@@ -1,57 +1,17 @@
-const path = require('path');
-const fs   = require('fs');
+const express = require('express');
 
-const getAllFiles = function(dirPath, arrayOfFiles) {
+const app = express();
 
-  files = fs.readdirSync(dirPath)
+app.use(express.static("./export"));
 
-  arrayOfFiles = arrayOfFiles || []
-
-    files.forEach(function(file) {
-      if (fs.statSync(dirPath + "/" + file).isDirectory()) {
-        arrayOfFiles = getAllFiles(dirPath + "/" + file, arrayOfFiles)
-      } else {
-        arrayOfFiles.push(path.join(__dirname, dirPath, "/", file))
-      }
-    })
-
-  return arrayOfFiles
-
-}
-
-const result = getAllFiles("css/src/")
-
-const text = "";
-
-const teste = result.forEach(element => {
-
-/* 
-  try {
- */
-
-const data = fs.readFileSync(element, 'utf8')
-
-  //text+="/* ["+element+"] */ \n\n";
-
-      text+=data;
-
-      text+="# \n\n";
-    
-/*   
-  } catch (err) {
-    console.error(err)
-  } */
-
-
-
+app.get('/compact', (req, res) => {
+  var csscompact = require('./csscompact');
+ var csscompact = require('./jscompact');
+  res.send('Hello Express app!')
 });
 
-//console.log(text);
 
-fs.writeFile('css/all.css', text, function (err,data) {
 
-  if (err) {
-    return console.log(err);
-  }
- 
-}); 
+app.listen(3000, function () {
+  console.log("rodando");
+});

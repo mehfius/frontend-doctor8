@@ -1,9 +1,3 @@
-
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/115-sectionMount.js ######## */
-
-
 function mountSection(){
 	
 	var section = cE("section");
@@ -17,11 +11,7 @@ function mountSection(){
 	
 	got(document,"body")[0].appendChild(section);
 
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/300-mount.js ######## */
-
+}# 
 
 
 function changeTitle(name){
@@ -87,11 +77,7 @@ function mountOrder(){
   
 }
 
-
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/650-adsense.js ######## */
-
+# 
 
 function adsense(){
   
@@ -122,11 +108,7 @@ function adsenseVertical(){
   return adsensevertical;  
   
   
-} 
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/710-upload-resize.js ######## */
-
+} # 
 
 
 
@@ -216,11 +198,7 @@ function resizeImage(file,cb){
 		
 	}
 
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/ad.js ######## */
-
+}# 
 
 function ad(){
   
@@ -234,11 +212,7 @@ function ad(){
   
   return ad;
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/core/100-default.js ######## */
-
+}# 
 
 
 
@@ -544,11 +518,7 @@ function mountRankingLine(json){
   
   return div;
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/core/createObject.js ######## */
-
+}# 
 
 function createObject(text){
 
@@ -570,11 +540,7 @@ function createObject(text){
   
   return field;
  
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/core/datePTBR.js ######## */
-
+}# 
 
 function datePTBR(string){
   
@@ -591,11 +557,7 @@ function datePTBR(string){
   
   return data;
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/core/johnesquery.js ######## */
-
+}# 
 
 
 function getImageInfo(src,cb){
@@ -859,33 +821,21 @@ function removeAcento(strToReplace) {
 
     return nova;
 
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/doctor8-goToMedicLogin.js ######## */
-
+}# 
 
 function goToMedicLogin(){
   
   document.body.setAttribute("openlogin","1");
   document.getElementById('btInsertMedico').click();
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/doctor8-goToPacienteLogin.js ######## */
-
+}# 
 
 function goToPacienteLogin(){
   
   document.body.setAttribute("openlogin","1");
   document.getElementById('btInsertPaciente').click();
   window.scrollTo( 0, 0 );
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/eventListener.js ######## */
-
+}# 
 
 function eventListener(){
   
@@ -907,11 +857,7 @@ function eventListener(){
     
   });
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/filter.js ######## */
-
+}# 
 
 function iconFilter(){
   
@@ -1042,11 +988,7 @@ function mountFilterStandard(){
 }
 
 
-
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/filterCustom.js ######## */
-
+# 
 
 
 function mountFilterCustom(modules,placeholder){
@@ -1293,11 +1235,7 @@ function mountFilterCustom(modules,placeholder){
 
   return div;
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/filterSearch.js ######## */
-
+}# 
 
 const filterSearch = (modules,placeholder) => {
   
@@ -1444,11 +1382,7 @@ const filterSearch = (modules,placeholder) => {
 
   return div;
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/filterStandard.js ######## */
-
+}# 
 
 
 function mountFilterStandard(){
@@ -1503,11 +1437,7 @@ function mountFilterStandard(){
 	//header.appendChild(filter);
 	
 	return filter;
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/form/formAutostart.js ######## */
-
+}# 
 
 
 function formMountAutoStart(area,cb){
@@ -1535,11 +1465,7 @@ function formMountAutoStart(area,cb){
 	xmlhttp.send();
   
 }
-
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/form/formButtonSave.js ######## */
-
+# 
 
 function formSave(codigo){
   
@@ -1618,11 +1544,7 @@ function formSave(codigo){
     
   }  
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/form/formButtonShare.js ######## */
-
+}# 
 
 function btOptionsBtShare(){
 
@@ -1636,11 +1558,7 @@ function btOptionsBtShare(){
   
 	return bt;
 	
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/form/formCustomEdit.js ######## */
-
+}# 
 
 
 function formCustomEdit(areas){
@@ -1657,11 +1575,7 @@ function formCustomEdit(areas){
 			
 		});
 
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/form/formCustomView.js ######## */
-
+}# 
 
 
 function formCustomView(areas,codigo){
@@ -1674,11 +1588,7 @@ function formCustomView(areas,codigo){
 			
 		});
 
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/form/formEdit.js ######## */
-
+}# 
 
 
 function formEdit(areas,codigo){
@@ -1704,11 +1614,7 @@ function formEdit(areas,codigo){
 			
 		});
 
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/form/formMount.js ######## */
-
+}# 
 
 function formMount(modules,codigo,cb){
   
@@ -1761,11 +1667,7 @@ function formMount(modules,codigo,cb){
 	xmlhttp.open("POST", url, true);
 	xmlhttp.send(data);
 	
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/form/formMountV2.js ######## */
-
+}# 
 
 function formMountV2(modules,action,codigo,cb){
   
@@ -1821,11 +1723,7 @@ function formMountV2(modules,action,codigo,cb){
 	xmlhttp.open("POST", url, true);
 	xmlhttp.send(data);
 	
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/form/formOptions.js ######## */
-
+}# 
 
 function formClose(){
 	
@@ -2150,11 +2048,7 @@ function btSeeAttach(){
 		var bt = cEA(attribute);
 			return bt;
 
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/form/formSend.js ######## */
-
+}# 
 
 function formSend(data,codigo){
 
@@ -2220,11 +2114,7 @@ function formSend(data,codigo){
     xmlhttp.open("POST", url, true);
     xmlhttp.send(data);
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/form/formView.js ######## */
-
+}# 
 
 function formView(areas,codigo){
 	
@@ -2243,11 +2133,7 @@ function formView(areas,codigo){
 
   });
 
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/formFieldCounter.js ######## */
-
+}# 
 
 
 function counter(div){
@@ -2288,11 +2174,7 @@ function counter(div){
 		
 	}
 	
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/formFieldData.js ######## */
-
+}# 
 
 function formMountData(attribute){
   
@@ -2387,11 +2269,7 @@ function applyDataMask(field) {
     field.addEventListener('click', changed)
     field.addEventListener('keyup', changed)
 }
-
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/formFieldHide.js ######## */
-
+# 
 
 function formMountHide(attribute){
 	
@@ -2451,11 +2329,7 @@ function formHide(e){
 		e.parentElement.setAttribute('hide','1');
 	}
 	
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/formFieldHideInput.js ######## */
-
+}# 
 
 function formMountHideInput(attribute){
 	
@@ -2515,11 +2389,7 @@ function formHideInput(e){
 		e.parentElement.setAttribute('hide','1');
 	}
 	
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/formFieldKeywords.js ######## */
-
+}# 
 
 /*
 
@@ -2616,11 +2486,7 @@ function formMountKeywords(attribute){
 	
 }
 
-
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/formFieldMultiple.js ######## */
-
+# 
 
 function formMountMultiple(attribute){
  
@@ -2704,11 +2570,7 @@ function formMountMultiple(attribute){
 	
 }
 
-
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/formFieldPassword.js ######## */
-
+# 
 
 function formMountPassword(attribute){
   
@@ -2736,11 +2598,7 @@ function formMountPassword(attribute){
   
   return div;
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/formFieldSearchmulti.js ######## */
-
+}# 
 
 
 function formMountSearchMulti(attribute){
@@ -2977,11 +2835,7 @@ function formMountSearchMulti(attribute){
   return div;
 	
 }
-
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/formFieldSelect.js ######## */
-
+# 
 
 function formMountSelect(attribute){
 	 
@@ -3328,11 +3182,7 @@ function formMountSelectCustom(attribute){
 
   return div;
 	
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/formFieldSelectAjax.js ######## */
-
+}# 
 
 function formMountSelectAjax(attribute){
 
@@ -3432,11 +3282,7 @@ function formMountSelectAjax(attribute){
 
   return div;
 	
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/formFieldSelectAjaxMountOpt.js ######## */
-
+}# 
 
 
 
@@ -3543,11 +3389,7 @@ function loadOpt(element,attribute){
 	xmlhttp.open("GET", url, true);
 	xmlhttp.send();  
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/formFieldSelectColor.js ######## */
-
+}# 
 
 function formMountSelectColor(attribute){
 
@@ -3661,11 +3503,7 @@ function formMountSelectColor(attribute){
 
   return div;
 	
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/formFieldTag.js ######## */
-
+}# 
 
 function formMountTag(attribute){
               	     
@@ -3965,11 +3803,7 @@ function getSelectedValues(object){
   console.log(JSON.stringify(array));
   return JSON.stringify(array);
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/formFieldTagGroup.js ######## */
-
+}# 
 
 function formMountTagGroup(attribute){
   
@@ -4091,11 +3925,7 @@ function formMountTagGroup(attribute){
   
   return div;
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/formFieldText.js ######## */
-
+}# 
 
 function formMountText(attribute){
   
@@ -4126,11 +3956,7 @@ function formMountText(attribute){
   console.log(attribute.action);
   return div;
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/formFieldTextUrl.js ######## */
-
+}# 
 
 function formMountTexturl(attribute){
                      
@@ -4161,11 +3987,7 @@ function formMountTexturl(attribute){
   
   return div;  
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/formFieldTextarea.js ######## */
-
+}# 
 
 
 function formMountTextarea(attribute){
@@ -4266,11 +4088,7 @@ function textareaPresetSelect(textarea,array){
   return label;
   
 }
-
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/formFieldTextareaPreset.js ######## */
-
+# 
 
 
 function formMountTextareaPreset(attribute){
@@ -4325,11 +4143,7 @@ function formMountTextareaPreset(attribute){
   return div;
   
 }
-
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/formFieldTooltip.js ######## */
-
+# 
 
 function formFieldTooltip(div,title){
   
@@ -4347,11 +4161,7 @@ function formFieldTooltip(div,title){
     
   }
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/formFieldTrueFalse.js ######## */
-
+}# 
 
 function formMountTrueFalse(attribute){
 
@@ -4413,11 +4223,7 @@ function formTrueFalse(e){
     got(e.parentElement,"input")[0].value="0";
 	}
 	
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/formFieldUpload.js ######## */
-
+}# 
 
 function formUpload(object){
 	
@@ -5093,11 +4899,7 @@ function mountPS(){
 	
 	got(document,"body")[0].appendChild(pswp);
 
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/formFieldUploadInsertAnexos.js ######## */
-
+}# 
 
 
 function insertAnexos(anexos,filename){
@@ -5139,11 +4941,7 @@ function insertAnexos(anexos,filename){
 	xmlhttp.open("POST", url, true);
 	xmlhttp.send(data);
 	
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/formFieldUploadRemoveAnexos.js ######## */
-
+}# 
 
 
 function removeAnexos(e,filename){
@@ -5173,11 +4971,7 @@ function removeAnexos(e,filename){
 	xmlhttp.open("GET", url, true);
 	xmlhttp.send();
 			
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/formFieldYoutube.js ######## */
-
+}# 
 
 function getStringFromYoutube(link){
 
@@ -5278,11 +5072,7 @@ function reload(){
   
   
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/formFinder.js ######## */
-
+}# 
 
 
 function finder(object){
@@ -5347,11 +5137,7 @@ function finder(object){
 	
 	object.appendChild(finder);
 	
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/formGooglePlace.js ######## */
-
+}# 
 
 
 function autoComplete(object,codigo){
@@ -5436,11 +5222,7 @@ function autoComplete(object,codigo){
 		
 	};
 
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/formMakeUrlFriendly.js ######## */
-
+}# 
 
 
 function makeUrlFriendly(object){
@@ -5487,11 +5269,7 @@ function makeUrlFriendly(object){
 		
 	});
 	
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/formMountFields.js ######## */
-
+}# 
 
 function formMountFields(modules,json,codigo,action){
  
@@ -5637,11 +5415,7 @@ function formMountFields(modules,json,codigo,action){
 	
 	document.body.appendChild(window);
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/multipleHidden.js ######## */
-
+}# 
 
 function formMountMultipleHidden(attribute){
 
@@ -5755,11 +5529,7 @@ function formMountMultipleHidden(attribute){
 	
 }
 
-
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/multipleHiddenAdd.js ######## */
-
+# 
 
 
 function multipleAdd(attribute){
@@ -5779,11 +5549,7 @@ function multipleAdd(attribute){
     
   return btadd;
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/multipleHiddenClose.js ######## */
-
+}# 
 
 
 function multipleHiddenClose(){
@@ -5796,11 +5562,7 @@ function multipleHiddenClose(){
   
   return icon;
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/multipleHiddenCoolButton.js ######## */
-
+}# 
 
 
 function coolbutton(list){
@@ -5845,11 +5607,7 @@ function coolbutton(list){
   
   return div;
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/multipleHiddenFinder.js ######## */
-
+}# 
 
 
 
@@ -5906,11 +5664,7 @@ function multipleHiddenFinder(object){
 	
 	object.appendChild(finder);
 	
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formField/share.js ######## */
-
+}# 
 
 function formFieldShare(attribute){
 
@@ -5933,11 +5687,7 @@ function formFieldShare(attribute){
   
   return div;
 	
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formOptionsBtFilter.js ######## */
-
+}# 
 
 function btFilter(){
   
@@ -5971,11 +5721,7 @@ function btFilter(){
 }
 
 
-  
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/formOptionsBtNew.js ######## */
-
+  # 
 
 
 function btNew(){
@@ -5993,11 +5739,7 @@ function btNew(){
 	button.append(icon);
 	return button;
 	
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/getLocalStorage.js ######## */
-
+}# 
 
 function getLocalStorage(key,object){
   
@@ -6005,11 +5747,7 @@ function getLocalStorage(key,object){
   
   return eval("storage."+object);
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/getLocalStorageMessages.js ######## */
-
+}# 
 
 function getLocalStorageMessages(key){
   
@@ -6019,11 +5757,7 @@ function getLocalStorageMessages(key){
   
   return eval("languages."+key);
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/header.js ######## */
-
+}# 
 
 function mountHeader(array){
 
@@ -6147,11 +5881,7 @@ function mountMobileVersion(){
   
   return icon;
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/headerCalendar.js ######## */
-
+}# 
 
 function iconCalendar(element){
   
@@ -6179,11 +5909,7 @@ function iconCalendar(element){
 
   element.appendChild(icon);
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/headerFacedoctor.js ######## */
-
+}# 
 
 function iconFacedoctor(element){
   
@@ -6203,11 +5929,7 @@ function iconFacedoctor(element){
 
   element.appendChild(icon);
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/headerHelp.js ######## */
-
+}# 
 
 function iconHelp(element){
   
@@ -6235,11 +5957,7 @@ var userinfo = JSON.parse(localStorage.userinfo);
     element.appendChild(icon);
   
 }
-
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/headerPlanilha.js ######## */
-
+# 
 
 function iconPlanilha(element){
   
@@ -6259,11 +5977,7 @@ function iconPlanilha(element){
   element.appendChild(icon);
   
 }
-
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/headerReceitaEspecial.js ######## */
-
+# 
 
 function iconReceitaEspecial(element){
 
@@ -6371,11 +6085,7 @@ function shortcutItem(link,label){
 }
 
 
-  
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/headerVideo.js ######## */
-
+  # 
 
 function iconVideo(element){
   
@@ -6396,11 +6106,7 @@ function iconVideo(element){
   element.appendChild(icon);
   
 }
-
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/header_notifications.js ######## */
-
+# 
 
 function iconNotification(){
   
@@ -6647,11 +6353,7 @@ function language(c,word){
   
   return eval(c+"."+word);
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/indexedDB.js ######## */
-
+}# 
 
 function startIndexedDB(data){
   
@@ -6695,11 +6397,7 @@ const DadosClientes = [
     }
   };
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/inputTypeNumber.js ######## */
-
+}# 
 
 function inputTypeNumber(element){
   
@@ -6716,22 +6414,14 @@ function inputTypeNumber(element){
   }
 
 
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/insertShortcut.js ######## */
-
+}# 
 
 function loginInsertShortcut(buttonid){
   
   document.body.setAttribute("openlogin","1");
   document.getElementById(buttonid).click();
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/lazyload.js ######## */
-
+}# 
 
   function lazyload() {
 
@@ -6837,11 +6527,7 @@ function loadLazyJson(limit,cb){
 	xmlhttp.open("GET", url, true);
 	xmlhttp.send();
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/load.js ######## */
-
+}# 
 
 function load(){
 
@@ -6898,11 +6584,7 @@ document.onkeydown = function(evt) {
 	
 }
 window.onload=load;
-
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/loadLogged.js ######## */
-
+# 
 
 function loadLogged(authentic){
   
@@ -6963,11 +6645,7 @@ function debugIphone(array){
     
   }
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/loadingMount.js ######## */
-
+}# 
 
 function loadingMount(){
   
@@ -6979,11 +6657,7 @@ function loadingMount(){
   
   return loading;
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/loginForm.js ######## */
-
+}# 
 
 function mountLogin(){
 
@@ -7146,11 +6820,7 @@ function setRequired(list){
 }
 
 
-
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/loginInsert.js ######## */
-
+# 
 
 function insert(){
 		
@@ -7247,11 +6917,7 @@ function insert(){
 	
 	
 	
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/loginInsertSucess.js ######## */
-
+}# 
 
 function loginInsertSuccess(authentic){
   
@@ -7266,11 +6932,7 @@ function loginInsertSuccess(authentic){
   }, 2000);
   
 }
-
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/loginLogin.js ######## */
-
+# 
 
 function login(){
 	
@@ -7351,11 +7013,7 @@ function loginSetStep1(authentic){
   document.body.setAttribute('areas',authentic.areas);
   document.body.setAttribute('open',"1");
 
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/loginLogout.js ######## */
-
+}# 
 
 
 function logout(){
@@ -7418,11 +7076,7 @@ function logoutResetStep2(){
     delete localStorage.userinfo;
 
   }
-
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/loginRecovery.js ######## */
-
+# 
 
 
 function recovery(){
@@ -7512,11 +7166,7 @@ function recovery(){
 
 	
 }
-
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/loginStatus.js ######## */
-
+# 
 
 function getLoginStatus(){
   
@@ -7564,11 +7214,7 @@ function getLoginStatus(){
 	xmlhttp.open("GET", url, true);
 	xmlhttp.send();
 	
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/md5.js ######## */
-
+}# 
 
 
 
@@ -8146,11 +7792,7 @@ var MD5 = function (string) {
 
     return temp.toLowerCase();
 
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/message.js ######## */
-
+}# 
 
 function message(code){
  
@@ -8180,11 +7822,7 @@ function message(code){
   
   return a[code];       
 
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/modal.js ######## */
-
+}# 
 
 function modal(){
   
@@ -8241,11 +7879,7 @@ function modalFormCovid(){
   
   return content;
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/modules/modulesLoad.js ######## */
-
+}# 
 
 function tabelaLoad(modules, cb) {
 
@@ -8311,11 +7945,7 @@ function modulesLoad(array) {
     return tabela;
 
 }
-
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/modules/modulesLoadCalendar.js ######## */
-
+# 
 
 function modulesLoadCalendar(){
   
@@ -8357,11 +7987,7 @@ function modulesLoadCalendar(){
 function newevent(){
   
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/modules/modulesLoadInfo.js ######## */
-
+}# 
 
 function loadInfo(header,array){
   
@@ -8385,11 +8011,7 @@ function loadInfo(header,array){
   
  header.appendChild(postdata);
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/modules/modulesLoadItem.js ######## */
-
+}# 
 
 function loadItem(item,array){
   
@@ -8434,11 +8056,7 @@ function loadItem(item,array){
   
   if(footer.innerHTML!=""){item.appendChild(footer);}
 
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/modules/modulesLoadItemActionButton.js ######## */
-
+}# 
 
 function actionButton(element,fields,table,array){
   
@@ -8479,11 +8097,7 @@ function actionButton(element,fields,table,array){
   
   });
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/modules/modulesLoadItemCategory.js ######## */
-
+}# 
 
 function modulesLoadItemCategory(header,array,item){
   
@@ -8511,11 +8125,7 @@ function modulesLoadItemCategory(header,array,item){
     
 	}	
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/modules/modulesLoadItemContent.js ######## */
-
+}# 
 
 function modulesLoadItemContent(item,array){
   
@@ -8525,11 +8135,7 @@ function modulesLoadItemContent(item,array){
 
   item.appendChild(p);
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/modules/modulesLoadItemDetail.js ######## */
-
+}# 
 
 function loadItemDetail(elements,array){
 
@@ -8584,11 +8190,7 @@ function loadItemDetail(elements,array){
     elements.appendChild(detalhes);
 	}		
 
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/modules/modulesLoadItemJson.js ######## */
-
+}# 
 
 function loadItemJson(codigo,cb){
   
@@ -8623,11 +8225,7 @@ function loadItemJson(codigo,cb){
 	xmlhttp.open("POST", url, true);
 	xmlhttp.send(data);
 	
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/modules/modulesLoadItemOptions.js ######## */
-
+}# 
 
 function loadItemOptions(elements,array){
   
@@ -8672,11 +8270,7 @@ function loadItemOptions(elements,array){
     elements.appendChild(options);
 
 
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/modules/modulesLoadItemUpdateTime.js ######## */
-
+}# 
 
 function loadItemUpdateTime(elements,array){
 
@@ -8711,11 +8305,7 @@ function loadItemUpdateTime(elements,array){
   }
   
   elements.appendChild(elementodata);
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/modules/modulesLoadItemView.js ######## */
-
+}# 
 
 function loadItemView(item,array){
   
@@ -8977,11 +8567,7 @@ function loadItemViewOptions(array){
   
   return div;
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/modules/modulesLoadItemfooter.js ######## */
-
+}# 
 
 function loadItemDetail(elements,array){
 
@@ -9036,11 +8622,7 @@ function loadItemDetail(elements,array){
     elements.appendChild(detalhes);
 	}		
 
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/modules/modulesLoadMedicos.js ######## */
-
+}# 
 
 
 function loadMedicos(elements,array){
@@ -9091,11 +8673,7 @@ function loadMedicos(elements,array){
    }
 
 }
-
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/modules/modulesLoadPacientes.js ######## */
-
+# 
 
 
 function loadPacientes(element,array){
@@ -9189,11 +8767,7 @@ function loadPacientes(element,array){
    }
   
 }
-
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/modules/modulesLoadPacientesFull.js ######## */
-
+# 
 
 
 function loadPacientesFull(element,array){
@@ -9208,11 +8782,7 @@ function loadPacientesFull(element,array){
       element.append(pacientes);
   
 }
-
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/modules/modulesLoadShare.js ######## */
-
+# 
 
 function loadShare(element, array) {
 
@@ -9251,11 +8821,7 @@ div.setAttribute("style","background-color:"+array.categorycolors+"20;");
 
 
 }
-
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/modules/modulesLoadUser.js ######## */
-
+# 
 
 
 function loadUser(elements,array){
@@ -9286,11 +8852,7 @@ function loadUser(elements,array){
   }
   
 }
-
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/modules/modulesOpen.js ######## */
-
+# 
 
 function modulesOpen(e){
 	
@@ -9340,11 +8902,7 @@ function modulesOpen(e){
 
  
 }
-
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/mountPrint.js ######## */
-
+# 
 
 
 function mountPrint(array){
@@ -9364,11 +8922,7 @@ header.appendChild(logo);
 		got(document,"body")[0].appendChild(header);
 		
 		
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/nav.js ######## */
-
+}# 
 
 function navMount(array){
 
@@ -9467,11 +9021,7 @@ function navClose(){
 	
 				nav.setAttribute('class','hide');
 	
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/navSuite.js ######## */
-
+}# 
 
 function loadNavSuite(){
   
@@ -9481,11 +9031,7 @@ function loadNavSuite(){
   document.body.appendChild(navsuite);
 
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/pagesLoad.js ######## */
-
+}# 
 
 
 function pagesLoad(callback){
@@ -9534,11 +9080,7 @@ function pagesMount(json){
 
   document.body.append(pages,grid);
  
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/profile.js ######## */
-
+}# 
 
 
 function profile(array){
@@ -9719,21 +9261,13 @@ function addUploadFilesProfile(local,filename){
 
 }
 
-
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/prototype.js ######## */
-
+# 
 
       Number.prototype.pad = function(size, character = "0") {
         var s = String(this);
         while (s.length < (size || 2)) {s = character + s;}
         return s;
-      }
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/suporteLoad.js ######## */
-
+      }# 
 
 function suporteLoad(){
   
@@ -9755,11 +9289,7 @@ function suporteLoad(){
     
   }
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/tooltip.js ######## */
-
+}# 
 
 function tooltip(element,label){
   
@@ -9779,11 +9309,7 @@ function tooltip(element,label){
     
   }
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/tooltipmenu.js ######## */
-
+}# 
 
 function tooltipmenu(element,innerhtml){
   
@@ -9808,11 +9334,7 @@ function tooltipmenu(element,innerhtml){
    
   }
   
-}
-
-
-/* ######## /home/cabox/workspace/sistema8/js/src/vanilla-calendar.js ######## */
-
+}# 
 
 /*
     Vanilla AutoComplete v0.1
@@ -10013,3 +9535,5 @@ let VanillaCalendar = (function () {
 })()
 
 window.VanillaCalendar = VanillaCalendar
+# 
+
