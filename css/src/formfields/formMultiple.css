@@ -1,0 +1,15 @@
+/* Form Multiple */
+
+form div > multiple > button[selected="0"] {  background-color: #824F4F;}
+form div > multiple > button {  width: 100%;  text-align: left;  display: block;  border: none;  padding: 5px;  margin-right: 5px;  color: #fff;  margin: 0 5px 5px 0;}
+form div > multiple > button {  cursor: pointer;}
+
+form div > multiple > button[found="1"] {  display:block;}
+form div > multiple > button[found="0"] {  display:none;}
+
+form div > multiple > button[selected="1"] {  background-color: #cd4f4f;  }
+form div > multiple {  margin-top: 10px;  display: block;margin-left:10px;}
+form div > multiple {  overflow: auto;  position: relative;height: 210px;}
+
+form div.multiple > label{}
+form div.multiple > input {  width: 250px;text-indent:0;}

@@ -1,0 +1,14 @@
+/* Form Keywords */
+
+form div > keywords > button[selected="0"] {color:#444;background-color:#fff;}
+form div > keywords > button {float:left;cursor: pointer;display: block;color:#444;border:1px solid #444;border-radius:5px;padding: 5px 7px;margin: 0 5px 5px 0;}
+
+form div > keywords > button[found="1"] {  display:block;}
+form div > keywords > button[found="0"] {  display:none;}
+
+form div > keywords > button[selected="1"] {color:#fff;background-color:#444;}
+form div > keywords {  margin-top: 10px;  display: block;margin-left:10px;}
+form div > keywords {  overflow: auto;  position: relative;}
+
+form div > keywords > label{}
+form div > keywords > input {  width: 250px;text-indent:0;}
