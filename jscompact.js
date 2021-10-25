@@ -31,7 +31,7 @@ const teste = result.forEach(element => {
 
   text+=data;
 
-  text+="# \n\n";
+  text+="\n\n";
 
 });
 

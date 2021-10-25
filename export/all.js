@@ -11,7 +11,7 @@ function mountSection(){
 	
 	got(document,"body")[0].appendChild(section);
 
-}# 
+}
 
 
 function changeTitle(name){
@@ -77,7 +77,7 @@ function mountOrder(){
   
 }
 
-# 
+
 
 function adsense(){
   
@@ -108,7 +108,7 @@ function adsenseVertical(){
   return adsensevertical;  
   
   
-} # 
+} 
 
 
 
@@ -198,7 +198,7 @@ function resizeImage(file,cb){
 		
 	}
 
-}# 
+}
 
 function ad(){
   
@@ -212,7 +212,7 @@ function ad(){
   
   return ad;
   
-}# 
+}
 
 
 
@@ -518,7 +518,7 @@ function mountRankingLine(json){
   
   return div;
   
-}# 
+}
 
 function createObject(text){
 
@@ -540,7 +540,7 @@ function createObject(text){
   
   return field;
  
-}# 
+}
 
 function datePTBR(string){
   
@@ -557,7 +557,7 @@ function datePTBR(string){
   
   return data;
   
-}# 
+}
 
 
 function getImageInfo(src,cb){
@@ -821,21 +821,21 @@ function removeAcento(strToReplace) {
 
     return nova;
 
-}# 
+}
 
 function goToMedicLogin(){
   
   document.body.setAttribute("openlogin","1");
   document.getElementById('btInsertMedico').click();
   
-}# 
+}
 
 function goToPacienteLogin(){
   
   document.body.setAttribute("openlogin","1");
   document.getElementById('btInsertPaciente').click();
   window.scrollTo( 0, 0 );
-}# 
+}
 
 function eventListener(){
   
@@ -857,7 +857,7 @@ function eventListener(){
     
   });
   
-}# 
+}
 
 function iconFilter(){
   
@@ -988,7 +988,7 @@ function mountFilterStandard(){
 }
 
 
-# 
+
 
 
 function mountFilterCustom(modules,placeholder){
@@ -1235,7 +1235,7 @@ function mountFilterCustom(modules,placeholder){
 
   return div;
   
-}# 
+}
 
 const filterSearch = (modules,placeholder) => {
   
@@ -1382,7 +1382,7 @@ const filterSearch = (modules,placeholder) => {
 
   return div;
   
-}# 
+}
 
 
 function mountFilterStandard(){
@@ -1437,7 +1437,7 @@ function mountFilterStandard(){
 	//header.appendChild(filter);
 	
 	return filter;
-}# 
+}
 
 
 function formMountAutoStart(area,cb){
@@ -1465,7 +1465,7 @@ function formMountAutoStart(area,cb){
 	xmlhttp.send();
   
 }
-# 
+
 
 function formSave(codigo){
   
@@ -1544,7 +1544,7 @@ function formSave(codigo){
     
   }  
   
-}# 
+}
 
 function btOptionsBtShare(){
 
@@ -1558,7 +1558,7 @@ function btOptionsBtShare(){
   
 	return bt;
 	
-}# 
+}
 
 
 function formCustomEdit(areas){
@@ -1575,7 +1575,7 @@ function formCustomEdit(areas){
 			
 		});
 
-}# 
+}
 
 
 function formCustomView(areas,codigo){
@@ -1588,7 +1588,7 @@ function formCustomView(areas,codigo){
 			
 		});
 
-}# 
+}
 
 
 function formEdit(areas,codigo){
@@ -1614,7 +1614,7 @@ function formEdit(areas,codigo){
 			
 		});
 
-}# 
+}
 
 function formMount(modules,codigo,cb){
   
@@ -1667,7 +1667,7 @@ function formMount(modules,codigo,cb){
 	xmlhttp.open("POST", url, true);
 	xmlhttp.send(data);
 	
-}# 
+}
 
 function formMountV2(modules,action,codigo,cb){
   
@@ -1723,7 +1723,7 @@ function formMountV2(modules,action,codigo,cb){
 	xmlhttp.open("POST", url, true);
 	xmlhttp.send(data);
 	
-}# 
+}
 
 function formClose(){
 	
@@ -2048,7 +2048,7 @@ function btSeeAttach(){
 		var bt = cEA(attribute);
 			return bt;
 
-}# 
+}
 
 function formSend(data,codigo){
 
@@ -2114,7 +2114,7 @@ function formSend(data,codigo){
     xmlhttp.open("POST", url, true);
     xmlhttp.send(data);
   
-}# 
+}
 
 function formView(areas,codigo){
 	
@@ -2133,7 +2133,7 @@ function formView(areas,codigo){
 
   });
 
-}# 
+}
 
 
 function counter(div){
@@ -2174,7 +2174,7 @@ function counter(div){
 		
 	}
 	
-}# 
+}
 
 function formMountData(attribute){
   
@@ -2269,7 +2269,7 @@ function applyDataMask(field) {
     field.addEventListener('click', changed)
     field.addEventListener('keyup', changed)
 }
-# 
+
 
 function formMountHide(attribute){
 	
@@ -2329,7 +2329,7 @@ function formHide(e){
 		e.parentElement.setAttribute('hide','1');
 	}
 	
-}# 
+}
 
 function formMountHideInput(attribute){
 	
@@ -2389,7 +2389,7 @@ function formHideInput(e){
 		e.parentElement.setAttribute('hide','1');
 	}
 	
-}# 
+}
 
 /*
 
@@ -2486,7 +2486,7 @@ function formMountKeywords(attribute){
 	
 }
 
-# 
+
 
 function formMountMultiple(attribute){
  
@@ -2570,7 +2570,7 @@ function formMountMultiple(attribute){
 	
 }
 
-# 
+
 
 function formMountPassword(attribute){
   
@@ -2598,7 +2598,7 @@ function formMountPassword(attribute){
   
   return div;
   
-}# 
+}
 
 
 function formMountSearchMulti(attribute){
@@ -2835,7 +2835,7 @@ function formMountSearchMulti(attribute){
   return div;
 	
 }
-# 
+
 
 function formMountSelect(attribute){
 	 
@@ -3182,7 +3182,7 @@ function formMountSelectCustom(attribute){
 
   return div;
 	
-}# 
+}
 
 function formMountSelectAjax(attribute){
 
@@ -3282,7 +3282,7 @@ function formMountSelectAjax(attribute){
 
   return div;
 	
-}# 
+}
 
 
 
@@ -3389,7 +3389,7 @@ function loadOpt(element,attribute){
 	xmlhttp.open("GET", url, true);
 	xmlhttp.send();  
   
-}# 
+}
 
 function formMountSelectColor(attribute){
 
@@ -3503,7 +3503,7 @@ function formMountSelectColor(attribute){
 
   return div;
 	
-}# 
+}
 
 function formMountTag(attribute){
               	     
@@ -3803,7 +3803,7 @@ function getSelectedValues(object){
   console.log(JSON.stringify(array));
   return JSON.stringify(array);
   
-}# 
+}
 
 function formMountTagGroup(attribute){
   
@@ -3925,7 +3925,7 @@ function formMountTagGroup(attribute){
   
   return div;
   
-}# 
+}
 
 function formMountText(attribute){
   
@@ -3956,7 +3956,7 @@ function formMountText(attribute){
   console.log(attribute.action);
   return div;
   
-}# 
+}
 
 function formMountTexturl(attribute){
                      
@@ -3987,7 +3987,7 @@ function formMountTexturl(attribute){
   
   return div;  
   
-}# 
+}
 
 
 function formMountTextarea(attribute){
@@ -4088,7 +4088,7 @@ function textareaPresetSelect(textarea,array){
   return label;
   
 }
-# 
+
 
 
 function formMountTextareaPreset(attribute){
@@ -4143,7 +4143,7 @@ function formMountTextareaPreset(attribute){
   return div;
   
 }
-# 
+
 
 function formFieldTooltip(div,title){
   
@@ -4161,7 +4161,7 @@ function formFieldTooltip(div,title){
     
   }
   
-}# 
+}
 
 function formMountTrueFalse(attribute){
 
@@ -4223,7 +4223,7 @@ function formTrueFalse(e){
     got(e.parentElement,"input")[0].value="0";
 	}
 	
-}# 
+}
 
 function formUpload(object){
 	
@@ -4899,7 +4899,7 @@ function mountPS(){
 	
 	got(document,"body")[0].appendChild(pswp);
 
-}# 
+}
 
 
 function insertAnexos(anexos,filename){
@@ -4941,7 +4941,7 @@ function insertAnexos(anexos,filename){
 	xmlhttp.open("POST", url, true);
 	xmlhttp.send(data);
 	
-}# 
+}
 
 
 function removeAnexos(e,filename){
@@ -4971,7 +4971,7 @@ function removeAnexos(e,filename){
 	xmlhttp.open("GET", url, true);
 	xmlhttp.send();
 			
-}# 
+}
 
 function getStringFromYoutube(link){
 
@@ -5072,7 +5072,7 @@ function reload(){
   
   
   
-}# 
+}
 
 
 function finder(object){
@@ -5137,7 +5137,7 @@ function finder(object){
 	
 	object.appendChild(finder);
 	
-}# 
+}
 
 
 function autoComplete(object,codigo){
@@ -5222,7 +5222,7 @@ function autoComplete(object,codigo){
 		
 	};
 
-}# 
+}
 
 
 function makeUrlFriendly(object){
@@ -5269,7 +5269,7 @@ function makeUrlFriendly(object){
 		
 	});
 	
-}# 
+}
 
 function formMountFields(modules,json,codigo,action){
  
@@ -5415,7 +5415,7 @@ function formMountFields(modules,json,codigo,action){
 	
 	document.body.appendChild(window);
   
-}# 
+}
 
 function formMountMultipleHidden(attribute){
 
@@ -5529,7 +5529,7 @@ function formMountMultipleHidden(attribute){
 	
 }
 
-# 
+
 
 
 function multipleAdd(attribute){
@@ -5549,7 +5549,7 @@ function multipleAdd(attribute){
     
   return btadd;
   
-}# 
+}
 
 
 function multipleHiddenClose(){
@@ -5562,7 +5562,7 @@ function multipleHiddenClose(){
   
   return icon;
   
-}# 
+}
 
 
 function coolbutton(list){
@@ -5607,7 +5607,7 @@ function coolbutton(list){
   
   return div;
   
-}# 
+}
 
 
 
@@ -5664,7 +5664,7 @@ function multipleHiddenFinder(object){
 	
 	object.appendChild(finder);
 	
-}# 
+}
 
 function formFieldShare(attribute){
 
@@ -5687,7 +5687,7 @@ function formFieldShare(attribute){
   
   return div;
 	
-}# 
+}
 
 function btFilter(){
   
@@ -5721,7 +5721,7 @@ function btFilter(){
 }
 
 
-  # 
+  
 
 
 function btNew(){
@@ -5739,7 +5739,7 @@ function btNew(){
 	button.append(icon);
 	return button;
 	
-}# 
+}
 
 function getLocalStorage(key,object){
   
@@ -5747,7 +5747,7 @@ function getLocalStorage(key,object){
   
   return eval("storage."+object);
   
-}# 
+}
 
 function getLocalStorageMessages(key){
   
@@ -5757,7 +5757,7 @@ function getLocalStorageMessages(key){
   
   return eval("languages."+key);
   
-}# 
+}
 
 function mountHeader(array){
 
@@ -5881,7 +5881,7 @@ function mountMobileVersion(){
   
   return icon;
   
-}# 
+}
 
 function iconCalendar(element){
   
@@ -5909,7 +5909,7 @@ function iconCalendar(element){
 
   element.appendChild(icon);
   
-}# 
+}
 
 function iconFacedoctor(element){
   
@@ -5929,7 +5929,7 @@ function iconFacedoctor(element){
 
   element.appendChild(icon);
   
-}# 
+}
 
 function iconHelp(element){
   
@@ -5957,7 +5957,7 @@ var userinfo = JSON.parse(localStorage.userinfo);
     element.appendChild(icon);
   
 }
-# 
+
 
 function iconPlanilha(element){
   
@@ -5977,7 +5977,7 @@ function iconPlanilha(element){
   element.appendChild(icon);
   
 }
-# 
+
 
 function iconReceitaEspecial(element){
 
@@ -6085,7 +6085,7 @@ function shortcutItem(link,label){
 }
 
 
-  # 
+  
 
 function iconVideo(element){
   
@@ -6106,7 +6106,7 @@ function iconVideo(element){
   element.appendChild(icon);
   
 }
-# 
+
 
 function iconNotification(){
   
@@ -6353,7 +6353,7 @@ function language(c,word){
   
   return eval(c+"."+word);
   
-}# 
+}
 
 function startIndexedDB(data){
   
@@ -6397,7 +6397,7 @@ const DadosClientes = [
     }
   };
   
-}# 
+}
 
 function inputTypeNumber(element){
   
@@ -6414,14 +6414,14 @@ function inputTypeNumber(element){
   }
 
 
-}# 
+}
 
 function loginInsertShortcut(buttonid){
   
   document.body.setAttribute("openlogin","1");
   document.getElementById(buttonid).click();
   
-}# 
+}
 
   function lazyload() {
 
@@ -6527,7 +6527,7 @@ function loadLazyJson(limit,cb){
 	xmlhttp.open("GET", url, true);
 	xmlhttp.send();
   
-}# 
+}
 
 function load(){
 
@@ -6584,7 +6584,7 @@ document.onkeydown = function(evt) {
 	
 }
 window.onload=load;
-# 
+
 
 function loadLogged(authentic){
   
@@ -6645,7 +6645,7 @@ function debugIphone(array){
     
   }
   
-}# 
+}
 
 function loadingMount(){
   
@@ -6657,7 +6657,7 @@ function loadingMount(){
   
   return loading;
   
-}# 
+}
 
 function mountLogin(){
 
@@ -6820,7 +6820,7 @@ function setRequired(list){
 }
 
 
-# 
+
 
 function insert(){
 		
@@ -6917,7 +6917,7 @@ function insert(){
 	
 	
 	
-}# 
+}
 
 function loginInsertSuccess(authentic){
   
@@ -6932,7 +6932,7 @@ function loginInsertSuccess(authentic){
   }, 2000);
   
 }
-# 
+
 
 function login(){
 	
@@ -7013,7 +7013,7 @@ function loginSetStep1(authentic){
   document.body.setAttribute('areas',authentic.areas);
   document.body.setAttribute('open',"1");
 
-}# 
+}
 
 
 function logout(){
@@ -7076,7 +7076,7 @@ function logoutResetStep2(){
     delete localStorage.userinfo;
 
   }
-# 
+
 
 
 function recovery(){
@@ -7166,7 +7166,7 @@ function recovery(){
 
 	
 }
-# 
+
 
 function getLoginStatus(){
   
@@ -7214,7 +7214,7 @@ function getLoginStatus(){
 	xmlhttp.open("GET", url, true);
 	xmlhttp.send();
 	
-}# 
+}
 
 
 
@@ -7792,7 +7792,7 @@ var MD5 = function (string) {
 
     return temp.toLowerCase();
 
-}# 
+}
 
 function message(code){
  
@@ -7822,7 +7822,7 @@ function message(code){
   
   return a[code];       
 
-}# 
+}
 
 function modal(){
   
@@ -7879,7 +7879,7 @@ function modalFormCovid(){
   
   return content;
   
-}# 
+}
 
 function tabelaLoad(modules, cb) {
 
@@ -7945,7 +7945,7 @@ function modulesLoad(array) {
     return tabela;
 
 }
-# 
+
 
 function modulesLoadCalendar(){
   
@@ -7987,7 +7987,7 @@ function modulesLoadCalendar(){
 function newevent(){
   
   
-}# 
+}
 
 function loadInfo(header,array){
   
@@ -8011,7 +8011,7 @@ function loadInfo(header,array){
   
  header.appendChild(postdata);
   
-}# 
+}
 
 function loadItem(item,array){
   
@@ -8056,7 +8056,7 @@ function loadItem(item,array){
   
   if(footer.innerHTML!=""){item.appendChild(footer);}
 
-}# 
+}
 
 function actionButton(element,fields,table,array){
   
@@ -8097,7 +8097,7 @@ function actionButton(element,fields,table,array){
   
   });
   
-}# 
+}
 
 function modulesLoadItemCategory(header,array,item){
   
@@ -8125,7 +8125,7 @@ function modulesLoadItemCategory(header,array,item){
     
 	}	
   
-}# 
+}
 
 function modulesLoadItemContent(item,array){
   
@@ -8135,7 +8135,7 @@ function modulesLoadItemContent(item,array){
 
   item.appendChild(p);
   
-}# 
+}
 
 function loadItemDetail(elements,array){
 
@@ -8190,7 +8190,7 @@ function loadItemDetail(elements,array){
     elements.appendChild(detalhes);
 	}		
 
-}# 
+}
 
 function loadItemJson(codigo,cb){
   
@@ -8225,7 +8225,7 @@ function loadItemJson(codigo,cb){
 	xmlhttp.open("POST", url, true);
 	xmlhttp.send(data);
 	
-}# 
+}
 
 function loadItemOptions(elements,array){
   
@@ -8270,7 +8270,7 @@ function loadItemOptions(elements,array){
     elements.appendChild(options);
 
 
-}# 
+}
 
 function loadItemUpdateTime(elements,array){
 
@@ -8305,7 +8305,7 @@ function loadItemUpdateTime(elements,array){
   }
   
   elements.appendChild(elementodata);
-}# 
+}
 
 function loadItemView(item,array){
   
@@ -8567,7 +8567,7 @@ function loadItemViewOptions(array){
   
   return div;
   
-}# 
+}
 
 function loadItemDetail(elements,array){
 
@@ -8622,7 +8622,7 @@ function loadItemDetail(elements,array){
     elements.appendChild(detalhes);
 	}		
 
-}# 
+}
 
 
 function loadMedicos(elements,array){
@@ -8673,7 +8673,7 @@ function loadMedicos(elements,array){
    }
 
 }
-# 
+
 
 
 function loadPacientes(element,array){
@@ -8767,7 +8767,7 @@ function loadPacientes(element,array){
    }
   
 }
-# 
+
 
 
 function loadPacientesFull(element,array){
@@ -8782,7 +8782,7 @@ function loadPacientesFull(element,array){
       element.append(pacientes);
   
 }
-# 
+
 
 function loadShare(element, array) {
 
@@ -8821,7 +8821,7 @@ div.setAttribute("style","background-color:"+array.categorycolors+"20;");
 
 
 }
-# 
+
 
 
 function loadUser(elements,array){
@@ -8852,7 +8852,7 @@ function loadUser(elements,array){
   }
   
 }
-# 
+
 
 function modulesOpen(e){
 	
@@ -8902,7 +8902,7 @@ function modulesOpen(e){
 
  
 }
-# 
+
 
 
 function mountPrint(array){
@@ -8922,7 +8922,7 @@ header.appendChild(logo);
 		got(document,"body")[0].appendChild(header);
 		
 		
-}# 
+}
 
 function navMount(array){
 
@@ -9021,7 +9021,7 @@ function navClose(){
 	
 				nav.setAttribute('class','hide');
 	
-}# 
+}
 
 function loadNavSuite(){
   
@@ -9031,12 +9031,12 @@ function loadNavSuite(){
   document.body.appendChild(navsuite);
 
   
-}# 
+}
 
 
 function pagesLoad(callback){
   
-  var url = localStorage.getItem("urljson")+"jsonSuiteInfo.php";
+  var url = localStorage.getItem("url")+"/jsonsuite";
   
   fetch(url, {
     method: 'POST',
@@ -9080,7 +9080,7 @@ function pagesMount(json){
 
   document.body.append(pages,grid);
  
-}# 
+}
 
 
 function profile(array){
@@ -9261,13 +9261,13 @@ function addUploadFilesProfile(local,filename){
 
 }
 
-# 
+
 
       Number.prototype.pad = function(size, character = "0") {
         var s = String(this);
         while (s.length < (size || 2)) {s = character + s;}
         return s;
-      }# 
+      }
 
 function suporteLoad(){
   
@@ -9289,7 +9289,7 @@ function suporteLoad(){
     
   }
   
-}# 
+}
 
 function tooltip(element,label){
   
@@ -9309,7 +9309,7 @@ function tooltip(element,label){
     
   }
   
-}# 
+}
 
 function tooltipmenu(element,innerhtml){
   
@@ -9334,7 +9334,7 @@ function tooltipmenu(element,innerhtml){
    
   }
   
-}# 
+}
 
 /*
     Vanilla AutoComplete v0.1
@@ -9535,5 +9535,5 @@ let VanillaCalendar = (function () {
 })()
 
 window.VanillaCalendar = VanillaCalendar
-# 
+
 

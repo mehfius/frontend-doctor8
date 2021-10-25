@@ -440,14 +440,14 @@ relationship > g > a:active {
 }
 
 
-# 
 
-intro {padding:20px;color:#000;position:absolute;top: 50%;transform: translateX(-50%) translateY(-50%);left: 50%;font-size:40pt;color:#444;}# 
+
+intro {padding:20px;color:#000;position:absolute;top: 50%;transform: translateX(-50%) translateY(-50%);left: 50%;font-size:40pt;color:#444;}
 
 adsensevertical{
   float:right;
   margin-top:70px;
-}# 
+}
 
 body > nav {  will-change: left;  position: fixed;  top: 0;  height: 100%;  background-color: #fff;  max-width: 250px;  height: 100%;  overflow-y: auto;  overflow-x: hidden;  box-shadow: 0 0 20px rgba(0, 0, 0, .135);  transition: left 0.2s ease-in 0s;  left: -250px;  z-index: 1000}
 
@@ -490,7 +490,7 @@ body > nav uploadedFiles > div > options > span:hover{background-color:rgba(198,
 body > nav uploadedFiles > div > options .icon-bin{ right:0;top:0; }
 body > nav uploadedFiles > div > options .icon-undo{ left:0;bottom:0; }
 body > nav uploadedFiles > div > options .icon-redo{ right:0;bottom:0; }
-body > nav uploadedFiles > div > options .icon-search{ left:0;top:0; }# 
+body > nav uploadedFiles > div > options .icon-search{ left:0;top:0; }
 
 navsuite{
   display:none;
@@ -500,7 +500,7 @@ navsuite{
     background-color: #ccc;
     width: 100px;
     height: 100px;
-}# 
+}
 
 menu {
   width: 100%;
@@ -589,9 +589,9 @@ order>button {
 
 order>button[selected="1"] {
   font-weight: bold;
-}# 
+}
 
-body[area="arquivos"] view item icon{display:none;}# 
+body[area="arquivos"] view item icon{display:none;}
 
 printheader {display:none;}
 
@@ -615,7 +615,7 @@ printheader {display:none;}
   printheader {display:block;width:100%;background-color:#444;float:left;}
   printheader logo{padding:10px;float:left;color:#fff;}
   
-}# 
+}
 
 body div[admin="1"]{display:none;}
 
@@ -624,9 +624,9 @@ body[areas="1"] div[admin="1"]{display:block;}
 body[modules="users"] button[action="delete"]{display:none;}
 body[areas="1"][modules="users"] button[action="delete"]{display:block;}
 
-body[suites='1'] window[modules="users"] #divorganizacoes {display:none;}# 
+body[suites='1'] window[modules="users"] #divorganizacoes {display:none;}
 
-body iframe {margin:0;padding:0;width:100%;height:100%;border:0;}# 
+body iframe {margin:0;padding:0;width:100%;height:100%;border:0;}
 
 
 
@@ -635,7 +635,7 @@ ad{display:none;z-index: 999;
   top: 50%; right: 50%;
   transform: translate(50%,-50%);}
 ad figure{float:left;width: 320px;height: 270px;background-color: #444;}
-body[ad="1"] ad{display:block;}# 
+body[ad="1"] ad{display:block;}
 
 body[calendar="1"] calendar {
   display: block;
@@ -663,13 +663,13 @@ calendar events button{
   height:30px;
   width:100%;
 }
-# 
+
 
 :root {
   --color1: #176B89;
   --color2: #fff;
   --color3: #e15a2f;
-}# 
+}
 
 
 body[filter="1"] boxfilter{display:block;float:left;}
@@ -748,7 +748,7 @@ boxfilter selectsearch icon{background-color: #fff;
     cursor: pointer;
     padding: 8px;}
 
-boxfilter selectsearch.category figure{display:none;}# 
+boxfilter selectsearch.category figure{display:none;}
 
 /* Filter filterSearch*/
 boxfilter filtersearch {float:left;position:relative;margin-right:10px;margin-bottom:10px;}
@@ -782,10 +782,10 @@ boxfilter filtersearch.category figure{display:none;}
 
 boxfilter filtersearch[mouse="1"] div{display:block;}
 
-boxfilter filtersearch[mouse="0"] div{display:none;}# 
+boxfilter filtersearch[mouse="0"] div{display:none;}
 
 filterstandard input{padding:20px;width:300px;}
-filterstandard icon{float:left;padding:20px;}# 
+filterstandard icon{float:left;padding:20px;}
 
 body[logged="1"] window{position:fixed;z-index:550;top: 50%;transform: translateX(-50%) translateY(-50%);left: 50%;overflow:auto;max-height:100%;}
 body[logged="1"] window form {float:left;background-color:#fff;width:100%;box-shadow: inset -1px 5px 8px -7px #000}
@@ -823,7 +823,7 @@ form checkbox button[selected="1"]:before {  content: "\ea52"}
 
 form .default {  color: #444444;padding:20px;margin:5px 0 0 10px;background-color:#f6f6f6;}
 
-form textarea {  height: 200px;}# 
+form textarea {  height: 200px;}
 
 window > header {width: 100%;float:left;}
 
@@ -845,15 +845,15 @@ window > header > icon[action="attach"] input{position: absolute;cursor:pointer;
 window > header > icon[action="close"]{float:right; font-size: 60%;line-height: 1.2;}
 
 window > header > icon:hover {color:#444;}
-# 
 
-# 
+
+
 
 /* Select */
 
 window form [type="date"] {height:59px;}
 
-# 
+
 
 /* Fileupload */
 
@@ -877,7 +877,7 @@ form uploadedFiles > div:hover > options { display: block; }
 form uploadedFiles > div > label {top: 50%;transform: translateX(-50%) translateY(-50%);left: 50%;position:absolute;}
 form uploadedFiles > div > options > span {color: #fff; padding:7px; font-size: 11pt; cursor: pointer;   display: block; float:left; }
 
-# 
+
 
 /* Form Hide */
 
@@ -895,7 +895,7 @@ form > div[type="hide"] icon {  font-size: 125%;  color: #000;margin:15px 5px 15
 
 form > div[type="hide"][hide='1'] icon:before {  content: "\ea53"}
 
-form > div[type="hide"][hide='0'] icon:before {  content: "\ea52"}# 
+form > div[type="hide"][hide='0'] icon:before {  content: "\ea52"}
 
 /* Form Hide Input */
 
@@ -913,7 +913,7 @@ form > div[type="hideinput"] icon {  font-size: 125%;  color: #000;margin:15px 5
 
 form > div[type="hideinput"][hide='1'] icon:before {  content: "\ea53"}
 
-form > div[type="hideinput"][hide='0'] icon:before {  content: "\ea52"}# 
+form > div[type="hideinput"][hide='0'] icon:before {  content: "\ea52"}
 
 /* Form Keywords */
 
@@ -928,7 +928,7 @@ form div > keywords {  margin-top: 10px;  display: block;margin-left:10px;}
 form div > keywords {  overflow: auto;  position: relative;}
 
 form div > keywords > label{}
-form div > keywords > input {  width: 250px;text-indent:0;}# 
+form div > keywords > input {  width: 250px;text-indent:0;}
 
 /* Form Multiple */
 
@@ -945,7 +945,7 @@ form div > multiple {  overflow: auto;  position: relative;height: 210px;}
 
 form div.multiple > label{}
 form div.multiple > input {  width: 250px;text-indent:0;}
-# 
+
 
 /* Select */
 
@@ -988,7 +988,7 @@ window form select3 > opt[selected="true"] label{font-weight:bold;}
 window form select3 > opt > label {float:left;padding: 5px 5px 0 5px;cursor:pointer;font-size:90%;}
 window form select3 > opt > figure {background-color:#444;width:24px;height:24px;float:left;background-position:center center;background-size:cover;background-repeat:no-repeat;}
 window form div > input[name="findernew"] {text-indent:50px;}
-window form div labelfigure {background-size: cover;background-position: center;background-color: #444;width: 50px;height: 50px;position: absolute;left: 15px;bottom: 5px;}# 
+window form div labelfigure {background-size: cover;background-position: center;background-color: #444;width: 50px;height: 50px;position: absolute;left: 15px;bottom: 5px;}
 
 
 /* Select 3 */
@@ -999,7 +999,7 @@ window form selectajax > opt:nth-last-child(1){margin-bottom:0;}
 window form selectajax > opt[selected="true"] label{font-weight:bold;}
 window form selectajax > opt > label {float:left;padding: 5px 5px 0 5px;cursor:pointer;font-size:90%;}
 window form selectajax > opt > figure {background-color:#444;width:24px;height:24px;float:left;background-position:center center;background-size:cover;background-repeat:no-repeat;}
-# 
+
 
 
 /* Form Tag */
@@ -1081,10 +1081,10 @@ tagview > div:hover > icon{display:block;}
 
 
 tagview > div > input {width:50px;float:left;background-color:transparent;text-align:right;margin-top:5px;}
-# 
+
 
 window [type="textarea"] select {display:none;}
-window[category="receituario"] [type="textarea"] select {display:block;}# 
+window[category="receituario"] [type="textarea"] select {display:block;}
 
 /* Form True or false  */
 
@@ -1099,13 +1099,13 @@ form > div[type="trueorfalse"] icon {  font-size: 125%;  color: #000;margin:15px
 
 form > div[type="trueorfalse"][hide='1'] icon:before {  content: "\ea53"}
 
-form > div[type="trueorfalse"][hide='0'] icon:before {  content: "\ea52"}# 
+form > div[type="trueorfalse"][hide='0'] icon:before {  content: "\ea52"}
 
 /* Youtube */
 
 form > div[type="youtube"] figure{cursor:pointer;background-color:#000;position:absolute;right: 10px;bottom: 10px;width: 70px;height: 40px;background-position:center center;background-size:100% auto;}
 form > div[type="youtube"][error="1"] input{background-color: #F2CBCB;}
-form > div[type="youtube"][error="1"] figure{display:none;}# 
+form > div[type="youtube"][error="1"] figure{display:none;}
 
 
 /* Form Multiple Hidden*/
@@ -1155,7 +1155,7 @@ form div > multipleview > div > icon {cursor:pointer;background-color: #824F4F;p
 form div > multipleview > add{cursor:pointer;background-color: #444;color: #fff;cursor: pointer;float: left;border-radius: 5px;margin-left: 10px;    margin-top: 10px;}
 form div > multipleview > add > icon {float:left;font-size: 10px;padding: 7px;}
 
-form div > multipleview > add > label {float:left;padding:5px 10px 5px 0;font-size:80%;cursor:pointer;}# 
+form div > multipleview > add > label {float:left;padding:5px 10px 5px 0;font-size:80%;cursor:pointer;}
 
 body > header {
   
@@ -1215,7 +1215,7 @@ body > header > mobileversion {
   cursor: pointer
 }
 
-# 
+
 
 boxnotification {height: 500px;overflow: auto;display:none;background-color: #fff; width: 400px; position: fixed; right: 10px;top: 58px;z-index: 10;box-shadow: 0px 0px 10px -7px #000;}
 body[notification="1"] boxnotification {display:block;}
@@ -1231,7 +1231,7 @@ boxnotification notifications div figure {margin-right:10px;width:64px; height:6
 boxnotification notifications div user {float:left;margin-right:5px;}
 boxnotification notifications div action {float:left;margin-right:5px;}
 boxnotification notifications div modules {float:left;margin-right:5px;}
-boxnotification notifications div date {float:left;position:absolute;bottom:10px;right:10px;}# 
+boxnotification notifications div date {float:left;position:absolute;bottom:10px;right:10px;}
 
 
 body > header > options > icon {
@@ -1263,7 +1263,7 @@ body > header > options > .icon-bell counternotification {
 }
 
 
-body[modules=""] > header .icon-search{display:none;}# 
+body[modules=""] > header .icon-search{display:none;}
 
 body[loading="1"] loading {
   display: block;
@@ -1289,7 +1289,7 @@ loading icon {
   -moz-animation: spin 1.0s infinite linear;
   -webkit-animation: spin 1.0s infinite linear;
   line-height: 1.3
-}# 
+}
 
 body[logged="1"] login {}
 
@@ -1375,7 +1375,7 @@ login form select:-webkit-autofill:focus {
   -webkit-background-color: #efefef !important;
   -webkit-box-shadow: 0 0 0px 1000px #fff inset !important;
 
-}# 
+}
 
 login.login .plogin     {display:block;}
 login.login #email      {display:block;}
@@ -1385,7 +1385,7 @@ login.login #btEntrar   {display:block;}
 
 login.login #btInsert   {display:block;}
 login.login #btRecovery {display:block;}
-# 
+
 
 login.insert .pinsert    {display:block;}
 login.insert #label      {display:block;}
@@ -1407,7 +1407,7 @@ login.insert #btLogin           {display: block;}
 login.insert #btInsertPaciente  {display:block;background-color:#444;color:#fff;}
 login.insert #btInsertMedico    {display:block;}
 login.insert #btRecovery        {display:block;}
-login.insert #btCadastrar        {display:block;}# 
+login.insert #btCadastrar        {display:block;}
 
 login.insertmedico .pinsert    {display:block;}
 login.insertmedico #label      {display:block;}
@@ -1432,7 +1432,7 @@ login.insertmedico #btInsertMedico {display: block;background-color:#444;color:#
 
 login.insertmedico #btLogin   {display:block;}
 login.insertmedico #btRecovery {display:block;}
-login.insertmedico #btCadastrar {display:block;}# 
+login.insertmedico #btCadastrar {display:block;}
 
 login.insertpaciente .pinsert    {display:block;}
 login.insertpaciente #label       {display:block;}
@@ -1455,7 +1455,7 @@ login.insertpaciente #btInsertMedico {display: block;}
 
 login.insertpaciente #btLogin    {display:block;}
 login.insertpaciente #btRecovery {display:block;}
-login.insertpaciente #btCadastrar {display:block;}# 
+login.insertpaciente #btCadastrar {display:block;}
 
 /* login[passo="1"] #label      {display:block;}
 login[passo="1"] #email      {display:block;}
@@ -1483,14 +1483,14 @@ login[passo="2"] #cep        {display:none;}
 login[passo="2"] #endereco   {display:none;}
 login[passo="2"] #cidade     {display:none;}
 login[passo="2"] #estado     {display:none;}
-login[passo="2"] #bairro     {display:none;} */# 
+login[passo="2"] #bairro     {display:none;} */
 
 login.recovery .precovery  {display:block;}
 login.recovery #email   {display:block;}
 
 login.recovery #btLogin   {display:block;}
 login.recovery #btInsert   {display:block;}
-login.recovery #btRecuperar{display:block;}# 
+login.recovery #btRecuperar{display:block;}
 
 modal{display:none;background-color: #fff;width: 200px;position: absolute;right: 10px;top: 70px;border-radius: 2px;font-size: 80%;
 box-shadow: 0px 0px 2px 0px #000;}
@@ -1501,16 +1501,16 @@ modal content{float:left;width:100%;}
 modal content p{float:left;padding:10px;line-height:1.5;}
 modal content button {cursor:pointer;margin: 0 auto;display: block;padding: 10px;margin-bottom: 10px;}
 
-modal content:nth-child(2n+1){border-top: 1px solid #000;}# 
+modal content:nth-child(2n+1){border-top: 1px solid #000;}
 
 /*
 body[modules='category'] form select3 figure{display:none;}
-*/# 
+*/
 
 body[modules='formcovid'] tabela item {padding-bottom:0;}
 body[modules='formcovid'] tabela item codigo{display:none;}
 body[modules='formcovid'] tabela item :is(label){padding:10px 0 10px 10px;float:left;}
-body[modules='formcovid'] tabela item data{padding:10px;float:right;}# 
+body[modules='formcovid'] tabela item data{padding:10px;float:right;}
 
 body[modules='medicos'] menu {}
 body[modules='medicos'] menu button[action="new"]{display:none;}
@@ -1546,7 +1546,7 @@ body[modules='medicos'] tabela > item[deleted="0"] > options > div button[name="
 body[modules='medicos'] tabela > item[deleted="1"] > options > div button[name="deleted"][value="1"]{display:none;}
 
 body[modules='medicos'] tabela > item[premium="0"] > options > div button[name="premium"][value="0"]{display:none;}
-body[modules='medicos'] tabela > item[premium="1"] > options > div button[name="premium"][value="1"]{display:none;}# 
+body[modules='medicos'] tabela > item[premium="1"] > options > div button[name="premium"][value="1"]{display:none;}
 
 body[modules='pacientes'] menu button[action="new"]{display:none;}
 
@@ -1578,7 +1578,7 @@ body[modules='pacientes'] tabela > item[deleted="0"] > options > div button[name
 body[modules='pacientes'] tabela > item[deleted="1"] > options > div button[name="deleted"][value="1"]{display:none;}
 
 body[modules='pacientes'] tabela > item[premium="0"] > options > div button[name="premium"][value="0"]{display:none;}
-body[modules='pacientes'] tabela > item[premium="1"] > options > div button[name="premium"][value="1"]{display:none;}# 
+body[modules='pacientes'] tabela > item[premium="1"] > options > div button[name="premium"][value="1"]{display:none;}
 
 item pacientes tooltipmenu{
 
@@ -1595,7 +1595,7 @@ item pacientes tooltipmenu{
   white-space: nowrap;
   font-family: "Droid Sans", sans-serif
 
-}# 
+}
 
 body[premium="0"] > nav > a[premium="1"]{
     pointer-events: none;
@@ -1618,7 +1618,7 @@ body[premium="0"] > nav > a[premium="1"]::before{
 
 
 
-# 
+
 
 body[shortcut='1'] shortcut {display:block;}
 body shortcut {z-index:10;border-radius:0 0 5px 5px;display:none;position:fixed;right:8px;top:60px;background-color:#fff;padding:10px;width:280px;}
@@ -1626,14 +1626,14 @@ body shortcut > label {float:left;padding:10px;width:260px;font-weight:bold;}
 body shortcut div {float:left;padding:10px;cursor:pointer;border-radius:5px;width:260px;}
 body shortcut > div:hover{background-color:var(--color3);color:var(--color2);}
 body shortcut div label{float:left;margin-left:10px;cursor:inherit;line-height:1;}
-body shortcut div icon{float:left;cursor:inherit;}# 
+body shortcut div icon{float:left;cursor:inherit;}
 
 body[suites='6'] window icon[action="print"]{display:none;}
 
 body[suites='6'] window[modules="users"] div input[name="crm"] {display:none;}
 body[suites='6'] view item user{display:none;}
 
-body[suites='6'] login #btInsertMedico{display:none !important;}# 
+body[suites='6'] login #btInsertMedico{display:none !important;}
 
 suporte {position: fixed;
     bottom: 10px;
@@ -1645,7 +1645,7 @@ suporte {position: fixed;
 suporte icon {color:#fff;background-color:#e15a2f;border-radius:20px;float: left;font-size: 150%;}
 suporte text {padding: 3px 0 0 3px; float: left;display:none;color:#fff;}
 suporte:hover text {display:block;}
-# 
+
 
 [theme="big"] item > header {width:100%;}
 [theme="big"] item > header > category {float:left;padding:2.5% 2.5% 0 2.5%;}
@@ -1660,11 +1660,11 @@ padding: 10px;margin: 2.5%;}
 [theme="big"] item > p { padding-bottom:0;min-width:95%;padding: 2.5%;}
 [theme="big"] item detalhes {width: 95%;margin: 2.5%;}
 [theme="big"] item detalhes > figure{margin:0 10px 0 0;}
-[theme="big"] item detalhes > figure >label{position:absolute;right:10px;bottom:10px;padding: 5px;background-color: #ccc;color: #fff;}# 
+[theme="big"] item detalhes > figure >label{position:absolute;right:10px;bottom:10px;padding: 5px;background-color: #ccc;color: #fff;}
 
-[mobile="0"][theme="big"] item detalhes > figure{width:128px;height:128px;}# 
+[mobile="0"][theme="big"] item detalhes > figure{width:128px;height:128px;}
 
-[mobile="1"] item[view="0"] > options > button[action="view"] {display:none;}# 
+[mobile="1"] item[view="0"] > options > button[action="view"] {display:none;}
 
 
 body[suites="2"] > header{background-color:#e47509;}
@@ -1689,7 +1689,7 @@ body[suites="6"] > login{}
 
 body[suites="999"] > header{background-color:#0e7f18;}
 body[suites="999"] window{background-color:#0e7f18;}
-body[suites="999"] > login{background-color:#0e7f18;}# 
+body[suites="999"] > login{background-color:#0e7f18;}
 
 
 body > section { max-width: 960px;margin:0 auto;width:95%;height:100%;}
@@ -1772,7 +1772,7 @@ body[suites="1"][filter="1"]        > header icon.icon-search{background-color:#
 
 
 
-# 
+
 
 
 /* Desktop */
@@ -1781,7 +1781,7 @@ body[mobile="0"] view detalhes figure{display:inline-block;}
 
 body[mobile="0"] window {width:820px;box-shadow:0 0px 20px 0px #000;}
 body[mobile="0"] filter > input {width:860px;}
-# 
+
 
 
 body[mobile="0"] window form {padding:0 0 10px 0;min-height:300px;}
@@ -1812,7 +1812,7 @@ body[mobile="0"] form div[grid="1"] tagsearchbox {width:400px;}
 body[mobile="0"] form div[grid="3"] tagsearchbox {width:400px;}
 body[mobile="0"] form div[grid="3"] tagview {width:200px;}
 body[mobile="0"] form div[grid="3"] taghidden {width:100%;height:131px;}
-body[mobile="0"] form div[grid="2"] tooltipv2icon tooltipv2 {  width: 250px;height:90px;}# 
+body[mobile="0"] form div[grid="2"] tooltipv2icon tooltipv2 {  width: 250px;height:90px;}
 
 body[mobile="1"] window form{width:100%;height:100%;overflow:auto;}
 body[mobile="1"] window form uploadedFiles > div {position:relative;width:280px;height:280px;}
@@ -1828,7 +1828,7 @@ body[mobile="1"] form div[gridmobile="1"] {}
 body[mobile="1"] form div[gridmobile="1"] .default{width:460px;} 
 body[mobile="1"] form div[gridmobile="1"] uploadedfiles{width:460px;} 
 
-body[mobile="1"] form textarea {height:100px;} # 
+body[mobile="1"] form textarea {height:100px;} 
 
 
 /* Mobile */
@@ -1861,13 +1861,13 @@ body[mobile="1"] > header > icon {
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
   
-}# 
+}
 
 
 item[me="1"] > footer > button {cursor:pointer;}
 item[me="0"]{cursor:auto;}
 item[me="1"] > footer > button:hover{box-shadow: 0 0 7px 0px #999;}
-item[me="0"] detalhes > figure{cursor:pointer;}# 
+item[me="0"] detalhes > figure{cursor:pointer;}
 
 
  [theme="small"] item > header {}
@@ -1907,9 +1907,9 @@ item[me="0"] detalhes > figure{cursor:pointer;}#
 /*
  [theme="small"] item[view="0"] pacientes {display:none;}
  [theme="small"] item[view="1"] pacientes {display:block;}*/
- [theme="small"] item[view="1"] p {white-space: pre-wrap;height:auto;}# 
+ [theme="small"] item[view="1"] p {white-space: pre-wrap;height:auto;}
 
-# 
+
 
 
 icon > tooltip{position: absolute;
@@ -1927,7 +1927,7 @@ body[mobile="0"] icon:hover tooltip{display:block;}
 tooltip > seta{background-color: #000000;width: 10px;height: 10px;transform: rotate(45deg);position: absolute;right: 10px;top: -3px;}
 
 
-# 
+
 
 tooltipv2icon {
   
@@ -1978,9 +1978,9 @@ tooltipv2icon:hover tooltipv2 {
   visibility: visible;
   opacity: 1;
   
-}# 
+}
 
-# 
+
 
 :root {
   --vanilla-calendar-bg-color: #fff;
@@ -2108,5 +2108,5 @@ tooltipv2icon:hover tooltipv2 {
   border-radius: 0;
   cursor: not-allowed;
   opacity: 0.2;
-}# 
+}
 

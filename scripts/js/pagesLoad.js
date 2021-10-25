@@ -1,7 +1,7 @@
 
 function pagesLoad(callback){
   
-  var url = localStorage.getItem("urljson")+"jsonSuiteInfo.php";
+  var url = localStorage.getItem("url")+"/jsonsuite";
   
   fetch(url, {
     method: 'POST',
