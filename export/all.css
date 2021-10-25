@@ -116,14 +116,14 @@ q:after {
   font-family: 'Droid Sans';
   font-style: normal;
   font-weight: 400;
-  src: local('Droid Sans'), local('DroidSans'), url('/sistema8/fonts/src/droidsans.woff') format('woff')
+  src: local('Droid Sans'), local('DroidSans'), url('fonts/src/droidsans.woff') format('woff')
 }
  
 @font-face {
   font-family: 'icomoon';
   font-style: normal;
   font-weight: 400;
-  src: local('icomoon'), local('icomoon'), url('/sistema8/fonts/icomoon/fonts/icomoon.woff') format('woff')
+  src: local('icomoon'), local('icomoon'), url('fonts/icomoon/fonts/icomoon.woff') format('woff')
 }
 
 table {
