@@ -6,13 +6,12 @@ app.use(express.static("./export"));
 
 app.get('/compact', (req, res) => {
 
-  var csscompact = require('./csscompact');
-  var csscompact = require('./jscompact');
+  require('./csscompact');
+  require('./jscompact');
 
-  res.send('Hello Express app!')
+  res.send('Compactado!')
 
 });
-
 
 
 app.listen(8000, function () {
