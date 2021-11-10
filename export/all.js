@@ -79,141 +79,6 @@ function mountOrder(){
 
 
 
-function adsense(){
-  
-  var ins = cE("ins");
-  
-  ins.setAttribute("style","width:320px;height:100px;float:left;border-top: 3px solid #fff;");
-  ins.setAttribute("data-ad-client","ca-pub-7384375628902072");
-  ins.setAttribute("data-ad-slot","2673791548");
-  ins.setAttribute("class","adsbygoogle");
-  
-  return ins;
-  
-}
-
-function adsenseVertical(){
-  
-  var ins = cE("ins");
-  
-  ins.setAttribute("style","display:inline-block;width:120px;height:600px");
-  ins.setAttribute("data-ad-client","ca-pub-7384375628902072");
-  ins.setAttribute("data-ad-slot","7149526584");
-  ins.setAttribute("class","adsbygoogle");
-  
-  var adsensevertical = cE("adsensevertical");
-  
-  adsensevertical.appendChild(ins);
-  
-  return adsensevertical;  
-  
-  
-} 
-
-
-
-function resizeImage(file,cb){
-
-// Get the image
-
-	var oFReader = new FileReader();
-	oFReader.readAsDataURL(file);
-	
-	oFReader.onload = function (oFREvent) {
-
-		var temp = new Image();
-
-		temp.src=oFREvent.target.result;
-
-		temp.onload = function(){
-		
-			// callback(image);
-
-			var image = convertCanvasToFile(convertImageToCanvas(temp));
-
-			// Actions
-			//document.getElementById("canvasHolder").appendChild(canvas);
-			
- 			//if(this.width!=this.height){
-				
-			//	alert("O sistema só permite foto quadrada. Recorte a foto e tente novamente.");
-				
- 		//	}else{
-				
-				cb(image);
-				
-		//	}
-
-			
-			
-			
-		};
-		
-	};
-
-	// Converts image to canvas; returns new canvas element
-	function convertImageToCanvas(image) {
-
-		var canvas = document.createElement("canvas");
-
-			var width  = 1280;
-			var height = width * (image.height / image.width);
-
-			canvas.height = height;
-			canvas.width = width;
-
-			canvas.getContext("2d").drawImage(image, 0, 0,width,height);
-
-		return canvas;
-
-	}
-
-	// Converts canvas to an image
-	function convertCanvasToImage(canvas) {
-
-		var image = new Image();
-
-		image.src = canvas.toDataURL("image/jpeg");
-
-		return image;
-
-	}
-
-	function convertCanvasToFile(canvas) {
-	
-		var dataURL = canvas.toDataURL("image/jpeg");
-
-		var blobBin = atob(dataURL.split(',')[1]);
-		var array = [];
-
-		for(var i = 0; i < blobBin.length; i++) {
-
-			array.push(blobBin.charCodeAt(i));
-
-		}
-
-		var file=new Blob([new Uint8Array(array)], {type: 'jpg'});
-
-		return file;
-		
-	}
-
-}
-
-function ad(){
-  
-  var ad      = createObject('{"tag":"ad"}');
-  
-  var p      = createObject('{"tag":"p","innerhtml":"Publicidade"}');
-
-  var figure      = createObject('{"tag":"figure"}');
-  
-  ad.append(p,figure);
-  
-  return ad;
-  
-}
-
 
 
 
@@ -522,6 +387,141 @@ function mountRankingLine(json){
   
 }
 
+function adsense(){
+  
+  var ins = cE("ins");
+  
+  ins.setAttribute("style","width:320px;height:100px;float:left;border-top: 3px solid #fff;");
+  ins.setAttribute("data-ad-client","ca-pub-7384375628902072");
+  ins.setAttribute("data-ad-slot","2673791548");
+  ins.setAttribute("class","adsbygoogle");
+  
+  return ins;
+  
+}
+
+function adsenseVertical(){
+  
+  var ins = cE("ins");
+  
+  ins.setAttribute("style","display:inline-block;width:120px;height:600px");
+  ins.setAttribute("data-ad-client","ca-pub-7384375628902072");
+  ins.setAttribute("data-ad-slot","7149526584");
+  ins.setAttribute("class","adsbygoogle");
+  
+  var adsensevertical = cE("adsensevertical");
+  
+  adsensevertical.appendChild(ins);
+  
+  return adsensevertical;  
+  
+  
+} 
+
+
+
+function resizeImage(file,cb){
+
+// Get the image
+
+	var oFReader = new FileReader();
+	oFReader.readAsDataURL(file);
+	
+	oFReader.onload = function (oFREvent) {
+
+		var temp = new Image();
+
+		temp.src=oFREvent.target.result;
+
+		temp.onload = function(){
+		
+			// callback(image);
+
+			var image = convertCanvasToFile(convertImageToCanvas(temp));
+
+			// Actions
+			//document.getElementById("canvasHolder").appendChild(canvas);
+			
+ 			//if(this.width!=this.height){
+				
+			//	alert("O sistema só permite foto quadrada. Recorte a foto e tente novamente.");
+				
+ 		//	}else{
+				
+				cb(image);
+				
+		//	}
+
+			
+			
+			
+		};
+		
+	};
+
+	// Converts image to canvas; returns new canvas element
+	function convertImageToCanvas(image) {
+
+		var canvas = document.createElement("canvas");
+
+			var width  = 1280;
+			var height = width * (image.height / image.width);
+
+			canvas.height = height;
+			canvas.width = width;
+
+			canvas.getContext("2d").drawImage(image, 0, 0,width,height);
+
+		return canvas;
+
+	}
+
+	// Converts canvas to an image
+	function convertCanvasToImage(canvas) {
+
+		var image = new Image();
+
+		image.src = canvas.toDataURL("image/jpeg");
+
+		return image;
+
+	}
+
+	function convertCanvasToFile(canvas) {
+	
+		var dataURL = canvas.toDataURL("image/jpeg");
+
+		var blobBin = atob(dataURL.split(',')[1]);
+		var array = [];
+
+		for(var i = 0; i < blobBin.length; i++) {
+
+			array.push(blobBin.charCodeAt(i));
+
+		}
+
+		var file=new Blob([new Uint8Array(array)], {type: 'jpg'});
+
+		return file;
+		
+	}
+
+}
+
+function ad(){
+  
+  var ad      = createObject('{"tag":"ad"}');
+  
+  var p      = createObject('{"tag":"p","innerhtml":"Publicidade"}');
+
+  var figure      = createObject('{"tag":"figure"}');
+  
+  ad.append(p,figure);
+  
+  return ad;
+  
+}
+
 function createObject(text){
 
   var json = JSON.parse(text);
@@ -558,6 +558,47 @@ function datePTBR(string){
     var data = new Date(year, month, day, hour, min, sec, mil);
   
   return data;
+  
+}
+
+function eventListener(){
+  
+  let lastKnownScrollPosition = 0;
+  let ticking = false;
+  
+  document.addEventListener('scroll', function(e) {
+    
+  lastKnownScrollPosition = window.scrollY;
+
+  if (!ticking) {
+    window.requestAnimationFrame(function() {
+      console.log(lastKnownScrollPosition);
+      ticking = false;
+    });
+
+    ticking = true;
+  }
+    
+  });
+  
+}
+
+function getLocalStorage(key,object){
+
+  var storage = JSON.parse(localStorage[key]);
+
+  return storage[object];
+  
+}
+
+
+function getLocalStorageMessages(key){
+  
+  var languages = JSON.parse(localStorage.languages);
+  
+ 
+  
+  return eval("languages."+key);
   
 }
 
@@ -825,6 +866,759 @@ function removeAcento(strToReplace) {
 
 }
 
+  function lazyload() {
+
+    var rolled = document.body.offsetHeight + document.body.scrollTop + document.documentElement.scrollTop;
+    var height = document.documentElement.scrollHeight;
+  
+    if ((rolled) > (height-10)) {
+      
+        window.onscroll=null;
+
+          var item = got(got(document,"tabela")[0],"item");
+
+          var limit= item.length+",10";
+
+          document.body.setAttribute("loading","1");
+      
+          loadLazyJson(limit,function(json){
+
+            let tabela = got(document,"tabela")[0];
+
+            let modules = document.body.getAttribute("modules");
+
+            for(var x=0;x<json.length;x++){
+
+                var item = cE('item');
+
+                    item.setAttribute('c',json[x].codigo);
+
+                    if(modules=="pacientes"){
+
+                        loadItemView(item,json[x]);
+
+                    }else{
+
+                        loadItem(item,json[x]);
+
+                    }
+
+                    tabela.appendChild(item);
+
+            }
+                
+            document.body.setAttribute("loading","0");
+                
+            //document.addEventListener('scroll',lazyload);
+            window.onscroll=lazyload;
+
+        });
+  
+    }
+
+}
+
+function loadMore(){
+  
+  var item = got(got(document,"tabela")[0],"item");
+  var display="0";
+  
+  for(var x=0;x<item.length;x++){
+
+    display=getComputedStyle(document.getElementsByTagName("item")[x]).display;
+    
+    if(display=="none"){
+      
+      for(var y=x;y<x+10;y++){
+        
+         if(item[y]!==undefined){
+           item[y].style.display="block";
+         }else{
+           break;
+         }
+        
+      }
+      
+      break;
+     
+    }
+    
+  }
+ 
+}
+
+function loadLazyJson(limit,cb){
+  
+  var url = localStorage.getItem("url")+'/admin/json/jsonView.php?&session='+localStorage.session+'&area='+gA()+'&limit='+limit;
+		
+	var xmlhttp;
+
+	xmlhttp = new XMLHttpRequest();
+ 
+	xmlhttp.onreadystatechange = function() {
+
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			
+ 			var json = JSON.parse(xmlhttp.responseText);
+		
+			cb(json);
+
+		}
+    
+	};
+	
+	xmlhttp.open("GET", url, true);
+	xmlhttp.send();
+  
+}
+
+function loadingMount(){
+  
+  let loading = createObject('{"tag":"loading"}');
+  let icon    = createObject('{"tag":"icon","class":"icon-spinner9"}');
+  //let label   = createObject('{"tag":"label","innerhtml":"Aguarde"}');
+  
+      loading.append(icon);
+  
+  return loading;
+  
+}
+
+
+
+var MD5 = function (string) {
+
+ 
+
+
+    function RotateLeft(lValue, iShiftBits) {
+
+
+        return (lValue<<iShiftBits) | (lValue>>>(32-iShiftBits));
+
+
+    }
+
+ 
+
+
+    function AddUnsigned(lX,lY) {
+
+
+        var lX4,lY4,lX8,lY8,lResult;
+
+
+        lX8 = (lX & 0x80000000);
+
+
+        lY8 = (lY & 0x80000000);
+
+
+        lX4 = (lX & 0x40000000);
+
+
+        lY4 = (lY & 0x40000000);
+
+
+        lResult = (lX & 0x3FFFFFFF)+(lY & 0x3FFFFFFF);
+
+
+        if (lX4 & lY4) {
+
+
+            return (lResult ^ 0x80000000 ^ lX8 ^ lY8);
+
+
+        }
+
+
+        if (lX4 | lY4) {
+
+
+            if (lResult & 0x40000000) {
+
+
+                return (lResult ^ 0xC0000000 ^ lX8 ^ lY8);
+
+
+            } else {
+
+
+                return (lResult ^ 0x40000000 ^ lX8 ^ lY8);
+
+
+            }
+
+
+        } else {
+
+
+            return (lResult ^ lX8 ^ lY8);
+
+
+        }
+
+
+     }
+
+ 
+
+
+     function F(x,y,z) { return (x & y) | ((~x) & z); }
+
+
+     function G(x,y,z) { return (x & z) | (y & (~z)); }
+
+
+     function H(x,y,z) { return (x ^ y ^ z); }
+
+
+    function I(x,y,z) { return (y ^ (x | (~z))); }
+
+ 
+
+
+    function FF(a,b,c,d,x,s,ac) {
+
+
+        a = AddUnsigned(a, AddUnsigned(AddUnsigned(F(b, c, d), x), ac));
+
+
+        return AddUnsigned(RotateLeft(a, s), b);
+
+
+    };
+
+ 
+
+
+    function GG(a,b,c,d,x,s,ac) {
+
+
+        a = AddUnsigned(a, AddUnsigned(AddUnsigned(G(b, c, d), x), ac));
+
+
+        return AddUnsigned(RotateLeft(a, s), b);
+
+
+    };
+
+ 
+
+
+    function HH(a,b,c,d,x,s,ac) {
+
+
+        a = AddUnsigned(a, AddUnsigned(AddUnsigned(H(b, c, d), x), ac));
+
+
+        return AddUnsigned(RotateLeft(a, s), b);
+
+
+    };
+
+ 
+
+
+    function II(a,b,c,d,x,s,ac) {
+
+
+        a = AddUnsigned(a, AddUnsigned(AddUnsigned(I(b, c, d), x), ac));
+
+
+        return AddUnsigned(RotateLeft(a, s), b);
+
+
+    };
+
+ 
+
+
+    function ConvertToWordArray(string) {
+
+
+        var lWordCount;
+
+
+        var lMessageLength = string.length;
+
+
+        var lNumberOfWords_temp1=lMessageLength + 8;
+
+
+        var lNumberOfWords_temp2=(lNumberOfWords_temp1-(lNumberOfWords_temp1 % 64))/64;
+
+
+        var lNumberOfWords = (lNumberOfWords_temp2+1)*16;
+
+
+        var lWordArray=Array(lNumberOfWords-1);
+
+
+        var lBytePosition = 0;
+
+
+        var lByteCount = 0;
+
+
+        while ( lByteCount < lMessageLength ) {
+
+
+            lWordCount = (lByteCount-(lByteCount % 4))/4;
+
+
+            lBytePosition = (lByteCount % 4)*8;
+
+
+            lWordArray[lWordCount] = (lWordArray[lWordCount] | (string.charCodeAt(lByteCount)<<lBytePosition));
+
+
+            lByteCount++;
+
+
+        }
+
+
+        lWordCount = (lByteCount-(lByteCount % 4))/4;
+
+
+        lBytePosition = (lByteCount % 4)*8;
+
+
+        lWordArray[lWordCount] = lWordArray[lWordCount] | (0x80<<lBytePosition);
+
+
+        lWordArray[lNumberOfWords-2] = lMessageLength<<3;
+
+
+        lWordArray[lNumberOfWords-1] = lMessageLength>>>29;
+
+
+        return lWordArray;
+
+
+    };
+
+ 
+
+
+    function WordToHex(lValue) {
+
+
+        var WordToHexValue="",WordToHexValue_temp="",lByte,lCount;
+
+
+        for (lCount = 0;lCount<=3;lCount++) {
+
+
+            lByte = (lValue>>>(lCount*8)) & 255;
+
+
+            WordToHexValue_temp = "0" + lByte.toString(16);
+
+
+            WordToHexValue = WordToHexValue + WordToHexValue_temp.substr(WordToHexValue_temp.length-2,2);
+
+
+        }
+
+
+        return WordToHexValue;
+
+
+    };
+
+ 
+
+
+    function Utf8Encode(string) {
+
+
+        string = string.replace(/\r\n/g,"\n");
+
+
+        var utftext = "";
+
+ 
+
+
+        for (var n = 0; n < string.length; n++) {
+
+ 
+
+
+            var c = string.charCodeAt(n);
+
+ 
+
+
+            if (c < 128) {
+
+
+                utftext += String.fromCharCode(c);
+
+
+            }
+
+
+            else if((c > 127) && (c < 2048)) {
+
+
+                utftext += String.fromCharCode((c >> 6) | 192);
+
+
+                utftext += String.fromCharCode((c & 63) | 128);
+
+
+            }
+
+
+            else {
+
+
+                utftext += String.fromCharCode((c >> 12) | 224);
+
+
+                utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+
+
+                utftext += String.fromCharCode((c & 63) | 128);
+
+
+            }
+
+ 
+
+
+        }
+
+ 
+
+
+        return utftext;
+
+
+    };
+
+ 
+
+
+    var x=Array();
+
+
+    var k,AA,BB,CC,DD,a,b,c,d;
+
+
+    var S11=7, S12=12, S13=17, S14=22;
+
+
+    var S21=5, S22=9 , S23=14, S24=20;
+
+
+    var S31=4, S32=11, S33=16, S34=23;
+
+
+    var S41=6, S42=10, S43=15, S44=21;
+
+ 
+
+
+    string = Utf8Encode(string);
+
+ 
+
+
+    x = ConvertToWordArray(string);
+
+ 
+
+
+    a = 0x67452301; b = 0xEFCDAB89; c = 0x98BADCFE; d = 0x10325476;
+
+ 
+
+
+    for (k=0;k<x.length;k+=16) {
+
+
+        AA=a; BB=b; CC=c; DD=d;
+
+
+        a=FF(a,b,c,d,x[k+0], S11,0xD76AA478);
+
+
+        d=FF(d,a,b,c,x[k+1], S12,0xE8C7B756);
+
+
+        c=FF(c,d,a,b,x[k+2], S13,0x242070DB);
+
+
+        b=FF(b,c,d,a,x[k+3], S14,0xC1BDCEEE);
+
+
+        a=FF(a,b,c,d,x[k+4], S11,0xF57C0FAF);
+
+
+        d=FF(d,a,b,c,x[k+5], S12,0x4787C62A);
+
+
+        c=FF(c,d,a,b,x[k+6], S13,0xA8304613);
+
+
+        b=FF(b,c,d,a,x[k+7], S14,0xFD469501);
+
+
+        a=FF(a,b,c,d,x[k+8], S11,0x698098D8);
+
+
+        d=FF(d,a,b,c,x[k+9], S12,0x8B44F7AF);
+
+
+        c=FF(c,d,a,b,x[k+10],S13,0xFFFF5BB1);
+
+
+        b=FF(b,c,d,a,x[k+11],S14,0x895CD7BE);
+
+
+        a=FF(a,b,c,d,x[k+12],S11,0x6B901122);
+
+
+        d=FF(d,a,b,c,x[k+13],S12,0xFD987193);
+
+
+        c=FF(c,d,a,b,x[k+14],S13,0xA679438E);
+
+
+        b=FF(b,c,d,a,x[k+15],S14,0x49B40821);
+
+
+        a=GG(a,b,c,d,x[k+1], S21,0xF61E2562);
+
+
+        d=GG(d,a,b,c,x[k+6], S22,0xC040B340);
+
+
+        c=GG(c,d,a,b,x[k+11],S23,0x265E5A51);
+
+
+        b=GG(b,c,d,a,x[k+0], S24,0xE9B6C7AA);
+
+
+        a=GG(a,b,c,d,x[k+5], S21,0xD62F105D);
+
+
+        d=GG(d,a,b,c,x[k+10],S22,0x2441453);
+
+
+        c=GG(c,d,a,b,x[k+15],S23,0xD8A1E681);
+
+
+        b=GG(b,c,d,a,x[k+4], S24,0xE7D3FBC8);
+
+
+        a=GG(a,b,c,d,x[k+9], S21,0x21E1CDE6);
+
+
+        d=GG(d,a,b,c,x[k+14],S22,0xC33707D6);
+
+
+        c=GG(c,d,a,b,x[k+3], S23,0xF4D50D87);
+
+
+        b=GG(b,c,d,a,x[k+8], S24,0x455A14ED);
+
+
+        a=GG(a,b,c,d,x[k+13],S21,0xA9E3E905);
+
+
+        d=GG(d,a,b,c,x[k+2], S22,0xFCEFA3F8);
+
+
+        c=GG(c,d,a,b,x[k+7], S23,0x676F02D9);
+
+
+        b=GG(b,c,d,a,x[k+12],S24,0x8D2A4C8A);
+
+
+        a=HH(a,b,c,d,x[k+5], S31,0xFFFA3942);
+
+
+        d=HH(d,a,b,c,x[k+8], S32,0x8771F681);
+
+
+        c=HH(c,d,a,b,x[k+11],S33,0x6D9D6122);
+
+
+        b=HH(b,c,d,a,x[k+14],S34,0xFDE5380C);
+
+
+        a=HH(a,b,c,d,x[k+1], S31,0xA4BEEA44);
+
+
+        d=HH(d,a,b,c,x[k+4], S32,0x4BDECFA9);
+
+
+        c=HH(c,d,a,b,x[k+7], S33,0xF6BB4B60);
+
+
+        b=HH(b,c,d,a,x[k+10],S34,0xBEBFBC70);
+
+
+        a=HH(a,b,c,d,x[k+13],S31,0x289B7EC6);
+
+
+        d=HH(d,a,b,c,x[k+0], S32,0xEAA127FA);
+
+
+        c=HH(c,d,a,b,x[k+3], S33,0xD4EF3085);
+
+
+        b=HH(b,c,d,a,x[k+6], S34,0x4881D05);
+
+
+        a=HH(a,b,c,d,x[k+9], S31,0xD9D4D039);
+
+
+        d=HH(d,a,b,c,x[k+12],S32,0xE6DB99E5);
+
+
+        c=HH(c,d,a,b,x[k+15],S33,0x1FA27CF8);
+
+
+        b=HH(b,c,d,a,x[k+2], S34,0xC4AC5665);
+
+
+        a=II(a,b,c,d,x[k+0], S41,0xF4292244);
+
+
+        d=II(d,a,b,c,x[k+7], S42,0x432AFF97);
+
+
+        c=II(c,d,a,b,x[k+14],S43,0xAB9423A7);
+
+
+        b=II(b,c,d,a,x[k+5], S44,0xFC93A039);
+
+
+        a=II(a,b,c,d,x[k+12],S41,0x655B59C3);
+
+
+        d=II(d,a,b,c,x[k+3], S42,0x8F0CCC92);
+
+
+        c=II(c,d,a,b,x[k+10],S43,0xFFEFF47D);
+
+
+        b=II(b,c,d,a,x[k+1], S44,0x85845DD1);
+
+
+        a=II(a,b,c,d,x[k+8], S41,0x6FA87E4F);
+
+
+        d=II(d,a,b,c,x[k+15],S42,0xFE2CE6E0);
+
+
+        c=II(c,d,a,b,x[k+6], S43,0xA3014314);
+
+
+        b=II(b,c,d,a,x[k+13],S44,0x4E0811A1);
+
+
+        a=II(a,b,c,d,x[k+4], S41,0xF7537E82);
+
+
+        d=II(d,a,b,c,x[k+11],S42,0xBD3AF235);
+
+
+        c=II(c,d,a,b,x[k+2], S43,0x2AD7D2BB);
+
+
+        b=II(b,c,d,a,x[k+9], S44,0xEB86D391);
+
+
+        a=AddUnsigned(a,AA);
+
+
+        b=AddUnsigned(b,BB);
+
+
+        c=AddUnsigned(c,CC);
+
+
+        d=AddUnsigned(d,DD);
+
+
+    }
+
+ 
+
+
+    var temp = WordToHex(a)+WordToHex(b)+WordToHex(c)+WordToHex(d);
+
+ 
+
+
+    return temp.toLowerCase();
+
+}
+
+function modal(){
+  
+  var customform 	= JSON.parse(localStorage.getItem("customform"));
+  
+  var body    = got(document,'body')[0];
+  
+  var div     = createObject('{"tag":"modal"}');
+  var header  = createObject('{"tag":"header","style":"background-color:#176B89;"}');
+  var title   = createObject('{"tag":"label","innerhtml":"Aviso"}');
+  
+  let content = createObject('{"tag":"content"}');
+  let p       = createObject('{"tag":"p","innerhtml":"Bem-vindo ao Doctor8, clique abaixo para começar"}');
+  let button  = createObject('{"tag":"button","type":"button","innerhtml":"Acessar meus arquivos"}');
+  
+      button.onclick=(function(){document.querySelector('a[c="132"]').click();});
+  
+  header.append(title);
+  content.append(p);
+  content.append(button);
+  div.append(header,content);
+  
+ if(customform!=undefined){
+   
+  
+  for(var x=0;x<customform.length;x++){
+  
+     let content = createObject('{"tag":"content"}');
+     let p       = createObject('{"tag":"p","innerhtml":"'+customform[x].label+'"}');
+     let button  = createObject('{"tag":"button","type":"button","innerhtml":"'+customform[x].buttonlabel+'"}');
+    
+    content.append(p);
+    content.append(button);
+        
+    div.append(content);
+    //console.log(customform[x].content);
+    
+  }
+ }
+  body.append(div);
+  
+}
+
+function modalFormCovid(){
+  
+  var content = createObject('{"tag":"content"}');
+  var p       = createObject('{"tag":"p","innerhtml":"Clique abaixo caso você queira receber um tratamento para covid-19"}');
+  var button  = createObject('{"tag":"button","type":"button","innerhtml":"Preencher formulário"}');
+  
+      button.onclick=(function(){formCustomEdit("formcovid")});
+  
+      content.append(p);
+      content.append(button);
+  
+  return content;
+  
+}
+
 function goToMedicLogin(){
   
   document.body.setAttribute("openlogin","1");
@@ -839,27 +1633,181 @@ function goToPacienteLogin(){
   window.scrollTo( 0, 0 );
 }
 
-function eventListener(){
+function iconCalendar(element){
   
-  let lastKnownScrollPosition = 0;
-  let ticking = false;
+    var icon = cE("icon")
+        icon.setAttribute("class","icon-calendar");
   
-  document.addEventListener('scroll', function(e) {
-    
-  lastKnownScrollPosition = window.scrollY;
+        tooltip(icon,"Agenda");
+  
+    var userinfo    = JSON.parse(localStorage.userinfo);
+    var systeminfo  = JSON.parse(localStorage.systeminfo);
+  
+    icon.onclick=(function(){
 
-  if (!ticking) {
-    window.requestAnimationFrame(function() {
-      console.log(lastKnownScrollPosition);
-      ticking = false;
+        if(document.body.getAttribute("calendar")=="1"){
+
+          document.body.setAttribute("calendar","0");
+
+        }else{
+
+          document.body.setAttribute("calendar","1");
+
+        }
+
     });
 
-    ticking = true;
-  }
-    
-  });
+  element.appendChild(icon);
   
 }
+
+function iconFacedoctor(element){
+  
+    var icon = cE("icon")
+        icon.setAttribute("class","icon-users");
+  
+        tooltip(icon,"Conheça o Facedoctors");
+  
+    var userinfo = JSON.parse(localStorage.userinfo);
+
+        icon.onclick=(function(){
+          
+     
+           window.open("https://facedoctors.com.br/","_blank");
+          
+        });
+
+  element.appendChild(icon);
+  
+}
+
+function iconPlanilha(element){
+  
+    var icon = cE("icon")
+        icon.setAttribute("class","icon-table2");
+  tooltip(icon,"Solicitação de contato");
+    var userinfo = JSON.parse(localStorage.userinfo);
+
+        icon.onclick=(function(){
+          
+          //window.open("https://docs.google.com/spreadsheets/d/1nBP4TC-7bqSTSDkye47bZHPe_aRNvV_RWmrQDGZIdlQ/edit#gid=1169328620","_blank");
+          window.open("https://docs.google.com/document/d/e/2PACX-1vTHgJvKWd8bfVKjoegbh-cLHcQ-7RrN-d1HOM6kTx9mk6jVGpRqxCKG95yNCsIUU9wJjHyETF7j2t_z/pub","_blank");
+          
+          
+        });
+
+  element.appendChild(icon);
+  
+}
+
+
+function iconReceitaEspecial(element){
+
+  var shortcut = createObject('{"tag":"shortcut"}');
+  
+  document.body.append(shortcut);
+  
+  var icon = cE("icon");
+      icon.setAttribute("class","icon-file-text2");
+
+     tooltip(icon,"Documentos");
+  
+  var userinfo   = JSON.parse(localStorage.userinfo);
+  var systeminfo = JSON.parse(localStorage.systeminfo);
+  var jsonshortcut   = JSON.parse(localStorage.shortcut);
+  var jsonshortcut   = JSON.parse(jsonshortcut[0].json); 
+  
+        icon.onclick=(function(){
+
+            if(document.body.getAttribute("shortcut")=="1"){
+              
+              document.body.setAttribute("shortcut","0");
+              
+            }else{
+              
+              document.body.setAttribute("shortcut","1");
+              
+            }
+        
+        });
+
+  element.appendChild(icon);
+
+        let label = "";
+        let url   = "";
+
+        shortcut.append(createObject('{"tag":"label","innerhtml":"Receitas"}'));
+  
+        let list = jsonshortcut[0].receitas;
+  
+        for (var x in list) {
+
+          label = list[x].label;
+          url = list[x].url;
+
+          if(url !== undefined && label!== undefined){
+            
+            shortcut.append(shortcutItem(url,label));
+            
+          }
+
+        }
+  
+        shortcut.append(createObject('{"tag":"label","innerhtml":"Protocolos"}'));
+  
+        list = jsonshortcut[1].protocolos;
+  
+        for (var x in list) {
+
+          label = list[x].label;
+          url = list[x].url;
+
+          if(url !== undefined && label!== undefined){
+            
+            shortcut.append(shortcutItem(url,label));
+            
+          }
+
+        }
+  
+        shortcut.append(createObject('{"tag":"label","innerhtml":"Outros"}'));
+  
+        list = jsonshortcut[2].outros;
+  
+        for (var x in list) {
+
+          label = list[x].label;
+          url = list[x].url;
+
+          if(url !== undefined && label!== undefined){
+            
+            shortcut.append(shortcutItem(url,label));
+            
+          }
+
+        }
+       
+  
+}
+
+function shortcutItem(link,label){
+ 
+  var div1      = createObject('{"tag":"div"}');
+  var icon1     = createObject('{"tag":"icon","class":"icon-file-text2"}');
+  var label1    = createObject('{"tag":"label","innerhtml":"'+label+'"}');
+  
+  div1.append(icon1,label1);
+  
+  div1.onclick=(function(){
+    window.open(link);
+  });
+  
+  return div1;
+
+}
+
+
+  
 
 function iconFilter(){
   
@@ -5743,24 +6691,6 @@ function btNew(){
 	
 }
 
-function getLocalStorage(key,object){
-  
-  var storage = JSON.parse(eval("localStorage."+key));
-  
-  return eval("storage."+object);
-  
-}
-
-function getLocalStorageMessages(key){
-  
-  var languages = JSON.parse(localStorage.languages);
-  
- 
-  
-  return eval("languages."+key);
-  
-}
-
 function mountHeader(array){
 
 	if(!got(document,"header").length){
@@ -5885,54 +6815,6 @@ function mountMobileVersion(){
   
 }
 
-function iconCalendar(element){
-  
-    var icon = cE("icon")
-        icon.setAttribute("class","icon-calendar");
-  
-        tooltip(icon,"Agenda");
-  
-    var userinfo    = JSON.parse(localStorage.userinfo);
-    var systeminfo  = JSON.parse(localStorage.systeminfo);
-  
-    icon.onclick=(function(){
-
-        if(document.body.getAttribute("calendar")=="1"){
-
-          document.body.setAttribute("calendar","0");
-
-        }else{
-
-          document.body.setAttribute("calendar","1");
-
-        }
-
-    });
-
-  element.appendChild(icon);
-  
-}
-
-function iconFacedoctor(element){
-  
-    var icon = cE("icon")
-        icon.setAttribute("class","icon-users");
-  
-        tooltip(icon,"Conheça o Facedoctors");
-  
-    var userinfo = JSON.parse(localStorage.userinfo);
-
-        icon.onclick=(function(){
-          
-     
-           window.open("https://facedoctors.com.br/","_blank");
-          
-        });
-
-  element.appendChild(icon);
-  
-}
-
 function iconHelp(element){
   
 var icon = cE("icon")
@@ -5960,134 +6842,6 @@ var userinfo = JSON.parse(localStorage.userinfo);
   
 }
 
-
-function iconPlanilha(element){
-  
-    var icon = cE("icon")
-        icon.setAttribute("class","icon-table2");
-  tooltip(icon,"Solicitação de contato");
-    var userinfo = JSON.parse(localStorage.userinfo);
-
-        icon.onclick=(function(){
-          
-          //window.open("https://docs.google.com/spreadsheets/d/1nBP4TC-7bqSTSDkye47bZHPe_aRNvV_RWmrQDGZIdlQ/edit#gid=1169328620","_blank");
-          window.open("https://docs.google.com/document/d/e/2PACX-1vTHgJvKWd8bfVKjoegbh-cLHcQ-7RrN-d1HOM6kTx9mk6jVGpRqxCKG95yNCsIUU9wJjHyETF7j2t_z/pub","_blank");
-          
-          
-        });
-
-  element.appendChild(icon);
-  
-}
-
-
-function iconReceitaEspecial(element){
-
-  var shortcut = createObject('{"tag":"shortcut"}');
-  
-  document.body.append(shortcut);
-  
-  var icon = cE("icon");
-      icon.setAttribute("class","icon-file-text2");
-
-     tooltip(icon,"Documentos");
-  
-  var userinfo   = JSON.parse(localStorage.userinfo);
-  var systeminfo = JSON.parse(localStorage.systeminfo);
-  var jsonshortcut   = JSON.parse(localStorage.shortcut);
-  var jsonshortcut   = JSON.parse(jsonshortcut[0].json); 
-  
-        icon.onclick=(function(){
-
-            if(document.body.getAttribute("shortcut")=="1"){
-              
-              document.body.setAttribute("shortcut","0");
-              
-            }else{
-              
-              document.body.setAttribute("shortcut","1");
-              
-            }
-        
-        });
-
-  element.appendChild(icon);
-
-        let label = "";
-        let url   = "";
-
-        shortcut.append(createObject('{"tag":"label","innerhtml":"Receitas"}'));
-  
-        let list = jsonshortcut[0].receitas;
-  
-        for (var x in list) {
-
-          label = list[x].label;
-          url = list[x].url;
-
-          if(url !== undefined && label!== undefined){
-            
-            shortcut.append(shortcutItem(url,label));
-            
-          }
-
-        }
-  
-        shortcut.append(createObject('{"tag":"label","innerhtml":"Protocolos"}'));
-  
-        list = jsonshortcut[1].protocolos;
-  
-        for (var x in list) {
-
-          label = list[x].label;
-          url = list[x].url;
-
-          if(url !== undefined && label!== undefined){
-            
-            shortcut.append(shortcutItem(url,label));
-            
-          }
-
-        }
-  
-        shortcut.append(createObject('{"tag":"label","innerhtml":"Outros"}'));
-  
-        list = jsonshortcut[2].outros;
-  
-        for (var x in list) {
-
-          label = list[x].label;
-          url = list[x].url;
-
-          if(url !== undefined && label!== undefined){
-            
-            shortcut.append(shortcutItem(url,label));
-            
-          }
-
-        }
-       
-  
-}
-
-function shortcutItem(link,label){
- 
-  var div1      = createObject('{"tag":"div"}');
-  var icon1     = createObject('{"tag":"icon","class":"icon-file-text2"}');
-  var label1    = createObject('{"tag":"label","innerhtml":"'+label+'"}');
-  
-  div1.append(icon1,label1);
-  
-  div1.onclick=(function(){
-    window.open(link);
-  });
-  
-  return div1;
-
-}
-
-
-  
 
 function iconVideo(element){
   
@@ -6425,112 +7179,6 @@ function loginInsertShortcut(buttonid){
   
 }
 
-  function lazyload() {
-
-    var rolled = document.body.offsetHeight + document.body.scrollTop + document.documentElement.scrollTop;
-    var height = document.documentElement.scrollHeight;
-  
-    if ((rolled) > (height-10)) {
-      
-        window.onscroll=null;
-
-          var item = got(got(document,"tabela")[0],"item");
-
-          var limit= item.length+",10";
-
-          document.body.setAttribute("loading","1");
-      
-          loadLazyJson(limit,function(json){
-
-            let tabela = got(document,"tabela")[0];
-
-            let modules = document.body.getAttribute("modules");
-
-            for(var x=0;x<json.length;x++){
-
-                var item = cE('item');
-
-                    item.setAttribute('c',json[x].codigo);
-
-                    if(modules=="pacientes"){
-
-                        loadItemView(item,json[x]);
-
-                    }else{
-
-                        loadItem(item,json[x]);
-
-                    }
-
-                    tabela.appendChild(item);
-
-            }
-                
-            document.body.setAttribute("loading","0");
-                
-            //document.addEventListener('scroll',lazyload);
-            window.onscroll=lazyload;
-
-        });
-  
-    }
-
-}
-
-function loadMore(){
-  
-  var item = got(got(document,"tabela")[0],"item");
-  var display="0";
-  
-  for(var x=0;x<item.length;x++){
-
-    display=getComputedStyle(document.getElementsByTagName("item")[x]).display;
-    
-    if(display=="none"){
-      
-      for(var y=x;y<x+10;y++){
-        
-         if(item[y]!==undefined){
-           item[y].style.display="block";
-         }else{
-           break;
-         }
-        
-      }
-      
-      break;
-     
-    }
-    
-  }
- 
-}
-
-function loadLazyJson(limit,cb){
-  
-  var url = localStorage.getItem("url")+'/admin/json/jsonView.php?&session='+localStorage.session+'&area='+gA()+'&limit='+limit;
-		
-	var xmlhttp;
-
-	xmlhttp = new XMLHttpRequest();
- 
-	xmlhttp.onreadystatechange = function() {
-
-		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			
- 			var json = JSON.parse(xmlhttp.responseText);
-		
-			cb(json);
-
-		}
-    
-	};
-	
-	xmlhttp.open("GET", url, true);
-	xmlhttp.send();
-  
-}
-
 function load(){
 
   document.body.appendChild(loadingMount());
@@ -6539,15 +7187,29 @@ function load(){
   document.body.setAttribute('logged','0');
   //fail
   pagesLoad((data)=>{
-    
-    localStorage.suitesinfo   = JSON.stringify(data.suiteinfo);
-    localStorage.languages    = JSON.stringify(data.languages);
-    localStorage.language    = "ptbr";
-    //startIndexedDB(data.users);
-  //  pagesMount(data);
+
+    var text = [];
+    var config ={};
+
+    for (var [key, value] of Object.entries(data[0].suites_config)) {
+
+        config[value.label]=value.url;
+
+    }
+
+    //var config=JSON.parse(text);
+ 
+
+    localStorage.config       = JSON.stringify(config);
+
+    //console.log(JSON.stringify(data));
+    //localStorage.languages    = JSON.stringify(data.languages);
+    //localStorage.language    = "ptbr";
+
+
     document.getElementsByTagName("pages")[0].append(mountLogin());
   });
-//firebaseSnapshot();
+
 
 }
 
@@ -6590,9 +7252,8 @@ window.onload=load;
 
 function loadLogged(authentic){
   
-  localStorage.session    = authentic.session;
-  
-  localStorage.userinfo   = JSON.stringify(authentic.userinfo);
+
+  localStorage.user   = JSON.stringify(authentic);
   localStorage.shortcut   = JSON.stringify(authentic.shortcut);
 
   if(authentic.customform!=undefined){
@@ -6649,27 +7310,15 @@ function debugIphone(array){
   
 }
 
-function loadingMount(){
-  
-  let loading = createObject('{"tag":"loading"}');
-  let icon    = createObject('{"tag":"icon","class":"icon-spinner9"}');
-  //let label   = createObject('{"tag":"label","innerhtml":"Aguarde"}');
-  
-      loading.append(icon);
-  
-  return loading;
-  
-}
-
 function mountLogin(){
 
-var suitesinfo  = JSON.parse(localStorage.suitesinfo);
-var systeminfo  = JSON.parse(localStorage.systeminfo);
-  
-var logo        = systeminfo.urllogo+suitesinfo.url+".png";
+
+var config      = JSON.parse(localStorage.config); 
+
+var logo        = config.urllogo;
   
 var btclose     = createObject('{"tag":"btclose","innerhtml":"x","onclick":"document.body.setAttribute(\'openlogin\',\'0\');"}');  
-var h1          = createObject('{"tag":"h1","innerhtml":"'+suitesinfo.label+'","style":"background-image:url('+logo+');"}');  
+var h1          = createObject('{"tag":"h1","innerhtml":"'+config.login+'","style":"background-image:url('+logo+');"}');  
 var plogin      = createObject('{"tag":"p","innerhtml":"Login","class":"plogin"}');
 var pinsert     = createObject('{"tag":"p","innerhtml":"Criar conta","class":"pinsert"}');
 var pinsertm    = createObject('{"tag":"p","innerhtml":"Cadastro de Médico","class":"pinsertm"}');
@@ -6695,7 +7344,7 @@ var inputBairro      = createObject('{"tag":"input","id":"bairro","placeholder":
 var inputCidade      = createObject('{"tag":"input","id":"cidade","placeholder":"Cidade"}'); 
 var inputEstado      = createObject('{"tag":"input","id":"estado","placeholder":"Estado"}'); 
 var inputCRM         = createObject('{"tag":"input","id":"crm","placeholder":"Registro profissional","type":"text","onkeydown":"return inputTypeNumber(event);"}');
-var inputSuite       = createObject('{"tag":"input","id":"suite","type":"hidden","value":"'+suitesinfo.codigo+'"}');  
+var inputSuite       = createObject('{"tag":"input","id":"suite","type":"hidden","value":"'+config.id+'"}');  
 // Fim input
   
 //var text = 'Ao clicar em Cadastrar, você concorda com <a href=https://docs.google.com/document/d/1i_-hQXcuPfCH48fUNvC-GN60zZas8eqSjrzoHPZtnPc/edit?usp=sharing target=_blank>nossos termos</a>, Política de Dados e Política de Cookies.';  
@@ -6951,7 +7600,7 @@ function login(){
 	sA(status,"class","loading");
 	status.innerHTML="";
 	status.innerHTML="Autenticando...";
- 
+ /* 
 	var xmlhttp;
 
 	xmlhttp = new XMLHttpRequest();
@@ -6989,11 +7638,11 @@ function login(){
 				
 			}
 		}
-	};
+	}; */
 
 	setTimeout(function () {
 
-    var url    = localStorage.getItem("url")+'/admin/json/jsonLogin.php';
+/*      var url    =  getLocalStorage("config","login");
     
     var data 	= new FormData();
         data.append('email', email.value);
@@ -7002,7 +7651,46 @@ function login(){
 
     xmlhttp.open("POST", url, true);
 
-    xmlhttp.send(data);
+    xmlhttp.send(data); */
+
+
+  (async () => {
+    const rawResponse = await fetch(getLocalStorage("config","login"), {
+    method: 'POST',
+    headers: {'Accept': 'application/json','Content-Type': 'application/json'},
+    body: JSON.stringify({email: email.value, password: password.value})
+    });
+
+    const authentic = await rawResponse.json();
+
+			if(authentic.status==="1"){
+				
+				//success
+
+				status.innerHTML=message("501");	
+				sA(status,"class","sucess");
+				setTimeout(function () {loadLogged(authentic);}, 500);
+			
+			}else{
+				
+				sA(status,"class","error");
+				
+        status.innerHTML=message(authentic.status);
+        
+        switch (authentic.status) {
+
+          case '502':sA(password,"class","error");break;  
+          case '504':sA(email,"class","error");break; 
+          case '505':sA(password,"class","error");break;
+          case '508':sA(email,"class","error");break;            
+  
+        }  
+  
+				setTimeout(function () {status.innerHTML="";sA(status,"class","");}, 2000);
+				
+			}
+
+  })();
 		
 	}, 1000);
 
@@ -7218,584 +7906,6 @@ function getLoginStatus(){
 	
 }
 
-
-
-var MD5 = function (string) {
-
- 
-
-
-    function RotateLeft(lValue, iShiftBits) {
-
-
-        return (lValue<<iShiftBits) | (lValue>>>(32-iShiftBits));
-
-
-    }
-
- 
-
-
-    function AddUnsigned(lX,lY) {
-
-
-        var lX4,lY4,lX8,lY8,lResult;
-
-
-        lX8 = (lX & 0x80000000);
-
-
-        lY8 = (lY & 0x80000000);
-
-
-        lX4 = (lX & 0x40000000);
-
-
-        lY4 = (lY & 0x40000000);
-
-
-        lResult = (lX & 0x3FFFFFFF)+(lY & 0x3FFFFFFF);
-
-
-        if (lX4 & lY4) {
-
-
-            return (lResult ^ 0x80000000 ^ lX8 ^ lY8);
-
-
-        }
-
-
-        if (lX4 | lY4) {
-
-
-            if (lResult & 0x40000000) {
-
-
-                return (lResult ^ 0xC0000000 ^ lX8 ^ lY8);
-
-
-            } else {
-
-
-                return (lResult ^ 0x40000000 ^ lX8 ^ lY8);
-
-
-            }
-
-
-        } else {
-
-
-            return (lResult ^ lX8 ^ lY8);
-
-
-        }
-
-
-     }
-
- 
-
-
-     function F(x,y,z) { return (x & y) | ((~x) & z); }
-
-
-     function G(x,y,z) { return (x & z) | (y & (~z)); }
-
-
-     function H(x,y,z) { return (x ^ y ^ z); }
-
-
-    function I(x,y,z) { return (y ^ (x | (~z))); }
-
- 
-
-
-    function FF(a,b,c,d,x,s,ac) {
-
-
-        a = AddUnsigned(a, AddUnsigned(AddUnsigned(F(b, c, d), x), ac));
-
-
-        return AddUnsigned(RotateLeft(a, s), b);
-
-
-    };
-
- 
-
-
-    function GG(a,b,c,d,x,s,ac) {
-
-
-        a = AddUnsigned(a, AddUnsigned(AddUnsigned(G(b, c, d), x), ac));
-
-
-        return AddUnsigned(RotateLeft(a, s), b);
-
-
-    };
-
- 
-
-
-    function HH(a,b,c,d,x,s,ac) {
-
-
-        a = AddUnsigned(a, AddUnsigned(AddUnsigned(H(b, c, d), x), ac));
-
-
-        return AddUnsigned(RotateLeft(a, s), b);
-
-
-    };
-
- 
-
-
-    function II(a,b,c,d,x,s,ac) {
-
-
-        a = AddUnsigned(a, AddUnsigned(AddUnsigned(I(b, c, d), x), ac));
-
-
-        return AddUnsigned(RotateLeft(a, s), b);
-
-
-    };
-
- 
-
-
-    function ConvertToWordArray(string) {
-
-
-        var lWordCount;
-
-
-        var lMessageLength = string.length;
-
-
-        var lNumberOfWords_temp1=lMessageLength + 8;
-
-
-        var lNumberOfWords_temp2=(lNumberOfWords_temp1-(lNumberOfWords_temp1 % 64))/64;
-
-
-        var lNumberOfWords = (lNumberOfWords_temp2+1)*16;
-
-
-        var lWordArray=Array(lNumberOfWords-1);
-
-
-        var lBytePosition = 0;
-
-
-        var lByteCount = 0;
-
-
-        while ( lByteCount < lMessageLength ) {
-
-
-            lWordCount = (lByteCount-(lByteCount % 4))/4;
-
-
-            lBytePosition = (lByteCount % 4)*8;
-
-
-            lWordArray[lWordCount] = (lWordArray[lWordCount] | (string.charCodeAt(lByteCount)<<lBytePosition));
-
-
-            lByteCount++;
-
-
-        }
-
-
-        lWordCount = (lByteCount-(lByteCount % 4))/4;
-
-
-        lBytePosition = (lByteCount % 4)*8;
-
-
-        lWordArray[lWordCount] = lWordArray[lWordCount] | (0x80<<lBytePosition);
-
-
-        lWordArray[lNumberOfWords-2] = lMessageLength<<3;
-
-
-        lWordArray[lNumberOfWords-1] = lMessageLength>>>29;
-
-
-        return lWordArray;
-
-
-    };
-
- 
-
-
-    function WordToHex(lValue) {
-
-
-        var WordToHexValue="",WordToHexValue_temp="",lByte,lCount;
-
-
-        for (lCount = 0;lCount<=3;lCount++) {
-
-
-            lByte = (lValue>>>(lCount*8)) & 255;
-
-
-            WordToHexValue_temp = "0" + lByte.toString(16);
-
-
-            WordToHexValue = WordToHexValue + WordToHexValue_temp.substr(WordToHexValue_temp.length-2,2);
-
-
-        }
-
-
-        return WordToHexValue;
-
-
-    };
-
- 
-
-
-    function Utf8Encode(string) {
-
-
-        string = string.replace(/\r\n/g,"\n");
-
-
-        var utftext = "";
-
- 
-
-
-        for (var n = 0; n < string.length; n++) {
-
- 
-
-
-            var c = string.charCodeAt(n);
-
- 
-
-
-            if (c < 128) {
-
-
-                utftext += String.fromCharCode(c);
-
-
-            }
-
-
-            else if((c > 127) && (c < 2048)) {
-
-
-                utftext += String.fromCharCode((c >> 6) | 192);
-
-
-                utftext += String.fromCharCode((c & 63) | 128);
-
-
-            }
-
-
-            else {
-
-
-                utftext += String.fromCharCode((c >> 12) | 224);
-
-
-                utftext += String.fromCharCode(((c >> 6) & 63) | 128);
-
-
-                utftext += String.fromCharCode((c & 63) | 128);
-
-
-            }
-
- 
-
-
-        }
-
- 
-
-
-        return utftext;
-
-
-    };
-
- 
-
-
-    var x=Array();
-
-
-    var k,AA,BB,CC,DD,a,b,c,d;
-
-
-    var S11=7, S12=12, S13=17, S14=22;
-
-
-    var S21=5, S22=9 , S23=14, S24=20;
-
-
-    var S31=4, S32=11, S33=16, S34=23;
-
-
-    var S41=6, S42=10, S43=15, S44=21;
-
- 
-
-
-    string = Utf8Encode(string);
-
- 
-
-
-    x = ConvertToWordArray(string);
-
- 
-
-
-    a = 0x67452301; b = 0xEFCDAB89; c = 0x98BADCFE; d = 0x10325476;
-
- 
-
-
-    for (k=0;k<x.length;k+=16) {
-
-
-        AA=a; BB=b; CC=c; DD=d;
-
-
-        a=FF(a,b,c,d,x[k+0], S11,0xD76AA478);
-
-
-        d=FF(d,a,b,c,x[k+1], S12,0xE8C7B756);
-
-
-        c=FF(c,d,a,b,x[k+2], S13,0x242070DB);
-
-
-        b=FF(b,c,d,a,x[k+3], S14,0xC1BDCEEE);
-
-
-        a=FF(a,b,c,d,x[k+4], S11,0xF57C0FAF);
-
-
-        d=FF(d,a,b,c,x[k+5], S12,0x4787C62A);
-
-
-        c=FF(c,d,a,b,x[k+6], S13,0xA8304613);
-
-
-        b=FF(b,c,d,a,x[k+7], S14,0xFD469501);
-
-
-        a=FF(a,b,c,d,x[k+8], S11,0x698098D8);
-
-
-        d=FF(d,a,b,c,x[k+9], S12,0x8B44F7AF);
-
-
-        c=FF(c,d,a,b,x[k+10],S13,0xFFFF5BB1);
-
-
-        b=FF(b,c,d,a,x[k+11],S14,0x895CD7BE);
-
-
-        a=FF(a,b,c,d,x[k+12],S11,0x6B901122);
-
-
-        d=FF(d,a,b,c,x[k+13],S12,0xFD987193);
-
-
-        c=FF(c,d,a,b,x[k+14],S13,0xA679438E);
-
-
-        b=FF(b,c,d,a,x[k+15],S14,0x49B40821);
-
-
-        a=GG(a,b,c,d,x[k+1], S21,0xF61E2562);
-
-
-        d=GG(d,a,b,c,x[k+6], S22,0xC040B340);
-
-
-        c=GG(c,d,a,b,x[k+11],S23,0x265E5A51);
-
-
-        b=GG(b,c,d,a,x[k+0], S24,0xE9B6C7AA);
-
-
-        a=GG(a,b,c,d,x[k+5], S21,0xD62F105D);
-
-
-        d=GG(d,a,b,c,x[k+10],S22,0x2441453);
-
-
-        c=GG(c,d,a,b,x[k+15],S23,0xD8A1E681);
-
-
-        b=GG(b,c,d,a,x[k+4], S24,0xE7D3FBC8);
-
-
-        a=GG(a,b,c,d,x[k+9], S21,0x21E1CDE6);
-
-
-        d=GG(d,a,b,c,x[k+14],S22,0xC33707D6);
-
-
-        c=GG(c,d,a,b,x[k+3], S23,0xF4D50D87);
-
-
-        b=GG(b,c,d,a,x[k+8], S24,0x455A14ED);
-
-
-        a=GG(a,b,c,d,x[k+13],S21,0xA9E3E905);
-
-
-        d=GG(d,a,b,c,x[k+2], S22,0xFCEFA3F8);
-
-
-        c=GG(c,d,a,b,x[k+7], S23,0x676F02D9);
-
-
-        b=GG(b,c,d,a,x[k+12],S24,0x8D2A4C8A);
-
-
-        a=HH(a,b,c,d,x[k+5], S31,0xFFFA3942);
-
-
-        d=HH(d,a,b,c,x[k+8], S32,0x8771F681);
-
-
-        c=HH(c,d,a,b,x[k+11],S33,0x6D9D6122);
-
-
-        b=HH(b,c,d,a,x[k+14],S34,0xFDE5380C);
-
-
-        a=HH(a,b,c,d,x[k+1], S31,0xA4BEEA44);
-
-
-        d=HH(d,a,b,c,x[k+4], S32,0x4BDECFA9);
-
-
-        c=HH(c,d,a,b,x[k+7], S33,0xF6BB4B60);
-
-
-        b=HH(b,c,d,a,x[k+10],S34,0xBEBFBC70);
-
-
-        a=HH(a,b,c,d,x[k+13],S31,0x289B7EC6);
-
-
-        d=HH(d,a,b,c,x[k+0], S32,0xEAA127FA);
-
-
-        c=HH(c,d,a,b,x[k+3], S33,0xD4EF3085);
-
-
-        b=HH(b,c,d,a,x[k+6], S34,0x4881D05);
-
-
-        a=HH(a,b,c,d,x[k+9], S31,0xD9D4D039);
-
-
-        d=HH(d,a,b,c,x[k+12],S32,0xE6DB99E5);
-
-
-        c=HH(c,d,a,b,x[k+15],S33,0x1FA27CF8);
-
-
-        b=HH(b,c,d,a,x[k+2], S34,0xC4AC5665);
-
-
-        a=II(a,b,c,d,x[k+0], S41,0xF4292244);
-
-
-        d=II(d,a,b,c,x[k+7], S42,0x432AFF97);
-
-
-        c=II(c,d,a,b,x[k+14],S43,0xAB9423A7);
-
-
-        b=II(b,c,d,a,x[k+5], S44,0xFC93A039);
-
-
-        a=II(a,b,c,d,x[k+12],S41,0x655B59C3);
-
-
-        d=II(d,a,b,c,x[k+3], S42,0x8F0CCC92);
-
-
-        c=II(c,d,a,b,x[k+10],S43,0xFFEFF47D);
-
-
-        b=II(b,c,d,a,x[k+1], S44,0x85845DD1);
-
-
-        a=II(a,b,c,d,x[k+8], S41,0x6FA87E4F);
-
-
-        d=II(d,a,b,c,x[k+15],S42,0xFE2CE6E0);
-
-
-        c=II(c,d,a,b,x[k+6], S43,0xA3014314);
-
-
-        b=II(b,c,d,a,x[k+13],S44,0x4E0811A1);
-
-
-        a=II(a,b,c,d,x[k+4], S41,0xF7537E82);
-
-
-        d=II(d,a,b,c,x[k+11],S42,0xBD3AF235);
-
-
-        c=II(c,d,a,b,x[k+2], S43,0x2AD7D2BB);
-
-
-        b=II(b,c,d,a,x[k+9], S44,0xEB86D391);
-
-
-        a=AddUnsigned(a,AA);
-
-
-        b=AddUnsigned(b,BB);
-
-
-        c=AddUnsigned(c,CC);
-
-
-        d=AddUnsigned(d,DD);
-
-
-    }
-
- 
-
-
-    var temp = WordToHex(a)+WordToHex(b)+WordToHex(c)+WordToHex(d);
-
- 
-
-
-    return temp.toLowerCase();
-
-}
-
 function message(code){
  
   var a=[];
@@ -7824,63 +7934,6 @@ function message(code){
   
   return a[code];       
 
-}
-
-function modal(){
-  
-  var customform 	= JSON.parse(localStorage.getItem("customform"));
-  
-  var body    = got(document,'body')[0];
-  
-  var div     = createObject('{"tag":"modal"}');
-  var header  = createObject('{"tag":"header","style":"background-color:#176B89;"}');
-  var title   = createObject('{"tag":"label","innerhtml":"Aviso"}');
-  
-  let content = createObject('{"tag":"content"}');
-  let p       = createObject('{"tag":"p","innerhtml":"Bem-vindo ao Doctor8, clique abaixo para começar"}');
-  let button  = createObject('{"tag":"button","type":"button","innerhtml":"Acessar meus arquivos"}');
-  
-      button.onclick=(function(){document.querySelector('a[c="132"]').click();});
-  
-  header.append(title);
-  content.append(p);
-  content.append(button);
-  div.append(header,content);
-  
- if(customform!=undefined){
-   
-  
-  for(var x=0;x<customform.length;x++){
-  
-     let content = createObject('{"tag":"content"}');
-     let p       = createObject('{"tag":"p","innerhtml":"'+customform[x].label+'"}');
-     let button  = createObject('{"tag":"button","type":"button","innerhtml":"'+customform[x].buttonlabel+'"}');
-    
-    content.append(p);
-    content.append(button);
-        
-    div.append(content);
-    //console.log(customform[x].content);
-    
-  }
- }
-  body.append(div);
-  
-}
-
-function modalFormCovid(){
-  
-  var content = createObject('{"tag":"content"}');
-  var p       = createObject('{"tag":"p","innerhtml":"Clique abaixo caso você queira receber um tratamento para covid-19"}');
-  var button  = createObject('{"tag":"button","type":"button","innerhtml":"Preencher formulário"}');
-  
-      button.onclick=(function(){formCustomEdit("formcovid")});
-  
-      content.append(p);
-      content.append(button);
-  
-  return content;
-  
 }
 
 function tabelaLoad(modules, cb) {
@@ -9038,7 +9091,7 @@ function loadNavSuite(){
 
 function pagesLoad(callback){
   
-  var url = localStorage.getItem("url")+"/suite";
+  var url = localStorage.getItem("url")+"/suites";
   
   fetch(url, {
     method: 'POST',
@@ -9285,7 +9338,9 @@ function suporteLoad(){
 
   suporte.append(icon,text);
 
-  if(document.getElementsByTagName("suporte").length==0 && getLocalStorage("suitesinfo","codigo")=="1"){
+
+
+  if(document.getElementsByTagName("suporte").length==0 && getLocalStorage("config","id")=="1"){
     
     document.body.append(suporte);
     

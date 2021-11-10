@@ -6,15 +6,29 @@ function load(){
   document.body.setAttribute('logged','0');
   //fail
   pagesLoad((data)=>{
-    
-    localStorage.suitesinfo   = JSON.stringify(data.suiteinfo);
-    localStorage.languages    = JSON.stringify(data.languages);
-    localStorage.language    = "ptbr";
-    //startIndexedDB(data.users);
-  //  pagesMount(data);
+
+    var text = [];
+    var config ={};
+
+    for (var [key, value] of Object.entries(data[0].suites_config)) {
+
+        config[value.label]=value.url;
+
+    }
+
+    //var config=JSON.parse(text);
+ 
+
+    localStorage.config       = JSON.stringify(config);
+
+    //console.log(JSON.stringify(data));
+    //localStorage.languages    = JSON.stringify(data.languages);
+    //localStorage.language    = "ptbr";
+
+
     document.getElementsByTagName("pages")[0].append(mountLogin());
   });
-//firebaseSnapshot();
+
 
 }
 

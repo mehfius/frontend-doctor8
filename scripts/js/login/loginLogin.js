@@ -13,7 +13,7 @@ function login(){
 	sA(status,"class","loading");
 	status.innerHTML="";
 	status.innerHTML="Autenticando...";
- 
+ /* 
 	var xmlhttp;
 
 	xmlhttp = new XMLHttpRequest();
@@ -51,11 +51,11 @@ function login(){
 				
 			}
 		}
-	};
+	}; */
 
 	setTimeout(function () {
 
-    var url    = localStorage.getItem("url")+'/admin/json/jsonLogin.php';
+/*      var url    =  getLocalStorage("config","login");
     
     var data 	= new FormData();
         data.append('email', email.value);
@@ -64,7 +64,46 @@ function login(){
 
     xmlhttp.open("POST", url, true);
 
-    xmlhttp.send(data);
+    xmlhttp.send(data); */
+
+
+  (async () => {
+    const rawResponse = await fetch(getLocalStorage("config","login"), {
+    method: 'POST',
+    headers: {'Accept': 'application/json','Content-Type': 'application/json'},
+    body: JSON.stringify({email: email.value, password: password.value})
+    });
+
+    const authentic = await rawResponse.json();
+
+			if(authentic.status==="1"){
+				
+				//success
+
+				status.innerHTML=message("501");	
+				sA(status,"class","sucess");
+				setTimeout(function () {loadLogged(authentic);}, 500);
+			
+			}else{
+				
+				sA(status,"class","error");
+				
+        status.innerHTML=message(authentic.status);
+        
+        switch (authentic.status) {
+
+          case '502':sA(password,"class","error");break;  
+          case '504':sA(email,"class","error");break; 
+          case '505':sA(password,"class","error");break;
+          case '508':sA(email,"class","error");break;            
+  
+        }  
+  
+				setTimeout(function () {status.innerHTML="";sA(status,"class","");}, 2000);
+				
+			}
+
+  })();
 		
 	}, 1000);
 

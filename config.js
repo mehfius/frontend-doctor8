@@ -1,4 +1,4 @@
-//localStorage.clear(); 
+/* //localStorage.clear(); 
 // Se ativar, toda vez que entrar no site a outra sessão irá ser desativada
 
 //Admin
@@ -8,6 +8,7 @@ localStorage.setItem("newusers", "1");
 localStorage.setItem("url", "https://suite8.com.br");
 
 // Image Store
+
 localStorage.setItem("imagestore", "https://suite8filesdev2021.ga");
 localStorage.setItem("urlimagerotate", "https://suite8filesdev2021.ga/uploads/image-rotate.php");
 
@@ -43,3 +44,4 @@ var systeminfo = {
 };
 
 localStorage.systeminfo=JSON.stringify(systeminfo);
+ */

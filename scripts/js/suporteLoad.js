@@ -12,7 +12,9 @@ function suporteLoad(){
 
   suporte.append(icon,text);
 
-  if(document.getElementsByTagName("suporte").length==0 && getLocalStorage("suitesinfo","codigo")=="1"){
+
+
+  if(document.getElementsByTagName("suporte").length==0 && getLocalStorage("config","id")=="1"){
     
     document.body.append(suporte);
     

@@ -1,7 +1,7 @@
 
 function pagesLoad(callback){
   
-  var url = localStorage.getItem("url")+"/suite";
+  var url = localStorage.getItem("url")+"/suites";
   
   fetch(url, {
     method: 'POST',

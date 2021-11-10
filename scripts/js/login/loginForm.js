@@ -1,12 +1,12 @@
 function mountLogin(){
 
-var suitesinfo  = JSON.parse(localStorage.suitesinfo);
-var systeminfo  = JSON.parse(localStorage.systeminfo);
-  
-var logo        = systeminfo.urllogo+suitesinfo.url+".png";
+
+var config      = JSON.parse(localStorage.config); 
+
+var logo        = config.urllogo;
   
 var btclose     = createObject('{"tag":"btclose","innerhtml":"x","onclick":"document.body.setAttribute(\'openlogin\',\'0\');"}');  
-var h1          = createObject('{"tag":"h1","innerhtml":"'+suitesinfo.label+'","style":"background-image:url('+logo+');"}');  
+var h1          = createObject('{"tag":"h1","innerhtml":"'+config.login+'","style":"background-image:url('+logo+');"}');  
 var plogin      = createObject('{"tag":"p","innerhtml":"Login","class":"plogin"}');
 var pinsert     = createObject('{"tag":"p","innerhtml":"Criar conta","class":"pinsert"}');
 var pinsertm    = createObject('{"tag":"p","innerhtml":"Cadastro de Médico","class":"pinsertm"}');
@@ -32,7 +32,7 @@ var inputBairro      = createObject('{"tag":"input","id":"bairro","placeholder":
 var inputCidade      = createObject('{"tag":"input","id":"cidade","placeholder":"Cidade"}'); 
 var inputEstado      = createObject('{"tag":"input","id":"estado","placeholder":"Estado"}'); 
 var inputCRM         = createObject('{"tag":"input","id":"crm","placeholder":"Registro profissional","type":"text","onkeydown":"return inputTypeNumber(event);"}');
-var inputSuite       = createObject('{"tag":"input","id":"suite","type":"hidden","value":"'+suitesinfo.codigo+'"}');  
+var inputSuite       = createObject('{"tag":"input","id":"suite","type":"hidden","value":"'+config.id+'"}');  
 // Fim input
   
 //var text = 'Ao clicar em Cadastrar, você concorda com <a href=https://docs.google.com/document/d/1i_-hQXcuPfCH48fUNvC-GN60zZas8eqSjrzoHPZtnPc/edit?usp=sharing target=_blank>nossos termos</a>, Política de Dados e Política de Cookies.';  

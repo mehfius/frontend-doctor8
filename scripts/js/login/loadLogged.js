@@ -1,8 +1,7 @@
 function loadLogged(authentic){
   
-  localStorage.session    = authentic.session;
-  
-  localStorage.userinfo   = JSON.stringify(authentic.userinfo);
+
+  localStorage.user   = JSON.stringify(authentic);
   localStorage.shortcut   = JSON.stringify(authentic.shortcut);
 
   if(authentic.customform!=undefined){
