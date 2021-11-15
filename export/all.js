@@ -6692,12 +6692,15 @@ function btNew(){
 }
 
 function mountHeader(array){
+  
+  var user   = JSON.parse(localStorage.user);  
+  var config          = JSON.parse(localStorage.config);
 
 	if(!got(document,"header").length){
 
-    var userinfo   = JSON.parse(localStorage.userinfo);  
-    var suitesinfo = JSON.parse(localStorage.suitesinfo);  
-    
+    var user   = JSON.parse(localStorage.user);  
+    var config = JSON.parse(localStorage.config);
+
 		var header = cE("header");
 
 		var icon = cE("icon");
@@ -6712,7 +6715,7 @@ function mountHeader(array){
 		var a 			= cE("a");
 		var logo    = cE("logo");
 		var span    = cE("span");	
-		var text    = cT(suitesinfo.label);
+		var text    = cT(config.label);
 
 		span.appendChild(text);
 		logo.appendChild(span);
@@ -6731,7 +6734,7 @@ function mountHeader(array){
 
 		got(document,"body")[0].appendChild(header);
     
-		if(userinfo.areas==1){
+		if(user.areas==1){
       
       header.appendChild(iconSuite);
       header.appendChild(mountMobileVersion());
@@ -6741,29 +6744,20 @@ function mountHeader(array){
     var options = document.createElement("options");
     
         options.appendChild(iconNotification());
-        //options.appendChild(iconFilter());
-       
-        //iconCalendar(options);
+
     
-		if(suitesinfo.codigo==1){      
+		if(config.id==1){      
       
-      if(userinfo.areas==50 ){
+      if(user.areas==50 ){
         
         iconPlanilha(options);
         
       }
 
-    //  if(userinfo.whereby!==''){
-     
-    //    iconVideo(options); 
-  
-   //   }
-
-      //iconFacedoctor(options);
       
       iconHelp(options);   
       
-      if(userinfo.areas==50 ){
+      if(user.areas==50 ){
         
         iconReceitaEspecial(options);
         
@@ -6773,7 +6767,7 @@ function mountHeader(array){
      
     header.appendChild(options);
        
-    //header.appendChild(iconSuite);
+
 	}
 	
 }
@@ -6822,17 +6816,18 @@ var icon = cE("icon")
 
 tooltip(icon,"Tutorial");
 
-var userinfo = JSON.parse(localStorage.userinfo);
+var user = JSON.parse(localStorage.user);
+var config = JSON.parse(localStorage.config);
 
     icon.onclick=(function(){
 
-      if(userinfo.areas==50){
+      if(user.areas==50){
 
-        window.open("https://docs.google.com/document/d/11vkmBO-ovp7A62Nhuw6HNbVein3BJ-EM9SsDIL-ziM0");
+        window.open(config.medicohelp);
 
-      }else if(userinfo.areas==100){
+      }else if(user.areas==100){
 
-        window.open("https://docs.google.com/document/d/1TPVpbdkPpjq83AwdchXUCgK6yTUyxTd2YNTqsiajN6A");
+        window.open(config.pacientehelp);
 
       }
 
@@ -7253,7 +7248,8 @@ window.onload=load;
 function loadLogged(authentic){
   
 
-  localStorage.user   = JSON.stringify(authentic);
+  localStorage.user       = JSON.stringify(authentic.user);
+  localStorage.nav        = JSON.stringify(authentic.nav);
   localStorage.shortcut   = JSON.stringify(authentic.shortcut);
 
   if(authentic.customform!=undefined){
@@ -7268,12 +7264,12 @@ function loadLogged(authentic){
 	mountPrint(authentic);
 	mountSection();
 
-	navMount(authentic);
+	navMount();
 	//modulesLoadCalendar();
   loadNavSuite();
   modal();
   document.getElementsByTagName("body")[0].setAttribute("modules","");
-  document.getElementsByTagName("body")[0].setAttribute("premium",authentic.userinfo.premium);
+  document.getElementsByTagName("body")[0].setAttribute("premium",authentic.user.premium);
   loopCheck();
   
   suporteLoad();
@@ -7658,12 +7654,13 @@ function login(){
     const rawResponse = await fetch(getLocalStorage("config","login"), {
     method: 'POST',
     headers: {'Accept': 'application/json','Content-Type': 'application/json'},
-    body: JSON.stringify({email: email.value, password: password.value})
+    body: JSON.stringify({email: email.value, password: password.value, suite: suite.value})
     });
 
     const authentic = await rawResponse.json();
 
-			if(authentic.status==="1"){
+
+			if(authentic.status==1){
 				
 				//success
 
@@ -8979,7 +8976,11 @@ header.appendChild(logo);
 		
 }
 
-function navMount(array){
+function navMount(){
+  
+  var user   = JSON.parse(localStorage.user);  
+  var config          = JSON.parse(localStorage.config);
+  var storagenav     = JSON.parse(localStorage.nav);
 
 	if(gotFind("nav")){
     
@@ -8989,24 +8990,40 @@ function navMount(array){
 	
 	var html = '';
 	var grade   = cE('grade');
-	var nav  	= cE('nav');
-	    nav.appendChild(profile(array.userinfo));
+	var nav  	  = cE('nav');
+	    nav.appendChild(profile());
 
 	var body = got(document,'body')[0];
-	
-	var anav = [];
-	
-	var arraynav = array.nav;
 
-    localStorage.anav=JSON.stringify(arraynav);
+  Object.entries(storagenav).forEach(([key, value]) => {
 
-  
-    for(var x = 0; x < arraynav.length; x++) {
+    var span      = createObject('{"tag":"span","innerhtml":"'+value.label+'"}');
 
-      if(x===0 || arraynav[x].groups!==arraynav[x-1].groups){
+    nav.append(span);
+
+    Object.entries(value.modules).forEach(([key1, value1]) => {
+
+/*       let label   = value1.label;
+      let name    = value1.name;
+      let premium = value1.premium;
+      let c       = value1.id; */
+
+      let {label,name,premium,c} = value1.label,value1.name,value1.premium,value1.id;
+
+      var a      = createObject('{"tag":"a","innerhtml":"'+label+'","modules":"'+name+'","modules":"'+premium+'"}');     
+      nav.append(a);
+
+    });
+
+  }); 
+
+/* 
+    for(var x = 0; x < storagenav.length; x++) {
+
+      if(x===0 || storagenav[x].groups!==nav[x-1].groups){
 
         var span = cE('span');
-        span.appendChild(cT(arraynav[x].groups));
+        span.appendChild(cT(storagenav[x].groups));
         nav.appendChild(span);
 
       }
@@ -9015,13 +9032,10 @@ function navMount(array){
       var count 	= cE('count');
 
 
-     // count.appendChild(cT("("+arraynav[x].count+")"));
-
-      //a.setAttribute('href','#'+arraynav[x].name);
-      a.setAttribute('modules',arraynav[x].name);
-      a.setAttribute('premium',arraynav[x].premium);
-      a.setAttribute('c',arraynav[x].codigo);
-      a.appendChild(cT(arraynav[x].label));
+      a.setAttribute('modules',storagenav[x].name);
+      a.setAttribute('premium',storagenav[x].premium);
+      a.setAttribute('c',storagenav[x].codigo);
+      a.appendChild(cT(storagenav[x].label));
       a.appendChild(count);
 
       a.onclick=(function(){
@@ -9030,7 +9044,7 @@ function navMount(array){
         navClose();
         gridHide();
        
-        //mountRanking();
+ 
 
         document.body.setAttribute("loading","1");
       });
@@ -9043,20 +9057,16 @@ function navMount(array){
 
 	a.onclick=(function(){
  
-		//logout();
-    //navClose();
-		//formClose();
-    
     window.open('/','_self');
 
 	});
 	
-	a.appendChild(cT('Sair'));
+	a.appendChild(cT('Sair')); 
 
-	nav.appendChild(a);
+	//nav.appendChild(a);
 	
-	nav.setAttribute('id','nav');
-
+	 */
+nav.setAttribute('id','nav');
 	grade.onclick=(function(){
 		
 		navClose();
@@ -9137,9 +9147,11 @@ function pagesMount(json){
  
 }
 
+function profile(){
 
-function profile(array){
-	
+  var user   = JSON.parse(localStorage.user);  
+  var config = JSON.parse(localStorage.config);
+
 	var div    		= cE("div");
 	var profile 	= cE("profile");
 	//var figure 		= cE("figure");
@@ -9148,13 +9160,13 @@ function profile(array){
 		//profile.appendChild(figure);
 
 		
-			label.appendChild(cT(array.label));
+			label.appendChild(cT(user.label));
 	
 
 	
 	div.onclick=(function(){		
 
-		formEdit("users",array.codigo);
+		formEdit("users",user.session);
 		navClose();
 		
 	});
@@ -9165,11 +9177,11 @@ function profile(array){
 
 	var result = cEA(attribute);
 		
-	if(array.figures!==undefined){
+	if(user.figures!==undefined){
 
-		for(var x=0;x<array.figures.length;x++){
+		for(var x=0;x<user.figures.length;x++){
 
-			addUploadFilesProfile(result,array.figures[x]);
+			addUploadFilesProfile(result,user.figures[x]);
 
 		}
 

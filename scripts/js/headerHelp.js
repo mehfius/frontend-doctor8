@@ -5,17 +5,18 @@ var icon = cE("icon")
 
 tooltip(icon,"Tutorial");
 
-var userinfo = JSON.parse(localStorage.userinfo);
+var user = JSON.parse(localStorage.user);
+var config = JSON.parse(localStorage.config);
 
     icon.onclick=(function(){
 
-      if(userinfo.areas==50){
+      if(user.areas==50){
 
-        window.open("https://docs.google.com/document/d/11vkmBO-ovp7A62Nhuw6HNbVein3BJ-EM9SsDIL-ziM0");
+        window.open(config.medicohelp);
 
-      }else if(userinfo.areas==100){
+      }else if(user.areas==100){
 
-        window.open("https://docs.google.com/document/d/1TPVpbdkPpjq83AwdchXUCgK6yTUyxTd2YNTqsiajN6A");
+        window.open(config.pacientehelp);
 
       }
 

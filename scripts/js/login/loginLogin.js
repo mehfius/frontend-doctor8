@@ -71,12 +71,13 @@ function login(){
     const rawResponse = await fetch(getLocalStorage("config","login"), {
     method: 'POST',
     headers: {'Accept': 'application/json','Content-Type': 'application/json'},
-    body: JSON.stringify({email: email.value, password: password.value})
+    body: JSON.stringify({email: email.value, password: password.value, suite: suite.value})
     });
 
     const authentic = await rawResponse.json();
 
-			if(authentic.status==="1"){
+
+			if(authentic.status==1){
 				
 				//success
 

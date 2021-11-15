@@ -1,6 +1,8 @@
+function profile(){
 
-function profile(array){
-	
+  var user   = JSON.parse(localStorage.user);  
+  var config = JSON.parse(localStorage.config);
+
 	var div    		= cE("div");
 	var profile 	= cE("profile");
 	//var figure 		= cE("figure");
@@ -9,13 +11,13 @@ function profile(array){
 		//profile.appendChild(figure);
 
 		
-			label.appendChild(cT(array.label));
+			label.appendChild(cT(user.label));
 	
 
 	
 	div.onclick=(function(){		
 
-		formEdit("users",array.codigo);
+		formEdit("users",user.session);
 		navClose();
 		
 	});
@@ -26,11 +28,11 @@ function profile(array){
 
 	var result = cEA(attribute);
 		
-	if(array.figures!==undefined){
+	if(user.figures!==undefined){
 
-		for(var x=0;x<array.figures.length;x++){
+		for(var x=0;x<user.figures.length;x++){
 
-			addUploadFilesProfile(result,array.figures[x]);
+			addUploadFilesProfile(result,user.figures[x]);
 
 		}
 

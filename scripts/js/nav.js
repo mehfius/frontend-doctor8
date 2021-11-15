@@ -1,4 +1,8 @@
-function navMount(array){
+function navMount(){
+  
+  var user   = JSON.parse(localStorage.user);  
+  var config          = JSON.parse(localStorage.config);
+  var storagenav     = JSON.parse(localStorage.nav);
 
 	if(gotFind("nav")){
     
@@ -8,24 +12,40 @@ function navMount(array){
 	
 	var html = '';
 	var grade   = cE('grade');
-	var nav  	= cE('nav');
-	    nav.appendChild(profile(array.userinfo));
+	var nav  	  = cE('nav');
+	    nav.appendChild(profile());
 
 	var body = got(document,'body')[0];
-	
-	var anav = [];
-	
-	var arraynav = array.nav;
 
-    localStorage.anav=JSON.stringify(arraynav);
+  Object.entries(storagenav).forEach(([key, value]) => {
 
-  
-    for(var x = 0; x < arraynav.length; x++) {
+    var span      = createObject('{"tag":"span","innerhtml":"'+value.label+'"}');
 
-      if(x===0 || arraynav[x].groups!==arraynav[x-1].groups){
+    nav.append(span);
+
+    Object.entries(value.modules).forEach(([key1, value1]) => {
+
+/*       let label   = value1.label;
+      let name    = value1.name;
+      let premium = value1.premium;
+      let c       = value1.id; */
+
+      let {label,name,premium,c} = value1.label,value1.name,value1.premium,value1.id;
+
+      var a      = createObject('{"tag":"a","innerhtml":"'+label+'","modules":"'+name+'","modules":"'+premium+'"}');     
+      nav.append(a);
+
+    });
+
+  }); 
+
+/* 
+    for(var x = 0; x < storagenav.length; x++) {
+
+      if(x===0 || storagenav[x].groups!==nav[x-1].groups){
 
         var span = cE('span');
-        span.appendChild(cT(arraynav[x].groups));
+        span.appendChild(cT(storagenav[x].groups));
         nav.appendChild(span);
 
       }
@@ -34,13 +54,10 @@ function navMount(array){
       var count 	= cE('count');
 
 
-     // count.appendChild(cT("("+arraynav[x].count+")"));
-
-      //a.setAttribute('href','#'+arraynav[x].name);
-      a.setAttribute('modules',arraynav[x].name);
-      a.setAttribute('premium',arraynav[x].premium);
-      a.setAttribute('c',arraynav[x].codigo);
-      a.appendChild(cT(arraynav[x].label));
+      a.setAttribute('modules',storagenav[x].name);
+      a.setAttribute('premium',storagenav[x].premium);
+      a.setAttribute('c',storagenav[x].codigo);
+      a.appendChild(cT(storagenav[x].label));
       a.appendChild(count);
 
       a.onclick=(function(){
@@ -49,7 +66,7 @@ function navMount(array){
         navClose();
         gridHide();
        
-        //mountRanking();
+ 
 
         document.body.setAttribute("loading","1");
       });
@@ -62,20 +79,16 @@ function navMount(array){
 
 	a.onclick=(function(){
  
-		//logout();
-    //navClose();
-		//formClose();
-    
     window.open('/','_self');
 
 	});
 	
-	a.appendChild(cT('Sair'));
+	a.appendChild(cT('Sair')); 
 
-	nav.appendChild(a);
+	//nav.appendChild(a);
 	
-	nav.setAttribute('id','nav');
-
+	 */
+nav.setAttribute('id','nav');
 	grade.onclick=(function(){
 		
 		navClose();

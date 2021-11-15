@@ -1,10 +1,13 @@
 function mountHeader(array){
+  
+  var user   = JSON.parse(localStorage.user);  
+  var config          = JSON.parse(localStorage.config);
 
 	if(!got(document,"header").length){
 
-    var userinfo   = JSON.parse(localStorage.userinfo);  
-    var suitesinfo = JSON.parse(localStorage.suitesinfo);  
-    
+    var user   = JSON.parse(localStorage.user);  
+    var config = JSON.parse(localStorage.config);
+
 		var header = cE("header");
 
 		var icon = cE("icon");
@@ -19,7 +22,7 @@ function mountHeader(array){
 		var a 			= cE("a");
 		var logo    = cE("logo");
 		var span    = cE("span");	
-		var text    = cT(suitesinfo.label);
+		var text    = cT(config.label);
 
 		span.appendChild(text);
 		logo.appendChild(span);
@@ -38,7 +41,7 @@ function mountHeader(array){
 
 		got(document,"body")[0].appendChild(header);
     
-		if(userinfo.areas==1){
+		if(user.areas==1){
       
       header.appendChild(iconSuite);
       header.appendChild(mountMobileVersion());
@@ -48,29 +51,20 @@ function mountHeader(array){
     var options = document.createElement("options");
     
         options.appendChild(iconNotification());
-        //options.appendChild(iconFilter());
-       
-        //iconCalendar(options);
+
     
-		if(suitesinfo.codigo==1){      
+		if(config.id==1){      
       
-      if(userinfo.areas==50 ){
+      if(user.areas==50 ){
         
         iconPlanilha(options);
         
       }
 
-    //  if(userinfo.whereby!==''){
-     
-    //    iconVideo(options); 
-  
-   //   }
-
-      //iconFacedoctor(options);
       
       iconHelp(options);   
       
-      if(userinfo.areas==50 ){
+      if(user.areas==50 ){
         
         iconReceitaEspecial(options);
         
@@ -80,7 +74,7 @@ function mountHeader(array){
      
     header.appendChild(options);
        
-    //header.appendChild(iconSuite);
+
 	}
 	
 }

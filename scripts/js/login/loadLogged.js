@@ -1,7 +1,8 @@
 function loadLogged(authentic){
   
 
-  localStorage.user   = JSON.stringify(authentic);
+  localStorage.user       = JSON.stringify(authentic.user);
+  localStorage.nav        = JSON.stringify(authentic.nav);
   localStorage.shortcut   = JSON.stringify(authentic.shortcut);
 
   if(authentic.customform!=undefined){
@@ -16,12 +17,12 @@ function loadLogged(authentic){
 	mountPrint(authentic);
 	mountSection();
 
-	navMount(authentic);
+	navMount();
 	//modulesLoadCalendar();
   loadNavSuite();
   modal();
   document.getElementsByTagName("body")[0].setAttribute("modules","");
-  document.getElementsByTagName("body")[0].setAttribute("premium",authentic.userinfo.premium);
+  document.getElementsByTagName("body")[0].setAttribute("premium",authentic.user.premium);
   loopCheck();
   
   suporteLoad();
