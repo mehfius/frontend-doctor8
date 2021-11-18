@@ -14,23 +14,6 @@ function mountSection(){
 }
 
 
-function changeTitle(name){
-		
-		var array = JSON.parse(localStorage.anav);
-		var nArray= getValueArray(array,'name',name)[0];
-	
-		var logo 	= got(document,"logo")[0];
-		var span  = cE("span");
-		var title = cT(nArray.title);
-	
-		race(logo);
-	
-		span.appendChild(title);
-		logo.appendChild(span);
-	
-		
-
-}
 
 
 function mountOrder(){
@@ -600,6 +583,30 @@ function getLocalStorageMessages(key){
   
   return eval("languages."+key);
   
+}
+
+
+function getModulesById(id){
+		
+		var groups = JSON.parse(localStorage.nav);
+let modules = {}
+    Object.entries(groups).forEach(([key, value]) => {
+
+      Object.entries(value.modules).forEach(([key1, value1]) => {
+
+          if(value1.id==id){
+
+            modules = value1;
+
+          }
+
+      });
+
+
+
+    });
+
+    return modules;
 }
 
 
@@ -1686,13 +1693,12 @@ function iconPlanilha(element){
     var icon = cE("icon")
         icon.setAttribute("class","icon-table2");
   tooltip(icon,"Solicitação de contato");
-    var userinfo = JSON.parse(localStorage.userinfo);
+  
+    var config = JSON.parse(localStorage.config);
 
         icon.onclick=(function(){
           
-          //window.open("https://docs.google.com/spreadsheets/d/1nBP4TC-7bqSTSDkye47bZHPe_aRNvV_RWmrQDGZIdlQ/edit#gid=1169328620","_blank");
-          window.open("https://docs.google.com/document/d/e/2PACX-1vTHgJvKWd8bfVKjoegbh-cLHcQ-7RrN-d1HOM6kTx9mk6jVGpRqxCKG95yNCsIUU9wJjHyETF7j2t_z/pub","_blank");
-          
+          window.open(config.planilha,"_blank");
           
         });
 
@@ -1712,80 +1718,55 @@ function iconReceitaEspecial(element){
 
      tooltip(icon,"Documentos");
   
-  var userinfo   = JSON.parse(localStorage.userinfo);
-  var systeminfo = JSON.parse(localStorage.systeminfo);
-  var jsonshortcut   = JSON.parse(localStorage.shortcut);
-  var jsonshortcut   = JSON.parse(jsonshortcut[0].json); 
-  
-        icon.onclick=(function(){
+  var config   = JSON.parse(localStorage.config);
+  var shortcutstorage   = JSON.parse(config.shortcut);
+  var links =shortcutstorage[0].links;
 
-            if(document.body.getAttribute("shortcut")=="1"){
-              
-              document.body.setAttribute("shortcut","0");
-              
-            }else{
-              
-              document.body.setAttribute("shortcut","1");
-              
-            }
-        
-        });
+      icon.onclick=(function(){
 
-  element.appendChild(icon);
+          if(document.body.getAttribute("shortcut")=="1"){
+            
+            document.body.setAttribute("shortcut","0");
+            
+          }else{
+            
+            document.body.setAttribute("shortcut","1");
+            
+          }
+
+      });
+
+        element.appendChild(icon);
 
         let label = "";
         let url   = "";
 
         shortcut.append(createObject('{"tag":"label","innerhtml":"Receitas"}'));
+
+
+        Object.entries(links[0].receituario).forEach(([key, value]) => {
+
+            shortcut.append(shortcutItem(value.url,value.label));
+
+        });
+
+shortcut.append(createObject('{"tag":"label","innerhtml":"Protocolos"}'));
+
+        Object.entries(links[1].protocolos).forEach(([key, value]) => {
+
+            shortcut.append(shortcutItem(value.url,value.label));
+
+        });
+
+
+shortcut.append(createObject('{"tag":"label","innerhtml":"Outros"}'));
+
+        Object.entries(links[2].outros).forEach(([key, value]) => {
+
+            shortcut.append(shortcutItem(value.url,value.label));
+
+        });
   
-        let list = jsonshortcut[0].receitas;
-  
-        for (var x in list) {
-
-          label = list[x].label;
-          url = list[x].url;
-
-          if(url !== undefined && label!== undefined){
-            
-            shortcut.append(shortcutItem(url,label));
-            
-          }
-
-        }
-  
-        shortcut.append(createObject('{"tag":"label","innerhtml":"Protocolos"}'));
-  
-        list = jsonshortcut[1].protocolos;
-  
-        for (var x in list) {
-
-          label = list[x].label;
-          url = list[x].url;
-
-          if(url !== undefined && label!== undefined){
-            
-            shortcut.append(shortcutItem(url,label));
-            
-          }
-
-        }
-  
-        shortcut.append(createObject('{"tag":"label","innerhtml":"Outros"}'));
-  
-        list = jsonshortcut[2].outros;
-  
-        for (var x in list) {
-
-          label = list[x].label;
-          url = list[x].url;
-
-          if(url !== undefined && label!== undefined){
-            
-            shortcut.append(shortcutItem(url,label));
-            
-          }
-
-        }
        
   
 }
@@ -2541,82 +2522,189 @@ function formCustomView(areas,codigo){
 }
 
 
-function formEdit(areas,codigo){
+function formEdit(modules,id){
 	
-		formMount(areas,codigo,function(){
+		formMount(modules,id,function(){
 			
 			document.body.setAttribute("loading","0");
       
-      var userinfo  = JSON.parse(localStorage.userinfo);
+      var user  = JSON.parse(localStorage.user);
       
-			if(codigo==userinfo.codigo && (areas=="users" || areas=="formcovid")){
+			if(id==user.id && (modules=="users" || modules=="formcovid")){
         //Edicao do proprio Profile
       }else{
 
-        var item  = gibc(codigo);
+        var item  = gibc(id);
+
         item.setAttribute("open","1");
-			localStorage.openedformcodigo=codigo;
+			  localStorage.openedformcodigo=id;
         
       }
 
-			
 			gridShow();
 			
 		});
 
 }
 
-function formMount(modules,codigo,cb){
-  
-  var suitesinfo  = JSON.parse(localStorage.suitesinfo);
-  var userinfo    = JSON.parse(localStorage.userinfo);
-	var session     = localStorage.session;
-  
-  var data 	= new FormData();
+function formMount(modules,id){
 
- 	    data.append('area', modules);
- 	    data.append('acao', 'editar');
- 	    data.append('codigo', codigo);
- 	    data.append('session', session);
- 	    data.append('codigosuites', suitesinfo.codigo);
-  
-   	  //data.append('area', content);
-  
-  
-	var url 	= localStorage.getItem("url")+'/admin/json/index.php';
+  var config    = JSON.parse(localStorage.config);
+	var user      = JSON.parse(localStorage.user);
 
-	var xmlhttp;
-	var action = (codigo!==null)?"edit":"insert";
+  console.log(config.form);
 
-	xmlhttp = new XMLHttpRequest();
- 
-	xmlhttp.onreadystatechange = function() {
+  (async () => {
+    const rawResponse = await fetch(config.form, {
+    method: 'POST',
+    headers: {'Accept': 'application/json','Content-Type': 'application/json'},
+    body: JSON.stringify({session:user.session,modules:modules,id:id})
+    });
 
-		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			
- 			var json = JSON.parse(xmlhttp.responseText);
-			
-			if(action=="edit"){
+    const data = await rawResponse.json();
 
-				formMountFields(modules,json,codigo);
+		formMountFields(modules,data);
 
-				cb();
-				
-			}else if(action == "insert"){
+  })();
+
+}
+
+function formMountFields(modules,data){
+
+ //function formMountFields(modules,json,codigo,action){
+
+	//var languages  = JSON.parse(localStorage.languages);
+
+	var user     = JSON.parse(localStorage.user);
+	var config   = JSON.parse(localStorage.config);
+
+	var window   = createObject('{"tag":"window","modules":"'+modules+'"}');
+	var form     = createObject('{"tag":"form","autocomplete":"off"}');
+	var header   = createObject('{"tag":"header"}');
+	var label    = createObject('{"tag":"label"}');
+
+	header.append(btBack(data.id));
+
 	
-				formMountFields(modules,json,codigo);
-				
-				cb();
-				
-			}
-			
-		}
+	header.appendChild(label);
+
+  if(document.getElementsByName('files')[0]!==undefined){
+
+  }
+	
+	if(data.id===null){
+    
+		window.setAttribute("tutorial","1");
+		label.appendChild(cT("Novo "+modules));
 		
-	};
+	}else{
+
+    label.appendChild(cT("Editando "+modules));
+    header.appendChild(btHeaderPrint());
+    
+		got(document,"body")[0].setAttribute("open","1");
+				
+	}  
+  
+  var menu = createObject('{"tag":"menu","style":"background-color:'+config.bgcolor+';"}');
+
+	form.appendChild(menu);
+
+	for(var x=0;x < data[0].form.fields.length;x++){
+		
+		var type 		      = json[x].type;
+		var grid 		      = json[x].grid;
+		var gridmobile 		= json[x].gridmobile;
+		var fieldcodigo 	= json[x].id;
+    
+		var attribute = [];
+		
+        attribute.codigo		      = codigo;
+        attribute.label			      = json[x].label;
+        attribute.name			      = json[x].name;
+        attribute.title			      = json[x].title;
+        attribute.required	      = json[x].required;
+        attribute.pattern		      = json[x].pattern;
+        attribute.value			      = (json[x].value!==undefined)?json[x].value:"";	
+        attribute.list			      = (json[x].list!==undefined)?json[x].list:"";	
+        attribute.limit			      = json[x].limit;
+        attribute.grid			      = json[x].grid;
+        attribute.gridmobile      = json[x].gridmobile;
+        attribute.admin			      = json[x].admin;
+        attribute.attributes			= json[x].attributes;
+        attribute.placeholder			= json[x].placeholder;
+        attribute.presetarray			= json[x].presetarray;  
+        attribute.action			    = action;
+
+        let div = fields(attribute);
+
+        
+    /*
+		switch(type) {
+
+            case "hide":            var div = formMountHide(attribute);div.setAttribute('type',type);           break;
+            case "hideinput":       var div = formMountHideInput(attribute);div.setAttribute('type',type);      break; 
+            case "textarea":        var div = formMountTextarea(attribute);div.setAttribute('type',type);       break;
+            case "textareapreset":  var div = formMountTextareaPreset(attribute);div.setAttribute('type',type);       break;
+            case "data":            var div = formMountData(attribute);div.setAttribute('type',type);           break;
+            case "text":            var div = formMountText(attribute);div.setAttribute('type',type);           break;
+            case "password":        var div = formMountPassword(attribute);div.setAttribute('type',type);       break;
+            case "youtube":         var div = formMountYoutube(attribute);div.setAttribute('type',type);        break;  
+            case "trueorfalse":     var div = formMountTrueFalse(attribute);div.setAttribute('type',type);      break;	
+            case "texturl":         var div = formMountTexturl(attribute);div.setAttribute('type',type);        break;
+            case "selectajax":      var div = formMountSelectAjax(attribute);                                   break;
+            case "selectcolor":     var div = formMountSelectColor(attribute);                                  break;   
+            case "search":          var div = formMountSelectCustom(attribute);                                 break;
+            case "multiple":        var div = formMountMultiple(attribute);div.setAttribute('type',type);       break;
+            case "multiplehidden":  var div = formMountMultipleHidden(attribute);div.setAttribute('type',type); break;
+            case "share":           var div = formFieldShare(attribute);div.setAttribute('type',type);header.append(btOptionsBtShare());break;    
+            case "tag":             var div = formMountTag(attribute);div.setAttribute('type',type);            break;
+            case "taggroup":        var div = formMountTagGroup(attribute);div.setAttribute('type',type);       break; 
+            case "keywords":        var div = formMountKeywords(attribute);div.setAttribute('type',type);       break;        
+            case "fileupload":      var div = formMountFileupload(attribute);div.setAttribute('type',type);header.append(btHeaderAttach());break;
+            case "select":
+                        
+                if(attribute.value=='undefined'){
+
+                    if(attribute.value.length<30){
+                        var div = formMountSelect(attribute);
+                    }else{
+                        var div = formMountSelectCustom(attribute);
+                    }
+
+                }else{
+                    
+                    var div = formMountSelect(attribute);
+                    
+                }
+
+        	    break;
+
+            default:
+                    
+                var div = formMountText(attribute);
+                //console.log(type);
+
+		}
+    */
+        div.setAttribute('id','div'+attribute.name);
+        div.setAttribute('grid',grid);
+        div.setAttribute('gridmobile',gridmobile);
+        div.setAttribute('fieldcodigo',id);
+        
+        if(attribute.admin=="1"){
+            div.setAttribute('admin',attribute.admin);
+        }
+
+        form.appendChild(div);	
 	
-	xmlhttp.open("POST", url, true);
-	xmlhttp.send(data);
+	}
+  
+	window.appendChild(header);
+	window.appendChild(form);
 	
+	document.body.appendChild(window);
+  
 }
 
 function formMountV2(modules,action,codigo,cb){
@@ -2676,8 +2764,7 @@ function formMountV2(modules,action,codigo,cb){
 }
 
 function formClose(){
-	
-  var userinfo  = JSON.parse(localStorage.userinfo);
+
   
 	rE(got(document,"window"));
 	got(document,"body")[0].setAttribute("open","0");
@@ -3083,6 +3170,56 @@ function formView(areas,codigo){
 
   });
 
+}
+
+function fields(data){
+
+  switch(data.type) {
+
+    case "hide":            var div = formMountHide(attribute);div.setAttribute('type',type);           break;
+    case "hideinput":       var div = formMountHideInput(attribute);div.setAttribute('type',type);      break; 
+    case "textarea":        var div = formMountTextarea(attribute);div.setAttribute('type',type);       break;
+    case "textareapreset":  var div = formMountTextareaPreset(attribute);div.setAttribute('type',type);       break;
+    case "data":            var div = formMountData(attribute);div.setAttribute('type',type);           break;
+    case "text":            var div = formMountText(attribute);div.setAttribute('type',type);           break;
+    case "password":        var div = formMountPassword(attribute);div.setAttribute('type',type);       break;
+    case "youtube":         var div = formMountYoutube(attribute);div.setAttribute('type',type);        break;  
+    case "trueorfalse":     var div = formMountTrueFalse(attribute);div.setAttribute('type',type);      break;	
+    case "texturl":         var div = formMountTexturl(attribute);div.setAttribute('type',type);        break;
+    case "selectajax":      var div = formMountSelectAjax(attribute);                                   break;
+    case "selectcolor":     var div = formMountSelectColor(attribute);                                  break;   
+    case "search":          var div = formMountSelectCustom(attribute);                                 break;
+    case "multiple":        var div = formMountMultiple(attribute);div.setAttribute('type',type);       break;
+    case "multiplehidden":  var div = formMountMultipleHidden(attribute);div.setAttribute('type',type); break;
+    case "share":           var div = formFieldShare(attribute);div.setAttribute('type',type);header.append(btOptionsBtShare());break;    
+    case "tag":             var div = formMountTag(attribute);div.setAttribute('type',type);            break;
+    case "taggroup":        var div = formMountTagGroup(attribute);div.setAttribute('type',type);       break; 
+    case "keywords":        var div = formMountKeywords(attribute);div.setAttribute('type',type);       break;        
+    case "fileupload":      var div = formMountFileupload(attribute);div.setAttribute('type',type);header.append(btHeaderAttach());break;
+    case "select":
+                
+        if(attribute.value=='undefined'){
+
+            if(attribute.value.length<30){
+                var div = formMountSelect(attribute);
+            }else{
+                var div = formMountSelectCustom(attribute);
+            }
+
+        }else{
+            
+            var div = formMountSelect(attribute);
+            
+        }
+
+      break;
+
+    default:
+            
+        var div = formMountText(attribute);
+        //console.log(type);
+
+	}
 }
 
 
@@ -6221,152 +6358,6 @@ function makeUrlFriendly(object){
 	
 }
 
-function formMountFields(modules,json,codigo,action){
- 
-	var languages  = JSON.parse(localStorage.languages);
-	var userinfo   = JSON.parse(localStorage.userinfo);
-  
-	var window = cE("window");
-	    window.setAttribute("modules",modules);
-	    window.setAttribute("action",action);
-  
-	var form=cE("form");
-	    form.setAttribute("autocomplete","off");
-  
-	var header = cE("header");
-
-	var label = cE("label");
-  
-	header.appendChild(btBack(codigo));
-	if(action!=="view"){header.appendChild(btHeaderSave(codigo));}
-	
-	header.appendChild(label);
-
-  if(document.getElementsByName('files')[0]!==undefined){
-
-  }
-	
-	if(codigo===null){
-    
-		window.setAttribute("tutorial","1");
-		label.appendChild(cT("Novo "+gM(modules)));
-		
-	}else{
-
-    if(codigo==userinfo.codigo && (modules=="users" || modules=="formcovid")){ //Se for a edição do proprio profile
-
-       label.appendChild(cT(languages.formprofiletitle));
-      
-    }else{
-      
-      label.appendChild(cT("Editando "+gM(modules)));
-      header.appendChild(btHeaderPrint());
-      
-      if(action!=="view"){header.appendChild(btHeaderDelete(codigo));}
-      
-    }
-
-		got(document,"body")[0].setAttribute("open","1");
-				
-	}  
-  
-  var menu = createObject('{"tag":"menu","style":"background-color:'+localStorage.getItem("bgcolor")+';"}');
-
-	form.appendChild(menu);
-
-	for(var x=0;x < json.length;x++){
-		
-		var type 		      = json[x].type;
-		var grid 		      = json[x].grid;
-		var gridmobile 		= json[x].gridmobile;
-		var fieldcodigo 	= json[x].fieldcodigo;
-    
-		var attribute = [];
-		
-        attribute.codigo		      = codigo;
-        attribute.label			      = json[x].label;
-        attribute.name			      = json[x].name;
-        attribute.title			      = json[x].title;
-        attribute.required	      = json[x].required;
-        attribute.pattern		      = json[x].pattern;
-        attribute.value			      = (json[x].value!==undefined)?json[x].value:"";	
-        attribute.list			      = (json[x].list!==undefined)?json[x].list:"";	
-        attribute.limit			      = json[x].limit;
-        attribute.grid			      = json[x].grid;
-        attribute.gridmobile      = json[x].gridmobile;
-        attribute.admin			      = json[x].admin;
-        attribute.attributes			= json[x].attributes;
-        attribute.placeholder			= json[x].placeholder;
-        attribute.presetarray			= json[x].presetarray;  
-        attribute.action			    = action;
-    
-		switch(type) {
-
-            case "hide":            var div = formMountHide(attribute);div.setAttribute('type',type);           break;
-            case "hideinput":       var div = formMountHideInput(attribute);div.setAttribute('type',type);      break; 
-            case "textarea":        var div = formMountTextarea(attribute);div.setAttribute('type',type);       break;
-            case "textareapreset":  var div = formMountTextareaPreset(attribute);div.setAttribute('type',type);       break;
-            case "data":            var div = formMountData(attribute);div.setAttribute('type',type);           break;
-            case "text":            var div = formMountText(attribute);div.setAttribute('type',type);           break;
-            case "password":        var div = formMountPassword(attribute);div.setAttribute('type',type);       break;
-            case "youtube":         var div = formMountYoutube(attribute);div.setAttribute('type',type);        break;  
-            case "trueorfalse":     var div = formMountTrueFalse(attribute);div.setAttribute('type',type);      break;	
-            case "texturl":         var div = formMountTexturl(attribute);div.setAttribute('type',type);        break;
-            case "selectajax":      var div = formMountSelectAjax(attribute);                                   break;
-            case "selectcolor":     var div = formMountSelectColor(attribute);                                  break;   
-            case "search":          var div = formMountSelectCustom(attribute);                                 break;
-            case "multiple":        var div = formMountMultiple(attribute);div.setAttribute('type',type);       break;
-            case "multiplehidden":  var div = formMountMultipleHidden(attribute);div.setAttribute('type',type); break;
-            case "share":           var div = formFieldShare(attribute);div.setAttribute('type',type);header.append(btOptionsBtShare());break;    
-            case "tag":             var div = formMountTag(attribute);div.setAttribute('type',type);            break;
-            case "taggroup":        var div = formMountTagGroup(attribute);div.setAttribute('type',type);       break; 
-            case "keywords":        var div = formMountKeywords(attribute);div.setAttribute('type',type);       break;        
-            case "fileupload":      var div = formMountFileupload(attribute);div.setAttribute('type',type);header.append(btHeaderAttach());break;
-            case "select":
-                        
-                if(attribute.value=='undefined'){
-
-                    if(attribute.value.length<30){
-                        var div = formMountSelect(attribute);
-                    }else{
-                        var div = formMountSelectCustom(attribute);
-                    }
-
-                }else{
-                    
-                    var div = formMountSelect(attribute);
-                    
-                }
-
-        	    break;
-
-            default:
-                    
-                var div = formMountText(attribute);
-                //console.log(type);
-
-		}
-    
-        div.setAttribute('id','div'+attribute.name);
-        div.setAttribute('grid',grid);
-        div.setAttribute('gridmobile',gridmobile);
-        div.setAttribute('fieldcodigo',fieldcodigo);
-        
-        if(attribute.admin=="1"){
-            div.setAttribute('admin',attribute.admin);
-        }
-
-        form.appendChild(div);	
-	
-	}
-  
-	window.appendChild(header);
-	window.appendChild(form);
-	
-	document.body.appendChild(window);
-  
-}
-
 function formMountMultipleHidden(attribute){
 
   var label       = createObject('{"tag":"label","innerhtml":"'+attribute.label+'"}');
@@ -7425,7 +7416,7 @@ formLogin.appendChild(bInsertMedico);
 
 formLogin.append(inputCRM,inputAreas,pTermos,btEntrar,btCadastrar,btRecuperar,div);
 
-if(localStorage.newusers==1){
+if(config.newusers==1){
 
     formLogin.appendChild(bInsert);
 
@@ -7666,7 +7657,7 @@ function login(){
 
 				status.innerHTML=message("501");	
 				sA(status,"class","sucess");
-				setTimeout(function () {loadLogged(authentic);}, 500);
+				setTimeout(function () {loadLogged(authentic);}, 100);
 			
 			}else{
 				
@@ -7683,13 +7674,13 @@ function login(){
   
         }  
   
-				setTimeout(function () {status.innerHTML="";sA(status,"class","");}, 2000);
+				setTimeout(function () {status.innerHTML="";sA(status,"class","");}, 100);
 				
 			}
 
   })();
 		
-	}, 1000);
+	}, 100);
 
 	
 }
@@ -7933,48 +7924,32 @@ function message(code){
 
 }
 
-function tabelaLoad(modules, cb) {
-
-    var xmlhttp;
-
-    xmlhttp = new XMLHttpRequest();
-
-    xmlhttp.onreadystatechange = function () {
-
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-
-            var array = JSON.parse(xmlhttp.responseText);
-
-            cb(modulesLoad(array));
-
-        }
-
-    };
-
-    var url = localStorage.getItem("url") + '/admin/json/jsonView.php';
-    var e = goa("filters", "1");
-    var data = new FormData();
-
-    data.append('session', localStorage.session);
-    data.append('area', gA());
-
-    for (var x = 0; x < e.length; x++) {
-
-        if (e[x].value !== "") { data.append(e[x].getAttribute("filternamemodules"), +e[x].value); }
-
-    }
-
-    xmlhttp.open("post", url, true);
-    xmlhttp.send(data);
-
-}
 
 function modulesLoad(array) {
 
-    var tabela = cE('tabela');
+    var tabela   = createObject('{"tag":"tabela"}');
+
     var modules = document.body.getAttribute("modules");
 
-    for (var x = 0; x < array.length; x++) {
+    Object.entries(array).forEach(([key, value]) => {
+
+      let item   = createObject('{"tag":"item","c":"'+value.id+'"}');
+
+        if (modules == "medicos" || modules == "pacientes" || modules == "formcovid") {
+
+            loadItemView(item, value);
+
+        } else {
+
+            loadItem(item, value);
+
+        }
+
+        tabela.append(item);
+
+    });
+
+/*     for (var x = 0; x < array.length; x++) {
 
         var item = cE('item');
 
@@ -7992,12 +7967,11 @@ function modulesLoad(array) {
 
         tabela.appendChild(item);
 
-    }
+    } */
 
     return tabela;
 
 }
-
 
 function modulesLoadCalendar(){
   
@@ -8072,10 +8046,10 @@ function loadItem(item,array){
   var footer = cE("footer");
   
         item.setAttribute('me',array.me);
-        item.setAttribute("a",array.activated);
+        item.setAttribute("a",array.a);
         item.setAttribute("view","0");
   
-  if(array.me==1){
+  if(array.me==true){
     
   }else{
     
@@ -8166,13 +8140,11 @@ function modulesLoadItemCategory(header,array,item){
     }
     
 		icon.appendChild(cT(array.categorylabel));
-		//icon.setAttribute("style","color:"+array.categorycolors+";");
+
 		header.appendChild(icon);
 
 		item.setAttribute("category",array.category);
-		//item.setAttribute("style","background-color:"+array.categorycolors+"20;border:1px solid "+array.categorycolors+"40;");
-		header.setAttribute("style","background-color:"+array.categorycolors+"20;");
-    //item.style.border="1px solid "+array.categorycolors+"40";
+
     item.style.backgroundColor=array.categorycolors+"20";
     
 	}	
@@ -8283,14 +8255,14 @@ function loadItemOptions(elements,array){
   
     let options = createObject('{"tag":"options"}');
   
-  	if(array.me==1){
+  	if(array.me==true){
     
       let edit = createObject('{"tag":"button","action":"edit","class":"icon-pencil"}');
 
 	    edit.onclick=(function(){ 
 
 			  document.body.setAttribute("loading","1");
-        formEdit(gA(),array.codigo)
+        formEdit(gA(),array.id)
       
       });
       
@@ -8302,7 +8274,7 @@ function loadItemOptions(elements,array){
   
  	        view.onclick=(function(){ 
         
-            document.querySelector("item[c='"+array.codigo+"']").setAttribute("view","1");
+            document.querySelector("item[c='"+array.id+"']").setAttribute("view","1");
       
           });
   
@@ -8310,7 +8282,7 @@ function loadItemOptions(elements,array){
 
           close.onclick=(function(){ 
 
-            document.querySelector("item[c='"+array.codigo+"']").setAttribute("view","0");
+            document.querySelector("item[c='"+array.id+"']").setAttribute("view","0");
 
           });
     
@@ -8331,7 +8303,7 @@ function loadItemUpdateTime(elements,array){
   let elementodata    = document.createElement("data");
   
   let data        = new Date(array.update);
-  let createddata = new Date(array.data);
+  let createddata = new Date(array.created_at);
   
   let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
   
@@ -8347,12 +8319,10 @@ function loadItemUpdateTime(elements,array){
       elementoupdated.append(document.createTextNode(updatetext));
       elementocreated.append(document.createTextNode(createdtext));
   
-      elementocreated.setAttribute("style","background-color:"+array.categorycolors+"20;");
-      elementoupdated.setAttribute("style","background-color:"+array.categorycolors+"20;");
   
       elementodata.appendChild(elementocreated);
   
-  if(array.data!==array.update){
+  if(array.created_at!==array.update){
       elementodata.appendChild(elementoupdated); 
   }
   
@@ -8682,7 +8652,7 @@ function loadMedicos(elements,array){
    if(array.medicoslabel!==undefined && array.medicoslabel!==null){
      
         var medico = cE("medicos");
-            medico.setAttribute("style","background-color:"+array.categorycolors+"20;");
+
      
         var div = cE("div");
 
@@ -8838,34 +8808,23 @@ function loadPacientesFull(element,array){
 
 function loadShare(element, array) {
 
-  if (array.share !== undefined) {
+  if (array.share !== null) {
 
-    var share = cE("share");
-    var icon = cE("icon");
+  let share      = createObject('{"tag":"share"}');
 
-        icon.setAttribute("class", "icon-share2");
 
-    var div = cE("div");
+Object.entries(array.share).forEach(([key, value]) => {
 
-        //share.appendChild(div);
+  let div      = createObject('{"tag":"div"}');
+  let figure   = createObject('{"tag":"figure"}');
+  let label   = createObject('{"tag":"label","innerhtml":"'+value.label+'"}');
 
-    for (var s = 0; s < array.share.length; s++) {
+    div.append(figure,label);  
 
-      let div = cE("div");
-div.setAttribute("style","background-color:"+array.categorycolors+"20;");
-      var figure = cE("figure");
+    share.append(div);
 
-          div.appendChild(figure);
+});
 
-      var label = cE("label");
-
-          label.appendChild(cT(array.share[s].label));
-
-          div.appendChild(label);
-
-          share.appendChild(div);
-
-    }
 
     element.appendChild(share);
 
@@ -8874,6 +8833,43 @@ div.setAttribute("style","background-color:"+array.categorycolors+"20;");
 
 }
 
+
+
+function modulesLoadTitle(id){
+		
+		var groups = JSON.parse(localStorage.nav);
+
+    Object.entries(groups).forEach(([key, value]) => {
+
+      Object.entries(value.modules).forEach(([key1, value1]) => {
+
+          if(value1.id==id){
+
+            
+
+          }
+
+
+
+      });
+
+    });
+
+    
+/* 		var nArray= getValueArray(array,'name',name)[0];
+	
+		var logo 	= got(document,"logo")[0];
+		var span  = cE("span");
+		var title = cT(nArray.title);
+	
+		race(logo);
+	
+		span.appendChild(title);
+		logo.appendChild(span);
+	
+		 */
+
+}
 
 
 function loadUser(elements,array){
@@ -8906,17 +8902,17 @@ function loadUser(elements,array){
 }
 
 
-function modulesOpen(e){
+function modulesOpen(id){
 	
 	var body    = got(document,'body')[0];
-	var codigo 	= e.getAttribute('c');
-	var modules = e.getAttribute('modules');
 
-	e.appendChild(boxLoad());
+	var modules = getModulesById(id);
+
+	//e.appendChild(boxLoad());
 
 	race(got(document,"view")[0]);
 
-	changeTitle(modules);
+	//changeTitle(modules);
   
 	var menu    = cE("menu");
 
@@ -8925,34 +8921,50 @@ function modulesOpen(e){
     menu.appendChild(btNew());
     menu.appendChild(btFilter());
     view.appendChild(menu); 
-
   
- if(modules=="prontuarios" || modules=="prontuariosmedicos" || modules=="pacientes"){
+ if(modules.url=="prontuarios" || modules.url=="prontuariosmedicos" || modules.url=="pacientes"){
 
     window.onscroll=lazyload;    
    
  }else{
    
     window.onscroll=null;
-
     
  }
 
-  
-  sA(body,'modules',modules);
-
-  
-	tabelaLoad(modules,function(list){
-    
-    rE(got(document,"box"));
-    boxFilter();
-    document.body.setAttribute("loading","0");
-    view.appendChild(list); 
-    
-	});
-
-
+  sA(body,'modules',modules.url);
+	tabelaLoad(modules);
  
+}
+
+
+function tabelaLoad(modules){
+
+ var config        = JSON.parse(localStorage.config);
+ var user          = JSON.parse(localStorage.user);
+  let view =got(document,'view')[0];
+
+  (async () => {
+  
+    const rawResponse = await fetch(config.urlmodules, {
+
+      method: 'POST',
+      headers: {'Accept': 'application/json','Content-Type': 'application/json'},
+      body: JSON.stringify({session: user.session, modules: modules.url})
+
+    });
+
+    const data = await rawResponse.json();
+
+    
+
+    rE(got(document,"box"));
+    //boxFilter();
+    document.body.setAttribute("loading","0");
+    view.append(modulesLoad(data)); 
+    
+  })();
+
 }
 
 
@@ -9003,56 +9015,32 @@ function navMount(){
 
     Object.entries(value.modules).forEach(([key1, value1]) => {
 
-/*       let label   = value1.label;
-      let name    = value1.name;
-      let premium = value1.premium;
-      let c       = value1.id; */
+       let label   = value1.label;
+       let url    = value1.url;
+       let premium = value1.premium;
+       let id       = value1.id; 
 
-      let {label,name,premium,c} = value1.label,value1.name,value1.premium,value1.id;
+      var a      = createObject('{"tag":"a","innerhtml":"'+label+'","modules":"'+url+'","premium":"'+premium+'","c":"'+id+'"}');     
 
-      var a      = createObject('{"tag":"a","innerhtml":"'+label+'","modules":"'+name+'","modules":"'+premium+'"}');     
+     a.onclick=(function(){
+        resetHeaderOptions();
+        //modulesLoadTitle(c);
+        modulesOpen(id);
+        navClose();
+        gridHide();
+       
+        //mountRanking();
+
+        document.body.setAttribute("loading","1");
+      });
+
+
       nav.append(a);
 
     });
 
   }); 
 
-/* 
-    for(var x = 0; x < storagenav.length; x++) {
-
-      if(x===0 || storagenav[x].groups!==nav[x-1].groups){
-
-        var span = cE('span');
-        span.appendChild(cT(storagenav[x].groups));
-        nav.appendChild(span);
-
-      }
-
-      var a 			= cE('a');
-      var count 	= cE('count');
-
-
-      a.setAttribute('modules',storagenav[x].name);
-      a.setAttribute('premium',storagenav[x].premium);
-      a.setAttribute('c',storagenav[x].codigo);
-      a.appendChild(cT(storagenav[x].label));
-      a.appendChild(count);
-
-      a.onclick=(function(){
-        resetHeaderOptions();
-        modulesOpen(this);
-        navClose();
-        gridHide();
-       
- 
-
-        document.body.setAttribute("loading","1");
-      });
-
-      nav.appendChild(a);
-
-    }
-		
 	var a = cE('a');
 
 	a.onclick=(function(){
@@ -9063,9 +9051,9 @@ function navMount(){
 	
 	a.appendChild(cT('Sair')); 
 
-	//nav.appendChild(a);
+	nav.appendChild(a);
 	
-	 */
+
 nav.setAttribute('id','nav');
 	grade.onclick=(function(){
 		

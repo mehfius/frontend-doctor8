@@ -5,10 +5,10 @@ function loadItem(item,array){
   var footer = cE("footer");
   
         item.setAttribute('me',array.me);
-        item.setAttribute("a",array.activated);
+        item.setAttribute("a",array.a);
         item.setAttribute("view","0");
   
-  if(array.me==1){
+  if(array.me==true){
     
   }else{
     

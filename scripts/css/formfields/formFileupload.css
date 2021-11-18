@@ -12,7 +12,7 @@ form uploadedFiles {  float: left;overflow: auto;white-space: nowrap;margin:10px
 form uploadedFiles > .pdf h3{color: rgb(255, 255, 255);top: 50%;transform: translateX(-50%) translateY(-50%);left: 50%;position: absolute;}
 form uploadedFiles > .pdf {background-color:#000;}
 
-form uploadedFiles > div {background-image:url('/admin/img/loading.gif');background-repeat:no-repeat;background-position:center center;position:relative;width:128px;height:128px;   margin-right: 10px; overflow: hidden;display: inline-block;}
+form uploadedFiles > div {background-image:var(--loading);background-repeat:no-repeat;background-position:center center;position:relative;width:128px;height:128px;   margin-right: 10px; overflow: hidden;display: inline-block;}
 form uploadedFiles > div > figure {cursor:pointer;width:100%;height:100%;background-position: center center; background-repeat:no-repeat;background-size:cover; }
 form uploadedFiles > div > options { display: none;  position: absolute;bottom:0;right:0;width:100%;background-color:#444;}
 form uploadedFiles > div:hover > options { display: block; }

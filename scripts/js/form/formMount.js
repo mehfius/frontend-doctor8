@@ -1,52 +1,21 @@
-function formMount(modules,codigo,cb){
-  
-  var suitesinfo  = JSON.parse(localStorage.suitesinfo);
-  var userinfo    = JSON.parse(localStorage.userinfo);
-	var session     = localStorage.session;
-  
-  var data 	= new FormData();
+function formMount(modules,id){
 
- 	    data.append('area', modules);
- 	    data.append('acao', 'editar');
- 	    data.append('codigo', codigo);
- 	    data.append('session', session);
- 	    data.append('codigosuites', suitesinfo.codigo);
-  
-   	  //data.append('area', content);
-  
-  
-	var url 	= localStorage.getItem("url")+'/admin/json/index.php';
+  var config    = JSON.parse(localStorage.config);
+	var user      = JSON.parse(localStorage.user);
 
-	var xmlhttp;
-	var action = (codigo!==null)?"edit":"insert";
+  console.log(config.form);
 
-	xmlhttp = new XMLHttpRequest();
- 
-	xmlhttp.onreadystatechange = function() {
+  (async () => {
+    const rawResponse = await fetch(config.form, {
+    method: 'POST',
+    headers: {'Accept': 'application/json','Content-Type': 'application/json'},
+    body: JSON.stringify({session:user.session,modules:modules,id:id})
+    });
 
-		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			
- 			var json = JSON.parse(xmlhttp.responseText);
-			
-			if(action=="edit"){
+    const data = await rawResponse.json();
 
-				formMountFields(modules,json,codigo);
+		formMountFields(modules,data);
 
-				cb();
-				
-			}else if(action == "insert"){
-	
-				formMountFields(modules,json,codigo);
-				
-				cb();
-				
-			}
-			
-		}
-		
-	};
-	
-	xmlhttp.open("POST", url, true);
-	xmlhttp.send(data);
-	
+  })();
+
 }

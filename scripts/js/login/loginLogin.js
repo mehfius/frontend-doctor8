@@ -83,7 +83,7 @@ function login(){
 
 				status.innerHTML=message("501");	
 				sA(status,"class","sucess");
-				setTimeout(function () {loadLogged(authentic);}, 500);
+				setTimeout(function () {loadLogged(authentic);}, 100);
 			
 			}else{
 				
@@ -100,13 +100,13 @@ function login(){
   
         }  
   
-				setTimeout(function () {status.innerHTML="";sA(status,"class","");}, 2000);
+				setTimeout(function () {status.innerHTML="";sA(status,"class","");}, 100);
 				
 			}
 
   })();
 		
-	}, 1000);
+	}, 100);
 
 	
 }

@@ -1,21 +1,4 @@
 
-function changeTitle(name){
-		
-		var array = JSON.parse(localStorage.anav);
-		var nArray= getValueArray(array,'name',name)[0];
-	
-		var logo 	= got(document,"logo")[0];
-		var span  = cE("span");
-		var title = cT(nArray.title);
-	
-		race(logo);
-	
-		span.appendChild(title);
-		logo.appendChild(span);
-	
-		
-
-}
 
 
 function mountOrder(){

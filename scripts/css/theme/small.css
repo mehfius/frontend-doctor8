@@ -24,14 +24,14 @@
  [theme="small"] item[view="1"] > header > category {}
 
  [theme="small"] item > data {font-weight: bold;float:left;width: 100%;}
- [theme="small"] item > data > updated{margin:10px 0 0 10px;float:left;background-color: #fff;padding: 4px 8px;border-radius: 2px;}
- [theme="small"] item > data > created{margin:10px 0 0 10px;float:left;background-color: #fff;padding: 4px 8px;border-radius: 2px;}
+ [theme="small"] item > data > updated{margin:10px 0 0 10px;float:left;padding: 4px 8px;border-radius: 2px;}
+ [theme="small"] item > data > created{margin:10px 0 0 10px;float:left;padding: 4px 8px;border-radius: 2px;}
  [theme="small"] item[view="0"] > data {display:none;}
 
 
  [theme="small"] item[view="0"] > footer > share {display:none;}
 
- [theme="small"] item medicos {float:left;margin: 10px 10px 0 10px;border-radius: 2px;padding: 4px 8px;background-color: #fff;}
+ [theme="small"] item medicos {float:left;margin: 10px 10px 0 10px;border-radius: 2px;padding: 4px 8px;}
  [theme="small"] item[view="0"] medicos {display:none;}
 /*
  [theme="small"] item[view="0"] pacientes {display:none;}

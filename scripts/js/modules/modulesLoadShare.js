@@ -1,33 +1,22 @@
 function loadShare(element, array) {
 
-  if (array.share !== undefined) {
+  if (array.share !== null) {
 
-    var share = cE("share");
-    var icon = cE("icon");
+  let share      = createObject('{"tag":"share"}');
 
-        icon.setAttribute("class", "icon-share2");
 
-    var div = cE("div");
+Object.entries(array.share).forEach(([key, value]) => {
 
-        //share.appendChild(div);
+  let div      = createObject('{"tag":"div"}');
+  let figure   = createObject('{"tag":"figure"}');
+  let label   = createObject('{"tag":"label","innerhtml":"'+value.label+'"}');
 
-    for (var s = 0; s < array.share.length; s++) {
+    div.append(figure,label);  
 
-      let div = cE("div");
-div.setAttribute("style","background-color:"+array.categorycolors+"20;");
-      var figure = cE("figure");
+    share.append(div);
 
-          div.appendChild(figure);
+});
 
-      var label = cE("label");
-
-          label.appendChild(cT(array.share[s].label));
-
-          div.appendChild(label);
-
-          share.appendChild(div);
-
-    }
 
     element.appendChild(share);
 

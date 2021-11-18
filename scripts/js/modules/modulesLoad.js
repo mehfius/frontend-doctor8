@@ -1,45 +1,29 @@
-function tabelaLoad(modules, cb) {
-
-    var xmlhttp;
-
-    xmlhttp = new XMLHttpRequest();
-
-    xmlhttp.onreadystatechange = function () {
-
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-
-            var array = JSON.parse(xmlhttp.responseText);
-
-            cb(modulesLoad(array));
-
-        }
-
-    };
-
-    var url = localStorage.getItem("url") + '/admin/json/jsonView.php';
-    var e = goa("filters", "1");
-    var data = new FormData();
-
-    data.append('session', localStorage.session);
-    data.append('area', gA());
-
-    for (var x = 0; x < e.length; x++) {
-
-        if (e[x].value !== "") { data.append(e[x].getAttribute("filternamemodules"), +e[x].value); }
-
-    }
-
-    xmlhttp.open("post", url, true);
-    xmlhttp.send(data);
-
-}
 
 function modulesLoad(array) {
 
-    var tabela = cE('tabela');
+    var tabela   = createObject('{"tag":"tabela"}');
+
     var modules = document.body.getAttribute("modules");
 
-    for (var x = 0; x < array.length; x++) {
+    Object.entries(array).forEach(([key, value]) => {
+
+      let item   = createObject('{"tag":"item","c":"'+value.id+'"}');
+
+        if (modules == "medicos" || modules == "pacientes" || modules == "formcovid") {
+
+            loadItemView(item, value);
+
+        } else {
+
+            loadItem(item, value);
+
+        }
+
+        tabela.append(item);
+
+    });
+
+/*     for (var x = 0; x < array.length; x++) {
 
         var item = cE('item');
 
@@ -57,7 +41,7 @@ function modulesLoad(array) {
 
         tabela.appendChild(item);
 
-    }
+    } */
 
     return tabela;
 

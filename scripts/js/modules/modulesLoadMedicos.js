@@ -4,7 +4,7 @@ function loadMedicos(elements,array){
    if(array.medicoslabel!==undefined && array.medicoslabel!==null){
      
         var medico = cE("medicos");
-            medico.setAttribute("style","background-color:"+array.categorycolors+"20;");
+
      
         var div = cE("div");
 

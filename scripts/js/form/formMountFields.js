@@ -1,21 +1,19 @@
-function formMountFields(modules,json,codigo,action){
- 
-	var languages  = JSON.parse(localStorage.languages);
-	var userinfo   = JSON.parse(localStorage.userinfo);
-  
-	var window = cE("window");
-	    window.setAttribute("modules",modules);
-	    window.setAttribute("action",action);
-  
-	var form=cE("form");
-	    form.setAttribute("autocomplete","off");
-  
-	var header = cE("header");
+function formMountFields(modules,data){
 
-	var label = cE("label");
-  
-	header.appendChild(btBack(codigo));
-	if(action!=="view"){header.appendChild(btHeaderSave(codigo));}
+ //function formMountFields(modules,json,codigo,action){
+
+	//var languages  = JSON.parse(localStorage.languages);
+
+	var user     = JSON.parse(localStorage.user);
+	var config   = JSON.parse(localStorage.config);
+
+	var window   = createObject('{"tag":"window","modules":"'+modules+'"}');
+	var form     = createObject('{"tag":"form","autocomplete":"off"}');
+	var header   = createObject('{"tag":"header"}');
+	var label    = createObject('{"tag":"label"}');
+
+	header.append(btBack(data.id));
+
 	
 	header.appendChild(label);
 
@@ -23,40 +21,33 @@ function formMountFields(modules,json,codigo,action){
 
   }
 	
-	if(codigo===null){
+	if(data.id===null){
     
 		window.setAttribute("tutorial","1");
-		label.appendChild(cT("Novo "+gM(modules)));
+		label.appendChild(cT("Novo "+modules));
 		
 	}else{
 
-    if(codigo==userinfo.codigo && (modules=="users" || modules=="formcovid")){ //Se for a edição do proprio profile
-
-       label.appendChild(cT(languages.formprofiletitle));
-      
-    }else{
-      
-      label.appendChild(cT("Editando "+gM(modules)));
-      header.appendChild(btHeaderPrint());
-      
-      if(action!=="view"){header.appendChild(btHeaderDelete(codigo));}
-      
-    }
-
+    label.appendChild(cT("Editando "+modules));
+    header.appendChild(btHeaderPrint());
+    
 		got(document,"body")[0].setAttribute("open","1");
 				
 	}  
   
-  var menu = createObject('{"tag":"menu","style":"background-color:'+localStorage.getItem("bgcolor")+';"}');
+  var menu = createObject('{"tag":"menu","style":"background-color:'+config.bgcolor+';"}');
 
 	form.appendChild(menu);
 
-	for(var x=0;x < json.length;x++){
-		
+  let jsonform = data[0].form.fields;
+
+		Object.entries(jsonform).forEach(([key, value]) => {
+
+/* 
 		var type 		      = json[x].type;
 		var grid 		      = json[x].grid;
 		var gridmobile 		= json[x].gridmobile;
-		var fieldcodigo 	= json[x].fieldcodigo;
+		var fieldcodigo 	= json[x].id;
     
 		var attribute = [];
 		
@@ -76,7 +67,11 @@ function formMountFields(modules,json,codigo,action){
         attribute.placeholder			= json[x].placeholder;
         attribute.presetarray			= json[x].presetarray;  
         attribute.action			    = action;
-    
+ */
+        let div = fields(jsonform);
+
+        
+    /*
 		switch(type) {
 
             case "hide":            var div = formMountHide(attribute);div.setAttribute('type',type);           break;
@@ -123,11 +118,11 @@ function formMountFields(modules,json,codigo,action){
                 //console.log(type);
 
 		}
-    
+    */
         div.setAttribute('id','div'+attribute.name);
         div.setAttribute('grid',grid);
         div.setAttribute('gridmobile',gridmobile);
-        div.setAttribute('fieldcodigo',fieldcodigo);
+        div.setAttribute('fieldcodigo',id);
         
         if(attribute.admin=="1"){
             div.setAttribute('admin',attribute.admin);

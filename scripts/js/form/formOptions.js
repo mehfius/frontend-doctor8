@@ -1,6 +1,5 @@
 function formClose(){
-	
-  var userinfo  = JSON.parse(localStorage.userinfo);
+
   
 	rE(got(document,"window"));
 	got(document,"body")[0].setAttribute("open","0");

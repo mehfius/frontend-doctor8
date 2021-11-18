@@ -1,14 +1,14 @@
-function modulesOpen(e){
+function modulesOpen(id){
 	
 	var body    = got(document,'body')[0];
-	var codigo 	= e.getAttribute('c');
-	var modules = e.getAttribute('modules');
 
-	e.appendChild(boxLoad());
+	var modules = getModulesById(id);
+
+	//e.appendChild(boxLoad());
 
 	race(got(document,"view")[0]);
 
-	changeTitle(modules);
+	//changeTitle(modules);
   
 	var menu    = cE("menu");
 
@@ -17,32 +17,18 @@ function modulesOpen(e){
     menu.appendChild(btNew());
     menu.appendChild(btFilter());
     view.appendChild(menu); 
-
   
- if(modules=="prontuarios" || modules=="prontuariosmedicos" || modules=="pacientes"){
+ if(modules.url=="prontuarios" || modules.url=="prontuariosmedicos" || modules.url=="pacientes"){
 
     window.onscroll=lazyload;    
    
  }else{
    
     window.onscroll=null;
-
     
  }
 
-  
-  sA(body,'modules',modules);
-
-  
-	tabelaLoad(modules,function(list){
-    
-    rE(got(document,"box"));
-    boxFilter();
-    document.body.setAttribute("loading","0");
-    view.appendChild(list); 
-    
-	});
-
-
+  sA(body,'modules',modules.url);
+	tabelaLoad(modules);
  
 }

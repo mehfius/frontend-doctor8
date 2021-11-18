@@ -25,56 +25,32 @@ function navMount(){
 
     Object.entries(value.modules).forEach(([key1, value1]) => {
 
-/*       let label   = value1.label;
-      let name    = value1.name;
-      let premium = value1.premium;
-      let c       = value1.id; */
+       let label   = value1.label;
+       let url    = value1.url;
+       let premium = value1.premium;
+       let id       = value1.id; 
 
-      let {label,name,premium,c} = value1.label,value1.name,value1.premium,value1.id;
+      var a      = createObject('{"tag":"a","innerhtml":"'+label+'","modules":"'+url+'","premium":"'+premium+'","c":"'+id+'"}');     
 
-      var a      = createObject('{"tag":"a","innerhtml":"'+label+'","modules":"'+name+'","modules":"'+premium+'"}');     
+     a.onclick=(function(){
+        resetHeaderOptions();
+        //modulesLoadTitle(c);
+        modulesOpen(id);
+        navClose();
+        gridHide();
+       
+        //mountRanking();
+
+        document.body.setAttribute("loading","1");
+      });
+
+
       nav.append(a);
 
     });
 
   }); 
 
-/* 
-    for(var x = 0; x < storagenav.length; x++) {
-
-      if(x===0 || storagenav[x].groups!==nav[x-1].groups){
-
-        var span = cE('span');
-        span.appendChild(cT(storagenav[x].groups));
-        nav.appendChild(span);
-
-      }
-
-      var a 			= cE('a');
-      var count 	= cE('count');
-
-
-      a.setAttribute('modules',storagenav[x].name);
-      a.setAttribute('premium',storagenav[x].premium);
-      a.setAttribute('c',storagenav[x].codigo);
-      a.appendChild(cT(storagenav[x].label));
-      a.appendChild(count);
-
-      a.onclick=(function(){
-        resetHeaderOptions();
-        modulesOpen(this);
-        navClose();
-        gridHide();
-       
- 
-
-        document.body.setAttribute("loading","1");
-      });
-
-      nav.appendChild(a);
-
-    }
-		
 	var a = cE('a');
 
 	a.onclick=(function(){
@@ -85,9 +61,9 @@ function navMount(){
 	
 	a.appendChild(cT('Sair')); 
 
-	//nav.appendChild(a);
+	nav.appendChild(a);
 	
-	 */
+
 nav.setAttribute('id','nav');
 	grade.onclick=(function(){
 		

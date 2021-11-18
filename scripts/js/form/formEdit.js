@@ -1,23 +1,23 @@
 
-function formEdit(areas,codigo){
+function formEdit(modules,id){
 	
-		formMount(areas,codigo,function(){
+		formMount(modules,id,function(){
 			
 			document.body.setAttribute("loading","0");
       
-      var userinfo  = JSON.parse(localStorage.userinfo);
+      var user  = JSON.parse(localStorage.user);
       
-			if(codigo==userinfo.codigo && (areas=="users" || areas=="formcovid")){
+			if(id==user.id && (modules=="users" || modules=="formcovid")){
         //Edicao do proprio Profile
       }else{
 
-        var item  = gibc(codigo);
+        var item  = gibc(id);
+
         item.setAttribute("open","1");
-			localStorage.openedformcodigo=codigo;
+			  localStorage.openedformcodigo=id;
         
       }
 
-			
 			gridShow();
 			
 		});

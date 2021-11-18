@@ -28,7 +28,7 @@ body > nav profile{width:100%;padding:20px 0;position: relative; float: left;  b
 body > nav profile label{text-align: center;width: 100%;display: block;font-size: 80%;float:left;margin-top:10px;}
 
 body > nav uploadedFiles {  margin-top: 5px;  float: left;  width: 100%;}
-body > nav uploadedFiles > div {box-shadow: 1px 1px 8px #999;border: 5px solid #fff;display:none;background-color:#fff;border-radius:150px;background-image:url('/sistema8/img/loading.gif');background-repeat:no-repeat;background-position:center center;width:128px;height:128px;  margin: 0 auto; overflow: hidden;}
+body > nav uploadedFiles > div {box-shadow: 1px 1px 8px #999;border: 5px solid #fff;display:none;background-color:#fff;border-radius:150px;background-image:var(--loading);background-repeat:no-repeat;background-position:center center;width:128px;height:128px;  margin: 0 auto; overflow: hidden;}
 body > nav uploadedFiles > div > figure {width:128px;height:128px;background-position: center center; background-repeat:no-repeat;background-size:cover;}
 body > nav uploadedFiles > div > options { display: none;  position: absolute;width:128px;height:128px;}
 body > nav uploadedFiles > div:hover > options { display: block; }

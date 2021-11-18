@@ -117,7 +117,7 @@ formLogin.appendChild(bInsertMedico);
 
 formLogin.append(inputCRM,inputAreas,pTermos,btEntrar,btCadastrar,btRecuperar,div);
 
-if(localStorage.newusers==1){
+if(config.newusers==1){
 
     formLogin.appendChild(bInsert);
 

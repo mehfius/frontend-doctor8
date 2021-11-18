@@ -2,14 +2,14 @@ function loadItemOptions(elements,array){
   
     let options = createObject('{"tag":"options"}');
   
-  	if(array.me==1){
+  	if(array.me==true){
     
       let edit = createObject('{"tag":"button","action":"edit","class":"icon-pencil"}');
 
 	    edit.onclick=(function(){ 
 
 			  document.body.setAttribute("loading","1");
-        formEdit(gA(),array.codigo)
+        formEdit(gA(),array.id)
       
       });
       
@@ -21,7 +21,7 @@ function loadItemOptions(elements,array){
   
  	        view.onclick=(function(){ 
         
-            document.querySelector("item[c='"+array.codigo+"']").setAttribute("view","1");
+            document.querySelector("item[c='"+array.id+"']").setAttribute("view","1");
       
           });
   
@@ -29,7 +29,7 @@ function loadItemOptions(elements,array){
 
           close.onclick=(function(){ 
 
-            document.querySelector("item[c='"+array.codigo+"']").setAttribute("view","0");
+            document.querySelector("item[c='"+array.id+"']").setAttribute("view","0");
 
           });
     
