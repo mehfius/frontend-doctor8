@@ -1,65 +1,79 @@
-function formSend(data,codigo){
 
-    var xmlhttp;
+function formSend(data,id){
 
-    xmlhttp = new XMLHttpRequest();
+  const modules     = document.querySelector("window").getAttribute("modules");
+  const config        = JSON.parse(localStorage.config);
+  const user          = JSON.parse(localStorage.user);
 
-    xmlhttp.onreadystatechange = function() {
+data.session=user.session;
+data.modules=modules;
+data.id=id;
 
-      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+  var url  = config.formsave;
 
-        var userinfo  = JSON.parse(localStorage.userinfo);
+  document.body.setAttribute("loading","1");
 
+  formClose();
 
-              if(userinfo.codigo==codigo){
+  const send = async function(data) {
 
-                // Proprio Profile
-                document.body.setAttribute("loading","0");
+    const rawResponse = await fetch(config.formsave, {
 
-              }else{
+      method: 'POST',
+      headers: {'Accept': 'application/json','Content-Type': 'application/json'},
+      body: JSON.stringify({data:data})
 
+    });
 
-                  if(codigo!==null){
+    const post = await rawResponse.json();
 
-                    loadItemJson(codigo,function(json){
+    itemReload(id)
 
-                      var userinfo  = JSON.parse(localStorage.userinfo);
-
-                        var item = gibc(codigo);
-                        race(item);
-                        loadItem(item,json);
-                        document.body.setAttribute("loading","0");
-
-                    });
-
-                  }else{
-
-                    tabelaLoad(gA(),function(tabela){
-                      document.body.setAttribute("loading","0");
-                      rE(got(document,'tabela'));
-                      document.getElementsByTagName("view")[0].appendChild(tabela);
-                    });
-
-                  }
-
-              }
-
-        formClose();
-
-      }
-
-    };
-
-    var url  = localStorage.getItem("url")+'/admin/json/jsonUpdate.php';
-
-    document.body.setAttribute("loading","1");
-
-    data.append("session",localStorage.session);    
-    data.append("area",got(document,"window")[0].getAttribute("modules")); 
-    data.append("acao","update");
-    data.append("codigo",codigo);
-
-    xmlhttp.open("POST", url, true);
-    xmlhttp.send(data);
   
+    
+}
+
+send(data); 
+
+  
+}
+
+function itemReload(id){
+
+     var user    = JSON.parse(localStorage.user);
+     var config  = JSON.parse(localStorage.config);
+
+    if(id){
+      
+  
+        const send = async function() {
+
+            const rawResponse = await fetch(config.urlmodules, {
+
+                  method: 'POST',
+                  headers: {'Accept': 'application/json','Content-Type': 'application/json'},
+                  body: JSON.stringify({session: user.session, modules: gA(),id:id})
+
+                });
+
+                const data = await rawResponse.json();
+
+                      var item = document.querySelector("tabela item[c='"+id+"']");
+
+                      race(item);
+                      loadItem(item,data[0]);
+         
+
+          document.body.removeAttribute("loading");
+        }
+
+        send();
+
+    }else{
+
+   
+      modulesOpen(gA());
+
+    }
+
 }

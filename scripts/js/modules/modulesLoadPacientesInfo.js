@@ -1,37 +1,7 @@
 
-function loadPacientes(element,array){
+function loadPacientesInfo(element,array){
   
-   if(array.pacienteslabel!==undefined && array.pacienteslabel!==null){
-     
-      var pacientes = cE("pacientes");
-
-      if(array.pacienteslabel!==undefined && array.pacienteslabel!==null){
-
-        var div = cE("div");
-
-        var icon = cE("icon");
-            icon.setAttribute("class","icon-user");
-
-        var label = cE("label");
-            label.appendChild(cT("Paciente: "));
-
-        var pacientesnome = array.pacienteslabel.split(" ");
-        
-        var label2 = cE("label");
-        label2.append(icon);
-            //label2.appendChild(cT(pacientesnome[0]+" "+pacientesnome[1]));
-        label2.appendChild(cT(array.pacienteslabel));
-        
-        var nome = array.pacienteslabel;
-
-        div.appendChild(label2);
-        pacientes.appendChild(div);
-
-      }
-     
-      element.appendChild(pacientes);
-     
-     pacientes.onmouseover=(function(){
+     element.mouseover(function(){
             
 
       var xmlhttp;
@@ -67,7 +37,7 @@ function loadPacientes(element,array){
               texto+="\n Endereço: "+json[0].endereco;          
               texto+="\n Idade: "+age;          
        
-          pacientes.setAttribute('title',texto);
+          element.setAttribute('title',texto);
              // tooltipmenu(label2,texto);
           
         }
@@ -88,5 +58,3 @@ function loadPacientes(element,array){
     });
 
    }
-  
-}

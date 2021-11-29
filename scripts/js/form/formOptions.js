@@ -1,6 +1,5 @@
 function formClose(){
 
-  
 	rE(got(document,"window"));
 	got(document,"body")[0].setAttribute("open","0");
 
@@ -66,12 +65,8 @@ function formDelete(codigo){
 }
 
 function formNew(){
-	window.open("#form","_self");
-		formMount(gA(),null,function(){
-			
-			gridShow();
-			
-		});
+      document.body.setAttribute("loading","1");
+  formEdit(gA(),null);
 
 	
 }
@@ -149,7 +144,7 @@ var attribute = [];
 		attribute.type 		= "file";
 		attribute.name 		= "fileupload";
 		attribute.multiple	= "";
-		attribute.onchange	= "formUpload(this);";
+		attribute.onchange	= "upload(this);";
 	
 var fileupload = cEA(attribute);
 	

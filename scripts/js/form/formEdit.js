@@ -1,8 +1,11 @@
 
 function formEdit(modules,id){
-	
-		formMount(modules,id,function(){
-			
+  
+  gridShow();
+  formMount(modules,id);
+
+
+    /* 
 			document.body.setAttribute("loading","0");
       
       var user  = JSON.parse(localStorage.user);
@@ -19,7 +22,6 @@ function formEdit(modules,id){
       }
 
 			gridShow();
-			
-		});
+			 */
 
 }

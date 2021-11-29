@@ -25,8 +25,12 @@ function load(){
     //localStorage.languages    = JSON.stringify(data.languages);
     //localStorage.language    = "ptbr";
 
-
     document.getElementsByTagName("pages")[0].append(mountLogin());
+    grade();
+
+   //formEdit('prontuarios',21233);
+    //document.body.append(selectBox('pacientes'));
+
   });
 
 

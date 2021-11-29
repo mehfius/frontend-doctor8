@@ -1,16 +1,41 @@
-function formMountMultipleHidden(attribute){
+function multipleHidden(data){
 
-  var label       = createObject('{"tag":"label","innerhtml":"'+attribute.label+'"}');
+  var label       = createObject('{"tag":"label","innerhtml":"'+data.label+'"}');
+	var div         = createObject('{"tag":"div","class":"multiplehidden"}');
+  var view        = createObject('{"tag":"multipleview"}');
+
+
+  var valor  = data.value;
+    
+  var input  = createObject('{"tag":"input","id":"'+data.url+'","value":"'+valor+'"}');
+
+
+  var select = createObject('{"tag":"multiplehidden"}');
+  
+      multipleHiddenFinder(select);
+  
+		  select.append(input,multipleHiddenClose());
+
+      div.append(select,view);
+
+  return div;
+}
+
+
+
+/* function multipleHidden(data){
+
+  var label       = createObject('{"tag":"label","innerhtml":"'+data.label+'"}');
 	var div         = createObject('{"tag":"div","class":"multiplehidden"}');
   var view        = createObject('{"tag":"multipleview"}');
  
-      view.appendChild(multipleAdd(attribute));
+      view.appendChild(multipleAdd(data));
   
       div.appendChild(label);
   
-  var valor  = (attribute.value[0].value[0]==",")?attribute.value[0].value:","+attribute.value[0].value;
+  var valor  = (data.value[0].value[0]==",")?data.value[0].value:","+data.value[0].value;
 	
-  var input  = createObject('{"tag":"input","name":"'+attribute.name+'","title":"","value":"'+valor+'","autocomplete":"off","required":"","type":"hidden","tipo":"select"}');
+  var input  = createObject('{"tag":"input","name":"'+data.name+'","title":"","value":"'+valor+'","autocomplete":"off","required":"","type":"hidden","tipo":"select"}');
      
   var select = createObject('{"tag":"multiplehidden"}');
   
@@ -20,7 +45,7 @@ function formMountMultipleHidden(attribute){
   
 		  select.appendChild(input);
 		
-	var object = attribute.value;
+	var object = data.value;
 
 		for (var item in object){
 			
@@ -110,3 +135,4 @@ function formMountMultipleHidden(attribute){
 	
 }
 
+ */

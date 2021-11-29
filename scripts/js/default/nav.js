@@ -11,7 +11,7 @@ function navMount(){
 	}
 	
 	var html = '';
-	var grade   = cE('grade');
+
 	var nav  	  = cE('nav');
 	    nav.appendChild(profile());
 
@@ -35,7 +35,7 @@ function navMount(){
      a.onclick=(function(){
         resetHeaderOptions();
         //modulesLoadTitle(c);
-        modulesOpen(id);
+        modulesOpen(url);
         navClose();
         gridHide();
        
@@ -65,16 +65,11 @@ function navMount(){
 	
 
 nav.setAttribute('id','nav');
-	grade.onclick=(function(){
-		
-		navClose();
-		formClose();
 
-	});
+
 	
 	body.appendChild(nav);
-	body.appendChild(grade);
-	
+
 	
 }
 

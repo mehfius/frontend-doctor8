@@ -1,4 +1,4 @@
-function formFieldShare(attribute){
+function share(attribute){
 
   var label       = cE("label");
 	var div         = cE("div");

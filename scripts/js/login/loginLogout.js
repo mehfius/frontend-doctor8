@@ -47,7 +47,7 @@ function logoutResetStep1(){
 function logoutResetStep2(){
   
     rE(got(document,'nav'));
-    rE(got(document,'grade'));
+    //rE(got(document,'grade'));
     rE(got(document,'section'));
     rE(got(document,'boxfilter'));
     rE(got(document,'header'));

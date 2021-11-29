@@ -6,10 +6,10 @@ function loadItemOptions(elements,array){
     
       let edit = createObject('{"tag":"button","action":"edit","class":"icon-pencil"}');
 
-	    edit.onclick=(function(){ 
+	    edit.onclick=( async function(){ 
 
 			  document.body.setAttribute("loading","1");
-        formEdit(gA(),array.id)
+         await formEdit(gA(),array.id)
       
       });
       

@@ -1,67 +1,3 @@
-function mountSection(){
-	
-	var section = cE("section");
-	var view 		= cE("view");
-
-	var ranking 	= cE("ranking");
-
-	
-
-	section.appendChild(view);
-	
-	got(document,"body")[0].appendChild(section);
-
-}
-
-
-
-
-function mountOrder(){
-  
-  var order = cE("order");
-  
-  var lbOrder = cE('label');
-  
-  lbOrder.appendChild(cT('Ordenar por :'));
-  lbOrder.setAttribute("class","order");
-  
-  var btOrderLabel=cB("nome");
-  btOrderLabel.setAttribute("class","order");
-  
-  btOrderLabel.onclick=(function(){
-    
-		localStorage.order=1;
-		viewLoad(gA());
-			
-	});
-  
-  var btOrderData=cB("data");
-  
-  btOrderData.setAttribute("class","order"); 
-  
-  btOrderData.onclick=(function(){
-    
-		localStorage.order=0;
-		viewLoad(gA());
-			
-	});
-  
-  if(localStorage.order==1){
-    btOrderLabel.setAttribute("selected","1");
-  }else{
-    btOrderData.setAttribute("selected","1");
-  }
-  
-  order.appendChild(lbOrder);
-  order.appendChild(btOrderLabel);
-	order.appendChild(btOrderData);
-  
-  return order;
-  
-}
-
-
-
 
 
 
@@ -505,6 +441,36 @@ function ad(){
   
 }
 
+function checkCookies(){
+
+    swal("A wild Pikachu appeared! What do you want to do?", {
+    buttons: {
+      cancel: "Run away!",
+      catch: {
+        text: "Throw Pokéball!",
+        value: "catch",
+      },
+      defeat: true,
+    },
+  })
+  .then((value) => {
+    switch (value) {
+  
+      case "defeat":
+        swal("Pikachu fainted! You gained 500 XP!");
+        break;
+  
+      case "catch":
+        swal("Gotcha!", "Pikachu was caught!", "success");
+        break;
+  
+      default:
+        swal("Got away safely!");
+    }
+  });
+
+}
+
 function createObject(text){
 
   var json = JSON.parse(text);
@@ -607,6 +573,41 @@ let modules = {}
     });
 
     return modules;
+}
+
+
+function getModulesByUrl(url){
+		
+		var groups = JSON.parse(localStorage.nav);
+let modules = {}
+    Object.entries(groups).forEach(([key, value]) => {
+
+      Object.entries(value.modules).forEach(([key1, value1]) => {
+
+          if(value1.url==url){
+
+            modules = value1;
+
+          }
+
+      });
+
+
+
+    });
+
+    return modules;
+}
+
+function grade(){
+  	var grade   = cE('grade');
+	grade.onclick=(function(){
+		
+		navClose();
+		formClose();
+
+	});
+		document.body.appendChild(grade);
 }
 
 
@@ -874,20 +875,61 @@ function removeAcento(strToReplace) {
 }
 
   function lazyload() {
+        
+    var config        = JSON.parse(localStorage.config);
+    var user          = JSON.parse(localStorage.user);
+    var modules       = document.body.getAttribute("modules");
+    var rolled        = document.body.offsetHeight + document.body.scrollTop + document.documentElement.scrollTop;
+    var height        = document.documentElement.scrollHeight;
+    var tabela        = got(document,"tabela")[0];
 
-    var rolled = document.body.offsetHeight + document.body.scrollTop + document.documentElement.scrollTop;
-    var height = document.documentElement.scrollHeight;
-  
     if ((rolled) > (height-10)) {
       
-        window.onscroll=null;
+          window.onscroll=null;
 
-          var item = got(got(document,"tabela")[0],"item");
+        
+          var limit = got(got(document,"tabela")[0],"item").length;
 
-          var limit= item.length+",10";
 
           document.body.setAttribute("loading","1");
-      
+
+          const loadLazyJson = async function(limit){
+            
+              const rawResponse = await fetch(config.urlmodules, {
+
+                method: 'POST',
+                headers: {'Accept': 'application/json','Content-Type': 'application/json'},
+                body: JSON.stringify({
+
+                  modules: modules, 
+                  session: user.session, 
+                  page: limit
+                  
+                  })
+
+              });
+
+              const data = await rawResponse.json();
+
+              Object.entries(data).forEach(([key, value]) => {
+
+
+                let item = createObject('{"tag":"item","c":"'+value.id+'"}');
+
+                loadItem(item,value);
+                tabela.appendChild(item);
+                
+              });
+
+              document.body.setAttribute("loading","0");
+              window.onscroll=lazyload;
+          }
+
+          loadLazyJson(limit);
+
+          
+
+      /* 
           loadLazyJson(limit,function(json){
 
             let tabela = got(document,"tabela")[0];
@@ -919,12 +961,12 @@ function removeAcento(strToReplace) {
             //document.addEventListener('scroll',lazyload);
             window.onscroll=lazyload;
 
-        });
+        }); */
   
     }
 
 }
-
+/* 
 function loadMore(){
   
   var item = got(got(document,"tabela")[0],"item");
@@ -953,31 +995,8 @@ function loadMore(){
   }
  
 }
+ */
 
-function loadLazyJson(limit,cb){
-  
-  var url = localStorage.getItem("url")+'/admin/json/jsonView.php?&session='+localStorage.session+'&area='+gA()+'&limit='+limit;
-		
-	var xmlhttp;
-
-	xmlhttp = new XMLHttpRequest();
- 
-	xmlhttp.onreadystatechange = function() {
-
-		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			
- 			var json = JSON.parse(xmlhttp.responseText);
-		
-			cb(json);
-
-		}
-    
-	};
-	
-	xmlhttp.open("GET", url, true);
-	xmlhttp.send();
-  
-}
 
 function loadingMount(){
   
@@ -1626,169 +1645,13 @@ function modalFormCovid(){
   
 }
 
-function goToMedicLogin(){
-  
-  document.body.setAttribute("openlogin","1");
-  document.getElementById('btInsertMedico').click();
-  
-}
-
-function goToPacienteLogin(){
-  
-  document.body.setAttribute("openlogin","1");
-  document.getElementById('btInsertPaciente').click();
-  window.scrollTo( 0, 0 );
-}
-
-function iconCalendar(element){
-  
-    var icon = cE("icon")
-        icon.setAttribute("class","icon-calendar");
-  
-        tooltip(icon,"Agenda");
-  
-    var userinfo    = JSON.parse(localStorage.userinfo);
-    var systeminfo  = JSON.parse(localStorage.systeminfo);
-  
-    icon.onclick=(function(){
-
-        if(document.body.getAttribute("calendar")=="1"){
-
-          document.body.setAttribute("calendar","0");
-
-        }else{
-
-          document.body.setAttribute("calendar","1");
-
-        }
-
-    });
-
-  element.appendChild(icon);
-  
-}
-
-function iconFacedoctor(element){
-  
-    var icon = cE("icon")
-        icon.setAttribute("class","icon-users");
-  
-        tooltip(icon,"Conheça o Facedoctors");
-  
-    var userinfo = JSON.parse(localStorage.userinfo);
-
-        icon.onclick=(function(){
-          
-     
-           window.open("https://facedoctors.com.br/","_blank");
-          
-        });
-
-  element.appendChild(icon);
-  
-}
-
-function iconPlanilha(element){
-  
-    var icon = cE("icon")
-        icon.setAttribute("class","icon-table2");
-  tooltip(icon,"Solicitação de contato");
-  
-    var config = JSON.parse(localStorage.config);
-
-        icon.onclick=(function(){
-          
-          window.open(config.planilha,"_blank");
-          
-        });
-
-  element.appendChild(icon);
-  
-}
-
-
-function iconReceitaEspecial(element){
-
-  var shortcut = createObject('{"tag":"shortcut"}');
-  
-  document.body.append(shortcut);
-  
-  var icon = cE("icon");
-      icon.setAttribute("class","icon-file-text2");
-
-     tooltip(icon,"Documentos");
-  
-  var config   = JSON.parse(localStorage.config);
-  var shortcutstorage   = JSON.parse(config.shortcut);
-  var links =shortcutstorage[0].links;
-
-      icon.onclick=(function(){
-
-          if(document.body.getAttribute("shortcut")=="1"){
-            
-            document.body.setAttribute("shortcut","0");
-            
-          }else{
-            
-            document.body.setAttribute("shortcut","1");
-            
-          }
-
-      });
-
-        element.appendChild(icon);
-
-        let label = "";
-        let url   = "";
-
-        shortcut.append(createObject('{"tag":"label","innerhtml":"Receitas"}'));
-
-
-        Object.entries(links[0].receituario).forEach(([key, value]) => {
-
-            shortcut.append(shortcutItem(value.url,value.label));
-
-        });
-
-shortcut.append(createObject('{"tag":"label","innerhtml":"Protocolos"}'));
-
-        Object.entries(links[1].protocolos).forEach(([key, value]) => {
-
-            shortcut.append(shortcutItem(value.url,value.label));
-
-        });
-
-
-shortcut.append(createObject('{"tag":"label","innerhtml":"Outros"}'));
-
-        Object.entries(links[2].outros).forEach(([key, value]) => {
-
-            shortcut.append(shortcutItem(value.url,value.label));
-
-        });
-  
-       
-  
-}
-
-function shortcutItem(link,label){
- 
-  var div1      = createObject('{"tag":"div"}');
-  var icon1     = createObject('{"tag":"icon","class":"icon-file-text2"}');
-  var label1    = createObject('{"tag":"label","innerhtml":"'+label+'"}');
-  
-  div1.append(icon1,label1);
-  
-  div1.onclick=(function(){
-    window.open(link);
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
   });
-  
-  return div1;
-
 }
 
-
-  
 
 function iconFilter(){
   
@@ -2370,4266 +2233,6 @@ function mountFilterStandard(){
 	return filter;
 }
 
-
-function formMountAutoStart(area,cb){
- 
-	var url 	= localStorage.getItem("url")+'/json/'+area+'/editar/null';
-
-  var view 	= got(document,"view")[0];
-	var xmlhttp;
-
-	xmlhttp = new XMLHttpRequest();
- 
-	xmlhttp.onreadystatechange = function() {
-
-		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			
- 			var json = JSON.parse(xmlhttp.responseText);
-     
-				
-			  cb(json);
-		}
-		
-	};
-	
-	xmlhttp.open("GET", url, true);
-	xmlhttp.send();
-  
-}
-
-
-function formSave(codigo){
-  
-  var window  = got(document,"window")[0];
-	var form    = got(window,"form");
-
-	var input    = got(form[0],"input");
-	var textarea = got(form[0],"textarea");
-	var select	 = got(form[0],"select");	
-  
-	var error    = "";
-	
-	var data = new FormData();
-  
-	for (var x = 0; x < input.length;x++){
-		
-		var n = input[x].getAttribute("name");
-		var v = input[x].value;
-		    v = (v!==null)?v:"";
-		
-		if(input[x].parentElement.getAttribute("type")=='data' && v!==""){
-			
-			var dataNew="";
-
-		}
-		
-		if(input[x].type!='file' && input[x].type!='search' && n!='findernew' && n!='finder' && n!='ignore'){
-			
-			data.append(n,v);
-			
-		}
-		
-		if(input[x].getAttribute("required")=="1" && v===""){
-			//error+=input[x].getAttribute("name")+"\n" ;
-      let fieldcodigo = input[x].parentElement.getAttribute("fieldcodigo");
-      		error+=getLocalStorageMessages('fieldempty'+fieldcodigo)+"\n" ;  
-		}
-
-	}
-
-	for (var x = 0; x < textarea.length;x++){
-				
-		var n = textarea[x].getAttribute("name");
-		var v = textarea[x].value;
-		    v = (v!==null)?v:"";
-		
-		data.append(n,v);
-		
-		if(textarea[x].getAttribute("required")=="1" && v===""){
-			error+=textarea[x].getAttribute("name")+"\n" ;
-		}
-		
-	}
-	
-	for (var x = 0; x < select.length;x++){
-			
-		var n = select[x].getAttribute("name");
-		var v = select[x].value;
-		    v = (v!==null)?v:"";
-		
-		data.append(n,v);
-		
-		if(select[x].getAttribute("required")=="1" && v===""){
-			error+=select[x].getAttribute("name")+"\n" ;
-		}
-		
-	}	
-  
-  if(error!==""){
-    
-    alert(error);
-    
-  }else{
-    
-    formSend(data,codigo);
-    
-  }  
-  
-}
-
-function btOptionsBtShare(){
-
-	var bt = cE("icon");
-			
-			bt.setAttribute("action","share");
-			bt.setAttribute("class","icon-share2");
-			bt.onclick=(function(){
-
-			});
-  
-	return bt;
-	
-}
-
-
-function formCustomEdit(areas){
-	
-		formMount(areas,null,function(){
-			
-			document.body.setAttribute("loading","0");
-      
-      //var userinfo  = JSON.parse(localStorage.userinfo);
-      
-
-			
-			gridShow();
-			
-		});
-
-}
-
-
-function formCustomView(areas,codigo){
-	
-		formMountV2(areas,'view',codigo,function(){
-			
-			document.body.setAttribute("loading","0");
-            
-			gridShow();
-			
-		});
-
-}
-
-
-function formEdit(modules,id){
-	
-		formMount(modules,id,function(){
-			
-			document.body.setAttribute("loading","0");
-      
-      var user  = JSON.parse(localStorage.user);
-      
-			if(id==user.id && (modules=="users" || modules=="formcovid")){
-        //Edicao do proprio Profile
-      }else{
-
-        var item  = gibc(id);
-
-        item.setAttribute("open","1");
-			  localStorage.openedformcodigo=id;
-        
-      }
-
-			gridShow();
-			
-		});
-
-}
-
-function formMount(modules,id){
-
-  var config    = JSON.parse(localStorage.config);
-	var user      = JSON.parse(localStorage.user);
-
-  console.log(config.form);
-
-  (async () => {
-    const rawResponse = await fetch(config.form, {
-    method: 'POST',
-    headers: {'Accept': 'application/json','Content-Type': 'application/json'},
-    body: JSON.stringify({session:user.session,modules:modules,id:id})
-    });
-
-    const data = await rawResponse.json();
-
-		formMountFields(modules,data);
-
-  })();
-
-}
-
-function formMountFields(modules,data){
-
- //function formMountFields(modules,json,codigo,action){
-
-	//var languages  = JSON.parse(localStorage.languages);
-
-	var user     = JSON.parse(localStorage.user);
-	var config   = JSON.parse(localStorage.config);
-
-	var window   = createObject('{"tag":"window","modules":"'+modules+'"}');
-	var form     = createObject('{"tag":"form","autocomplete":"off"}');
-	var header   = createObject('{"tag":"header"}');
-	var label    = createObject('{"tag":"label"}');
-
-	header.append(btBack(data.id));
-
-	
-	header.appendChild(label);
-
-  if(document.getElementsByName('files')[0]!==undefined){
-
-  }
-	
-	if(data.id===null){
-    
-		window.setAttribute("tutorial","1");
-		label.appendChild(cT("Novo "+modules));
-		
-	}else{
-
-    label.appendChild(cT("Editando "+modules));
-    header.appendChild(btHeaderPrint());
-    
-		got(document,"body")[0].setAttribute("open","1");
-				
-	}  
-  
-  var menu = createObject('{"tag":"menu","style":"background-color:'+config.bgcolor+';"}');
-
-	form.appendChild(menu);
-
-	for(var x=0;x < data[0].form.fields.length;x++){
-		
-		var type 		      = json[x].type;
-		var grid 		      = json[x].grid;
-		var gridmobile 		= json[x].gridmobile;
-		var fieldcodigo 	= json[x].id;
-    
-		var attribute = [];
-		
-        attribute.codigo		      = codigo;
-        attribute.label			      = json[x].label;
-        attribute.name			      = json[x].name;
-        attribute.title			      = json[x].title;
-        attribute.required	      = json[x].required;
-        attribute.pattern		      = json[x].pattern;
-        attribute.value			      = (json[x].value!==undefined)?json[x].value:"";	
-        attribute.list			      = (json[x].list!==undefined)?json[x].list:"";	
-        attribute.limit			      = json[x].limit;
-        attribute.grid			      = json[x].grid;
-        attribute.gridmobile      = json[x].gridmobile;
-        attribute.admin			      = json[x].admin;
-        attribute.attributes			= json[x].attributes;
-        attribute.placeholder			= json[x].placeholder;
-        attribute.presetarray			= json[x].presetarray;  
-        attribute.action			    = action;
-
-        let div = fields(attribute);
-
-        
-    /*
-		switch(type) {
-
-            case "hide":            var div = formMountHide(attribute);div.setAttribute('type',type);           break;
-            case "hideinput":       var div = formMountHideInput(attribute);div.setAttribute('type',type);      break; 
-            case "textarea":        var div = formMountTextarea(attribute);div.setAttribute('type',type);       break;
-            case "textareapreset":  var div = formMountTextareaPreset(attribute);div.setAttribute('type',type);       break;
-            case "data":            var div = formMountData(attribute);div.setAttribute('type',type);           break;
-            case "text":            var div = formMountText(attribute);div.setAttribute('type',type);           break;
-            case "password":        var div = formMountPassword(attribute);div.setAttribute('type',type);       break;
-            case "youtube":         var div = formMountYoutube(attribute);div.setAttribute('type',type);        break;  
-            case "trueorfalse":     var div = formMountTrueFalse(attribute);div.setAttribute('type',type);      break;	
-            case "texturl":         var div = formMountTexturl(attribute);div.setAttribute('type',type);        break;
-            case "selectajax":      var div = formMountSelectAjax(attribute);                                   break;
-            case "selectcolor":     var div = formMountSelectColor(attribute);                                  break;   
-            case "search":          var div = formMountSelectCustom(attribute);                                 break;
-            case "multiple":        var div = formMountMultiple(attribute);div.setAttribute('type',type);       break;
-            case "multiplehidden":  var div = formMountMultipleHidden(attribute);div.setAttribute('type',type); break;
-            case "share":           var div = formFieldShare(attribute);div.setAttribute('type',type);header.append(btOptionsBtShare());break;    
-            case "tag":             var div = formMountTag(attribute);div.setAttribute('type',type);            break;
-            case "taggroup":        var div = formMountTagGroup(attribute);div.setAttribute('type',type);       break; 
-            case "keywords":        var div = formMountKeywords(attribute);div.setAttribute('type',type);       break;        
-            case "fileupload":      var div = formMountFileupload(attribute);div.setAttribute('type',type);header.append(btHeaderAttach());break;
-            case "select":
-                        
-                if(attribute.value=='undefined'){
-
-                    if(attribute.value.length<30){
-                        var div = formMountSelect(attribute);
-                    }else{
-                        var div = formMountSelectCustom(attribute);
-                    }
-
-                }else{
-                    
-                    var div = formMountSelect(attribute);
-                    
-                }
-
-        	    break;
-
-            default:
-                    
-                var div = formMountText(attribute);
-                //console.log(type);
-
-		}
-    */
-        div.setAttribute('id','div'+attribute.name);
-        div.setAttribute('grid',grid);
-        div.setAttribute('gridmobile',gridmobile);
-        div.setAttribute('fieldcodigo',id);
-        
-        if(attribute.admin=="1"){
-            div.setAttribute('admin',attribute.admin);
-        }
-
-        form.appendChild(div);	
-	
-	}
-  
-	window.appendChild(header);
-	window.appendChild(form);
-	
-	document.body.appendChild(window);
-  
-}
-
-function formMountV2(modules,action,codigo,cb){
-  
-  var suitesinfo  = JSON.parse(localStorage.suitesinfo);
-  var userinfo    = JSON.parse(localStorage.userinfo);
-	var session     = localStorage.session;
-  
-  var data 	= new FormData();
-
- 	    data.append('area', modules);
- 	    data.append('acao', action);
- 	    data.append('codigo', codigo);
- 	    data.append('session', session);
- 	    data.append('codigosuites', suitesinfo.codigo);
-  
-	var url 	= localStorage.getItem("url")+'/admin/json/index.php';
-
-	var xmlhttp;
-
-
-	xmlhttp = new XMLHttpRequest();
- 
-	xmlhttp.onreadystatechange = function() {
-
-		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			
- 			var json = JSON.parse(xmlhttp.responseText);
-			
-			if(action=="edit"){
-
-				formMountFields(modules,json,codigo,action);
-
-				cb();
-				
-			}else if(action == "insert"){
-	
-				formMountFields(modules,json,codigo,action);
-				
-				cb();
-        
-			}else if(action == "view"){
-	
-				formMountFields(modules,json,codigo,action);
-				
-				cb();
-      
-			}
-			
-		}
-		
-	};
-	
-	xmlhttp.open("POST", url, true);
-	xmlhttp.send(data);
-	
-}
-
-function formClose(){
-
-  
-	rE(got(document,"window"));
-	got(document,"body")[0].setAttribute("open","0");
-
-	gridHide();
-
-	if(localStorage.openedformcodigo){
-    
-    var item  = gibc(localStorage.openedformcodigo);
-    
-    if(item!=undefined){
-      
-       	item.setAttribute("open","0");
-      
-    }
-
-		localStorage.openedformcodigo="";
-		
-	}
-	
-}
-
-function formDelete(codigo){
-	
-
-
-	var xmlhttp;
-
-	xmlhttp = new XMLHttpRequest();
- 
-	xmlhttp.onreadystatechange = function() {
-
-		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-	
-
-						
-		}
-		
-	};
-
-	if (confirm("Tem certeza que deseja excluir?") === true) {
-
-    var url = localStorage.getItem("url")+'/admin/json/jsonUpdate.php';
-    
-    var data = new FormData();
-    
-        data.append('area',gA());
-        data.append('acao','delete');
-        data.append('codigo',codigo);
-        data.append('session',localStorage.session);
-    
-		xmlhttp.open("POST", url, true);
-		xmlhttp.send(data);
-		
-			rE(gibc(codigo));
-			formClose();
-		
-	} else {
-
-	
-
-	}
-
-}
-
-function formNew(){
-	window.open("#form","_self");
-		formMount(gA(),null,function(){
-			
-			gridShow();
-			
-		});
-
-	
-}
-
-function gridShow(){
-	
-		var grade= got(document,"grade")[0];
-
-		grade.setAttribute("class","show");
-
-	
-}
-
-function gridHide(){
-	
-		var grade= got(document,"grade")[0];
-	
-		grade.setAttribute("class","hide");
-
-}
-
-function btClose(codigo){
-
-	var btClose = cE("icon");
-			btClose.setAttribute("class","icon-cross");
-	//btClose.appendChild(cT("×"));
-			btClose.setAttribute("action","close");
-			btClose.onclick=(function(){
-
-				formClose(codigo);
-
-			});
-
-	return btClose;
-	
-}
-
-function btBack(codigo){
-
-	var bt = cE("icon");
-			//btClose.setAttribute("class","icon-cross");
-	//bt.appendChild(cT("<"));
-			bt.setAttribute("action","back");
-			bt.setAttribute("class","icon-arrow-left2");
-			bt.onclick=(function(){
-
-				formClose(codigo);
-
-			});
-
-	return bt;
-	
-}
-
-function btHeaderPrint(){
-
-	var bt = cE("icon");
-			
-			bt.setAttribute("action","print");
-			bt.setAttribute("class","icon-printer");
-			bt.onclick=(function(){
-
-					print();
-
-			});
-
-	return bt;
-	
-}
-
-function btHeaderAttach(){
-	
-var attribute = [];
-		attribute.tag 		= "input";
-		attribute.type 		= "file";
-		attribute.name 		= "fileupload";
-		attribute.multiple	= "";
-		attribute.onchange	= "formUpload(this);";
-	
-var fileupload = cEA(attribute);
-	
-	var bt = cE("icon");
-		
-			bt.setAttribute("action","attach");
-			bt.setAttribute("class","icon-attachment");
-			bt.onclick=(function(){
-
-				
-
-			});
-
-	bt.appendChild(fileupload);
-	
-	return bt;
-	
-}
-
-function btHeaderSeeAttach(){
-
-	var bt = cE("icon");
-			
-			bt.setAttribute("action","seeattach");
-			bt.setAttribute("class","icon-images");
-			bt.onclick=(function(){
-					var anexos=document.getElementsByName('files')[0].value;
-					window.open("/admin/json/jsonAnexosView.php?anexos="+anexos,"_blank");
-
-			});
-
-	return bt;
-	
-}
-
-function btHeaderSave(codigo){
-
-	var bt = cE("icon");
-			
-			bt.setAttribute("action","save");
-			bt.setAttribute("class","icon-checkmark");
-			bt.onclick=(function(){
-					formSave(codigo);
-
-
-			});
-
-	return bt;
-	
-}
-
-function btHeaderDelete(codigo){
-
-	var bt = cE("icon");
-			
-			bt.setAttribute("action","delete");
-			bt.setAttribute("class","icon-bin");
-			bt.onclick=(function(){
-					formDelete(codigo);
-
-			});
-
-	return bt;
-	
-}
-
-function btDelete(codigo){
-	
-		var btDelete = cB("excluir");
-	
-				btDelete.setAttribute("action","delete");
-				btDelete.onclick=(function(){
-
-					formDelete(codigo);
-
-				});
-	
-	return btDelete;
-}
-
-function btSave(codigo){
-	
-		var button = cB("salvar");
-				button.setAttribute("action","save");
-				button.onclick=(function(){
-
-					formSave(codigo);
-
-				});
-	
-	return button;
-		
-}
-
-function btPrint(){
-	
-	var button = cB("imprimir");
-	
-			button.setAttribute('action','print');
-			button.onclick=(function(){
-
-				print();
-
-			});
-	
-	return button;
-	
-}
-
-function btAttach(){
-	
-	var attribute = [];
-
-		attribute.tag 		= "input";
-		attribute.type 		= "file";
-		attribute.name 		= "fileupload";
-		//attribute.anexos 	= object.getAttribute('value');
-		attribute.gwidth 	= "900";
-		attribute.multiple	= "";
-		attribute.onchange	= "formUpload(this);";
-
-	var fileupload = cEA(attribute);
-	
-	var attribute = [];
-
-		attribute.tag 		= "div";
-		attribute.class 	= "fileupload";
-
-	
-	var divFileUpload = cEA(attribute);
-	
-	var attribute = [];
-
-		attribute.tag 		= "icon";
-		attribute.class 		= "icon-attachment";
-	
-	var icon = cEA(attribute);
-	
-	var attribute = [];
-
-		attribute.tag 		= "button";
-		attribute.text 		= "";
-		attribute.action 	= "attach";
-	
-	var divFileUploadEnviar = cEA(attribute);
-	
-	divFileUploadEnviar.appendChild(icon);
-	
-	divFileUpload.appendChild(divFileUploadEnviar);
-	divFileUpload.appendChild(fileupload);
-	
-	return divFileUpload;
-	
-}
-
-function btSeeAttach(){
-
-				var anexos=document.getElementsByName('files')[0].value;
-	
-			var attribute = [];
-
-			attribute.tag 		= "button";
-			attribute.text 		= "Visualizar anexos";
-			attribute.onclick	= "window.open('/admin/json/jsonAnexosView.php?anexos="+anexos+"','_blank')";
-			attribute.type		= "button";
-			attribute.action	= "seeattach";
-	
-		var bt = cEA(attribute);
-			return bt;
-
-}
-
-function formSend(data,codigo){
-
-    var xmlhttp;
-
-    xmlhttp = new XMLHttpRequest();
-
-    xmlhttp.onreadystatechange = function() {
-
-      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-
-        var userinfo  = JSON.parse(localStorage.userinfo);
-
-
-              if(userinfo.codigo==codigo){
-
-                // Proprio Profile
-                document.body.setAttribute("loading","0");
-
-              }else{
-
-
-                  if(codigo!==null){
-
-                    loadItemJson(codigo,function(json){
-
-                      var userinfo  = JSON.parse(localStorage.userinfo);
-
-                        var item = gibc(codigo);
-                        race(item);
-                        loadItem(item,json);
-                        document.body.setAttribute("loading","0");
-
-                    });
-
-                  }else{
-
-                    tabelaLoad(gA(),function(tabela){
-                      document.body.setAttribute("loading","0");
-                      rE(got(document,'tabela'));
-                      document.getElementsByTagName("view")[0].appendChild(tabela);
-                    });
-
-                  }
-
-              }
-
-        formClose();
-
-      }
-
-    };
-
-    var url  = localStorage.getItem("url")+'/admin/json/jsonUpdate.php';
-
-    document.body.setAttribute("loading","1");
-
-    data.append("session",localStorage.session);    
-    data.append("area",got(document,"window")[0].getAttribute("modules")); 
-    data.append("acao","update");
-    data.append("codigo",codigo);
-
-    xmlhttp.open("POST", url, true);
-    xmlhttp.send(data);
-  
-}
-
-function formView(areas,codigo){
-	
-  formMount(areas,codigo,function(){
-
-    document.body.setAttribute("loading","0");
-
-    let userinfo  = JSON.parse(localStorage.userinfo);
-
-    let item      = gibc(codigo);
-        item.setAttribute("open","1");
-
-    localStorage.openedformcodigo=codigo;
-
-    gridShow();
-
-  });
-
-}
-
-function fields(data){
-
-  switch(data.type) {
-
-    case "hide":            var div = formMountHide(attribute);div.setAttribute('type',type);           break;
-    case "hideinput":       var div = formMountHideInput(attribute);div.setAttribute('type',type);      break; 
-    case "textarea":        var div = formMountTextarea(attribute);div.setAttribute('type',type);       break;
-    case "textareapreset":  var div = formMountTextareaPreset(attribute);div.setAttribute('type',type);       break;
-    case "data":            var div = formMountData(attribute);div.setAttribute('type',type);           break;
-    case "text":            var div = formMountText(attribute);div.setAttribute('type',type);           break;
-    case "password":        var div = formMountPassword(attribute);div.setAttribute('type',type);       break;
-    case "youtube":         var div = formMountYoutube(attribute);div.setAttribute('type',type);        break;  
-    case "trueorfalse":     var div = formMountTrueFalse(attribute);div.setAttribute('type',type);      break;	
-    case "texturl":         var div = formMountTexturl(attribute);div.setAttribute('type',type);        break;
-    case "selectajax":      var div = formMountSelectAjax(attribute);                                   break;
-    case "selectcolor":     var div = formMountSelectColor(attribute);                                  break;   
-    case "search":          var div = formMountSelectCustom(attribute);                                 break;
-    case "multiple":        var div = formMountMultiple(attribute);div.setAttribute('type',type);       break;
-    case "multiplehidden":  var div = formMountMultipleHidden(attribute);div.setAttribute('type',type); break;
-    case "share":           var div = formFieldShare(attribute);div.setAttribute('type',type);header.append(btOptionsBtShare());break;    
-    case "tag":             var div = formMountTag(attribute);div.setAttribute('type',type);            break;
-    case "taggroup":        var div = formMountTagGroup(attribute);div.setAttribute('type',type);       break; 
-    case "keywords":        var div = formMountKeywords(attribute);div.setAttribute('type',type);       break;        
-    case "fileupload":      var div = formMountFileupload(attribute);div.setAttribute('type',type);header.append(btHeaderAttach());break;
-    case "select":
-                
-        if(attribute.value=='undefined'){
-
-            if(attribute.value.length<30){
-                var div = formMountSelect(attribute);
-            }else{
-                var div = formMountSelectCustom(attribute);
-            }
-
-        }else{
-            
-            var div = formMountSelect(attribute);
-            
-        }
-
-      break;
-
-    default:
-            
-        var div = formMountText(attribute);
-        //console.log(type);
-
-	}
-}
-
-
-function counter(div){
-	
-	function conta(object){
-		
-		var limit =	object.getAttribute("limit");
-		var restante = limit-object.value.length;
-		
-		if(restante<0){
-			object.parentNode.setAttribute("class","error");
-		}else{
-			object.parentNode.setAttribute("class","");
-		}
-		
-		return  " ("+restante+" caracteres restantes)";
-		
-	}
-	
-	var object = pegaObjetoPorAtributoP(div,"limit");
-	
-	if(object.length){
-
-		var label=got(div,"label")[0];
-	
-		var counter = cE("counter");
-		var limit =	object[0].getAttribute("limit");
-		
-		label.appendChild(counter);
-		
-		counter.innerHTML=conta(object[0]);
-		
-		object[0].onkeyup=(function(){
-			
-			counter.innerHTML=conta(this);
-			
-		});
-		
-	}
-	
-}
-
-function formMountData(attribute){
-  
-  var label       = cE("label");
-	var div         = cE("div");
-  
-  label.appendChild(cT(attribute.label));
-
-  div.appendChild(label);
-
-	var object = cE("input");
-	
-	for (var key in attribute){
-				
-		if(attribute[key]!=="0" && attribute[key]!==""){
-			object.setAttribute(key,attribute[key]);
-		}
-
-	}
-	
-	object.setAttribute("autocomplete","off");
-	object.setAttribute("type","date");
-	object.setAttribute("class","default");
-	object.setAttribute("maxlength","10");
-
-
-  
-  div.appendChild(object);
-  
-  return div;
-  
-}
-
-function verifyDate(e){
-	
-
-	
-	if(e.value.match(/^\d{2}\/\d{2}\/\d{4}$/) == null){
-		e.value="";
-	}
-	
-}
-
-function maskDate(e){
-	
-	var date = e.value;
-	
-  if (date.match(/^\d{2}$/) !== null) {
-     e.value = date + '/';
-  }else if (date.match(/^\d{2}\/\d{2}$/) !== null) {
-     e.value = date + '/';
-  }
-	
-	
-}
-
-
-function applyDataMask(field) {
-    var mask = field.dataset.mask.split('');
-    
-    // For now, this just strips everything that's not a number
-    function stripMask(maskedData) {
-        function isDigit(char) {
-            return /\d/.test(char);
-        }
-        return maskedData.split('').filter(isDigit);
-    }
-    
-    // Replace `_` characters with characters from `data`
-    function applyMask(data) {
-        return mask.map(function(char) {
-            if (char != '_') return char;
-            if (data.length == 0) return char;
-            return data.shift();
-        }).join('')
-    }
-    
-    function reapplyMask(data) {
-        return applyMask(stripMask(data));
-    }
-    
-    function changed() {   
-        var oldStart = field.selectionStart;
-        var oldEnd = field.selectionEnd;
-        
-        field.value = reapplyMask(field.value);
-        
-        field.selectionStart = oldStart;
-        field.selectionEnd = oldEnd;
-    }
-    
-    field.addEventListener('click', changed)
-    field.addEventListener('keyup', changed)
-}
-
-
-function formMountHide(attribute){
-	
- var div   = cE("div");	
-	
-	var icon  = cE("icon");
-	    icon.setAttribute("class","icon-");
-  
-			div.appendChild(icon); 
-	
-			icon.onclick=function(){formHide(this);};
-	
-	
-  var label       = cE("label");
-  
-  var vhide = (attribute.value)?"0":"1";
-
-			div.setAttribute("hide",vhide);
-
-			label.onclick=function(){formHide(this);};
-
-			label.appendChild(cT(attribute.label));
-
-			div.appendChild(label);
-
-			attribute.type			= "text";
-
-			var object = cE("input");
-
-			for (var key in attribute){
-
-				if(attribute[key]!=="0" && attribute[key]!==""){
-					
-					object.setAttribute(key,attribute[key]);
-					
-				}
-
-			}
-
-			object.setAttribute("autocomplete","off");
-			object.setAttribute("type","text");
-			// object.setAttribute("class","default");
-
-			div.appendChild(object);
-  
-  return div;
-  
-}
-
-function formHide(e){
-	
-	var hide = e.parentElement.getAttribute('hide');
-	
-	if(hide==1){
-		e.parentElement.setAttribute('hide','0');
-	}else if(hide==0){
-		e.parentElement.setAttribute('hide','1');
-	}
-	
-}
-
-function formMountHideInput(attribute){
-	
- var div   = cE("div");	
-	
-	var icon  = cE("icon");
-	    icon.setAttribute("class","icon-");
-  
-			div.appendChild(icon); 
-	
-			icon.onclick=function(){formHideInput(this);};
-	
-	
-  var label       = cE("label");
-  
-  var vhide = (attribute.value)?"0":"1";
-
-			div.setAttribute("hide",vhide);
-
-			label.onclick=function(){formHideInput(this);};
-
-			label.appendChild(cT(attribute.label));
-
-			div.appendChild(label);
-
-			attribute.type			= "text";
-
-			var object = cE("input");
-
-			for (var key in attribute){
-
-				if(attribute[key]!=="0" && attribute[key]!==""){
-					
-					object.setAttribute(key,attribute[key]);
-					
-				}
-
-			}
-
-			object.setAttribute("autocomplete","off");
-			object.setAttribute("type","text");
-			// object.setAttribute("class","default");
-
-			div.appendChild(object);
-  
-  return div;
-  
-}
-
-function formHideInput(e){
-	
-	var hide = e.parentElement.getAttribute('hide');
-	
-	if(hide==1){
-		e.parentElement.setAttribute('hide','0');
-	}else if(hide==0){
-		e.parentElement.setAttribute('hide','1');
-	}
-	
-}
-
-/*
-
-FormFieldKeywords
-Selecionar mais de um valor, como se fosse marcação de palavra chave
-
-*/
-
-function formMountKeywords(attribute){
- 
-  var label       = cE("label");
-	var div         = cE("div");
-  
-  label.appendChild(cT(attribute.label));
-  div.appendChild(label);
-
-
-		var select = cE("keywords");
-		var input  = cE("input");
-		var valor  = (attribute.value[0].value[0]==",")?attribute.value[0].value:","+attribute.value[0].value;
-	
-		input.setAttribute("name",attribute.name);
-		input.setAttribute("title",attribute.title);
-		input.setAttribute("value",valor);
-		input.setAttribute("autocomplete","off");
-		input.setAttribute("required","");
-		input.setAttribute("type","hidden");
-		input.setAttribute("tipo","select");	
-		select.appendChild(input);
-		
-		var arrayS = attribute.value;
-
-		for (var keyS in arrayS){
-			
-			var codigo = arrayS[keyS].codigo;
-			var label  = arrayS[keyS].label+" ";
-			
-			var bt = cB(label);
-			
-			bt.setAttribute("value",codigo);
-			
-			var selected = valor.indexOf(","+codigo+","); 
-			
-			if(selected>=0){
-		
-				bt.setAttribute('selected','1');
-
-			}else{
-				
-				bt.setAttribute('selected','0');
-				
-            }
-            
-            if(attribute.action=="view"){
-
-                if(selected>=0){select.appendChild(bt);}
-
-            }else{
-            
-                bt.onclick=(function(){
-				
-                    //var bt 		= got(this.parentNode,"button");
-                    var attr = this.getAttribute("selected");
-                    
-                    if(attr==1){
-                        
-                        this.setAttribute("selected","0");
-                        var valor = ","+this.value+",";
-                        var text = input.value;
-                        var x = text.replace(valor,","); 
-                        input.value=x;
-                        
-                    }else{
-                        
-                        this.setAttribute("selected","1");
-                        var valor = this.value+",";
-                        input.value=input.value+valor;
-                        
-                    }
-
-                });
-
-                select.appendChild(bt);
-
-            }
-
-		}
-	
-
-	
-	  div.appendChild(select);
-
-  return div;
-	
-}
-
-
-
-function formMountMultiple(attribute){
- 
-  var label       = cE("label");
-	var div         = cE("div");
-  
-  label.appendChild(cT(attribute.label));
-  div.appendChild(label);
-
-  div.setAttribute("class","multiple");
-  //finder(div);
-
-		var select = cE("multiple");
-		var input  = cE("input");
-		var valor  = (attribute.value[0].value[0]==",")?attribute.value[0].value:","+attribute.value[0].value;
-	
-		input.setAttribute("name",attribute.name);
-		input.setAttribute("title",attribute.title);
-		input.setAttribute("value",valor);
-		input.setAttribute("autocomplete","off");
-		input.setAttribute("required","");
-		input.setAttribute("type","hidden");
-		input.setAttribute("tipo","select");	
-		select.appendChild(input);
-		
-		var arrayS = attribute.value;
-
-		for (var keyS in arrayS){
-			
-			var codigo = arrayS[keyS].codigo;
-			var label  = arrayS[keyS].label+" ("+arrayS[keyS].codigo+")";
-			
-			var bt = cB(label);
-			
-			bt.setAttribute("value",codigo);
-			
-			var selected = valor.indexOf(","+codigo+","); 
-			
-			if(selected>=0){
-		
-				bt.setAttribute('selected','1');
-
-			}else{
-				
-				bt.setAttribute('selected','0');
-				
-			}
-			
-			bt.onclick=(function(){
-				
-				//var bt 		= got(this.parentNode,"button");
-				var attr = this.getAttribute("selected");
-				
-				if(attr==1){
-					
-					this.setAttribute("selected","0");
-					var valor = ","+this.value+",";
-					var text = input.value;
-					var x = text.replace(valor,","); 
-					input.value=x;
-					
-				}else{
-					
-					this.setAttribute("selected","1");
-					var valor = this.value+",";
-					input.value=input.value+valor;
-					
-				}
-
-			});
-
-			select.appendChild(bt);
-
-		}
-	
-
-	
-	  div.appendChild(select);
-
-  return div;
-	
-}
-
-
-
-function formMountPassword(attribute){
-  
-  var label       = cE("label");
-	var div         = cE("div");
-  
-  label.appendChild(cT(attribute.label));
-
-  div.appendChild(label);
-
-	var object = cE("input");
-	
-	for (var key in attribute){
-				
-		if(attribute[key]!=="0" && attribute[key]!==""){
-			object.setAttribute(key,attribute[key]);
-		}
-
-	}
-	
-	object.setAttribute("type","password");
-	object.setAttribute("class","default");
-	object.setAttribute("placeholder",attribute.label);
-  div.appendChild(object);
-  
-  return div;
-  
-}
-
-
-function formMountSearchMulti(attribute){
-
-    var div         = cE("div");
-  
-    var label       = cE("label");
-
-        label.appendChild(cT(attribute.label));
-  
-        div.appendChild(label);
- 
-		var finder       = cE("input");
-	
-				finder.setAttribute("name","finder");
-		    finder.setAttribute("autocomplete","new-password")
-	
-		var labelfigure       = cE("labelfigure");
-
-			
-	
-		var icon				= cE("icon");
-	
-		if(attribute.value.length<50){
-				icon.setAttribute("class","icon-arrowdown");
-		}
-	
-		var iconconfig				= cE("icon");
-				iconconfig.setAttribute("class","icon-cog");
-				iconconfig.setAttribute("modules",attribute.name);
-				//ipconfig.setAttribute("");
-	
-				iconconfig.onclick=(function(){
-					
-					if(confirm("Tem certeza que deseja mudar de página?")){
-						
-						modulesOpen(this);
-						formClose();
-						
-					}else{
-						
-					};
-					
-				});
-	
-		var input = cE("input");
-				input.setAttribute("name",attribute.name);
-				input.setAttribute("type","hidden");
-				input.setAttribute("codigo",attribute.codigo);
-				input.setAttribute("required",attribute.required);
-	
-	
-		finder.placeholder="Escolha "+attribute.label;
-		finder.setAttribute("class","default");
-
-	
-		div.appendChild(labelfigure);
-		div.appendChild(finder);
-		div.appendChild(icon);
-		div.appendChild(iconconfig);
-	
-		var select = cE("select3");
-				
-	select.setAttribute("mouse","0");
-	
-	if(attribute.value!==undefined){
-		
-		var valor  = (attribute.value[0].value!=="")?attribute.value[0].value:"1";
-
-		var arrayS = attribute.value;
-
-		for (var keyS in arrayS){
-
-			var codigo  = arrayS[keyS].codigo;
-			var alabel  = arrayS[keyS].label;
-
-			var bt 			= cE("opt");
-			
-			var optlabel		= cE("label");
-					optlabel.appendChild(cT(alabel));
-			
-			var optfigure 	= cE("figure");
-			
-			if(arrayS[keyS].filename!==null){
-				
-					optfigure.setAttribute("style","background-image:url("+localStorage.getItem("imgm")+arrayS[keyS].filename+"?key="+arrayS[keyS].key+");");
-				
-			}
-
-			if(arrayS[keyS].colors!==null){
-				
-					optfigure.setAttribute("style","background-color:"+arrayS[keyS].colors+";");
-				
-			}
-			
-			bt.appendChild(optfigure);
-			bt.appendChild(optlabel);
-			
-			bt.setAttribute("value",codigo);
-
-			if(attribute.name=="colors"){
-				
-				optfigure.setAttribute("style","background-color:"+alabel+";");
-			}
-				
-			bt.onclick=(function(){
-				
-				input.value=this.getAttribute("value");
-				label.value=got(this,"label")[0].innerHTML;
-				label.placeholder=got(this,"label")[0].innerHTML;
-				//var select3 = document.getElementsByName(attribute.name);
-				var style=got(this,"figure")[0].getAttribute("style");
-				
-				labelfigure.setAttribute("style",style);
-				
-				var select3=this.parentElement;
-				
-				var opt = got(select3,"opt");
-				
-				for (var x=0;x<opt.length;x++){
-					
-					opt[x].setAttribute("selected",false);
-					opt[x].style.display="none";
-				}
-				
-				this.setAttribute('selected',true);
-				
-			});
-			
-			if(codigo==arrayS[keyS].value){
-				
-				label.placeholder=alabel;
-				input.value=codigo;
-				bt.setAttribute('selected',true);
-				
-				var style=got(bt,"figure")[0].getAttribute("style");
-				
-				labelfigure.setAttribute("style",style);
-				
-				
-				
-			}else{
-
-			}
-			//bt.setAttribute('selected',false);
-			select.appendChild(bt);
-
-		}
-	}
-	
-	select.onmouseover = function(){
-		
-		this.setAttribute("mouse","1");
-		
-	}
-	
-	select.onmouseout = function(){
-		
-		this.setAttribute("mouse","0");
-			
-	}
-	
-	label.onblur = function() {
-		
-		if(select.getAttribute("mouse")==0){
-			
-			var item = got(select,"opt");
-
-			for(var x=0;x<item.length;x++){
-
-				item[x].style.display="none";
-
-			}
-			label.value="";
-		}
-		
-	};
-	
-	label.onclick = function() {
-		
-		if(attribute.value.length<50){
-				var item = got(select,"opt");
-
-					for(var x=0;x<item.length;x++){
-
-								item[x].style.display="block";
-
-				}
-		}
-		
-	};
-	
-		label.onkeyup = function() {
-
-		var item = got(select,"opt");
-
-		if(item.length && this.value.length>3){
-
-			var string1 = removeAcento(this.value.toLowerCase());
-
-			for(var x=0;x<item.length;x++){
-
-				var ohtml=removeAcento(item[x].innerHTML.toLowerCase());
-
-					if(ohtml.indexOf(string1) >= 0){			
-
-						item[x].style.display="block";
-
-					}else{
-
-						item[x].style.display="none";
-
-					}
-
-			}
-
-		}else{
-			
-			for(var x=0;x<item.length;x++){
-		
-				item[x].style.display="none";
-
-			}
-			
-		}
-
-	};
-	
-	div.appendChild(select);
-	//var selectgrid	= cE("selectgrid");
-	//div.appendChild(selectgrid);
-	div.appendChild(input);
-
-  return div;
-	
-}
-
-
-function formMountSelect(attribute){
-	 
-    var div         = cE("div");
-  
-    var label       = cE("label");
-  
- 
-		var icon				= cE("icon");
-				icon.setAttribute("class","icon-arrow-down");
- 
-	
-    label.appendChild(cT(attribute.label));
-  
-		var placeholder = cE("placeholder");
-        placeholder.appendChild(cT("Selecione"));
-        placeholder.setAttribute("class","default");
-
-    div.appendChild(label);
-    if(attribute.action!=="view"){
-        div.appendChild(placeholder);
-		    div.appendChild(icon);
-    }
-		//div.appendChild(iconconfig);
-	
-		var select = cE("select");
-				select.setAttribute("name",attribute.name);
-	
-    if(attribute.value!==undefined){
-
-      var valor  = (attribute.value[0].value!=="")?attribute.value[0].value:"1";
-
-      var arrayS = attribute.value;
-
-      var bt = cE("option");
-      select.appendChild(bt);
-
-      bt.appendChild(cT("Selecione"));
-      bt.setAttribute("value","");
-
-        for (var keyS in arrayS){
-
-          var codigo = arrayS[keyS].codigo;
-          var alabel  = arrayS[keyS].label;
-
-          var bt = cE("option");
-
-          bt.appendChild(cT(alabel));
-
-          bt.setAttribute("value",codigo);
-
-          if(attribute.name=="colors"){
-            bt.setAttribute("style","background-color:"+alabel+";");
-
-          }
-
-          if(codigo==arrayS[keyS].value){
-
-
-            placeholder.innerHTML=alabel;
-
-            bt.setAttribute('selected',true);
-
-            
-            if(attribute.action=="view"){
-              label.innerHTML=label.innerHTML+alabel;
-            }
-
-          }else{
-
-            //bt.setAttribute('selected','0');
-
-          }
-
-          select.appendChild(bt);
-
-        }
-    
-	  }
-
-		select.onchange=(function(){placeholder.innerHTML=this.options[this.selectedIndex].innerHTML;});
-  
-    if(attribute.action!=="view"){
-      div.appendChild(select);
-    }
-  
-  return div;
-	
-}
-
-function formMountSelectCustom(attribute){
-
-    var div           = cE("div");
-  
-    var label         = cE("label");
-
-        label.appendChild(cT(attribute.label));
-  
-        div.appendChild(label);  
-  
-		var finder        = cE("input");
-	
-				finder.setAttribute("name","findernew");
-        finder.setAttribute("title",attribute.label);
-	
-		var labelfigure   = cE("labelfigure");
-
-		var icon				  = cE("icon");
-	
-		if(attribute.value.length<50){
-				icon.setAttribute("class","icon-arrow-down");
-		}
-	
-		var iconconfig				= cE("icon");
-				iconconfig.setAttribute("class","icon-cog");
-				iconconfig.setAttribute("modules",attribute.name);
-				//ipconfig.setAttribute("");
-	
-				iconconfig.onclick=(function(){
-					
-					if(confirm("Tem certeza que deseja mudar de página?")){
-						
-						modulesOpen(this);
-						formClose();
-						
-					}else{
-						
-					};
-					
-				});
-	
-		var input = cE("input");
-				input.setAttribute("name",attribute.name);
-				input.setAttribute("type","hidden");
-				input.setAttribute("codigo",attribute.codigo);
-				input.setAttribute("required",attribute.required);
-	
-		finder.placeholder="Escolha "+attribute.label;
-		finder.setAttribute("class","default");
-		finder.setAttribute("autocomplete","new-password");
-	
-  
-  
-		div.appendChild(labelfigure);
-  
-		div.appendChild(finder);
-		div.appendChild(icon);
-		//div.appendChild(iconconfig);
-	
-		var select = cE("select3");
-				
-	      select.setAttribute("mouse","0");
-  
-	//console.log("name"+attribute.name+" - valor:"+attribute.value);
-  
-	if(attribute.value!==undefined){
-		
-		var valor  = (attribute.value[0].value!=="")?attribute.value[0].value:"1";
-
-		var arrayS = attribute.value;
-
-		for (var keyS in arrayS){
-
-			var codigo  = arrayS[keyS].codigo;
-			var alabel  = arrayS[keyS].label;
-
-			var bt 			= cE("opt");
-			
-			var optlabel		= cE("label");
-					optlabel.appendChild(cT(alabel));
-			
-			var optfigure 	= cE("figure");
-			
-			if(arrayS[keyS].filename!==undefined){
-				
-					optfigure.setAttribute("style","background-image:url("+localStorage.getItem("imgm")+arrayS[keyS].filename+"?key="+arrayS[keyS].key+");");
-				
-			}
-
-			if(arrayS[keyS].colors!==undefined){
-				
-					optfigure.setAttribute("style","background-color:"+arrayS[keyS].colors+";");
-				
-			}
-			
-      if(arrayS[keyS].filename!==undefined || arrayS[keyS].colors!==undefined){
-        
-			  bt.appendChild(optfigure);
-        
-      }
-      
-      
-			bt.appendChild(optlabel);
-			
-			bt.setAttribute("value",codigo);
-
-			if(attribute.name=="colors"){
-				
-				optfigure.setAttribute("style","background-color:"+alabel+";");
-			}
-				
-			bt.onclick=(function(){
-				
-				input.value=this.getAttribute("value");
-				finder.value=got(this,"label")[0].innerHTML;
-				finder.placeholder=got(this,"label")[0].innerHTML;
-				//var select3 = document.getElementsByName(attribute.name);
-				var style=got(this,"figure")[0].getAttribute("style");
-				
-				labelfigure.setAttribute("style",style);
-				
-				var select3=this.parentElement;
-				
-				var opt = got(select3,"opt");
-				
-				for (var x=0;x<opt.length;x++){
-					
-					opt[x].setAttribute("selected",false);
-					opt[x].style.display="none";
-				}
-				
-				this.setAttribute('selected',true);
-				select3.style.display="none";
-        
-			});
-			
-			if(codigo==arrayS[keyS].value){
-				
-				finder.value=alabel;
-				input.value=codigo;
-        
-				bt.setAttribute('selected',true);
-        
-        if(got(bt,"figure").length){
-          
-				  var style=got(bt,"figure")[0].getAttribute("style");
-          labelfigure.setAttribute("style",style);
-          
-        }
-				
-			}else{
-
-			}
-			//bt.setAttribute('selected',false);
-			select.appendChild(bt);
-
-		}
-    
-	}
-	
-	select.onmouseover = function(){
-		
-		this.setAttribute("mouse","1");
-		
-	}
-	
-	select.onmouseout = function(){
-		
-		this.setAttribute("mouse","0");
-			
-	}
-	
-	finder.onblur = function() {
-		
-		if(select.getAttribute("mouse")==0){
-			
-			var item = got(select,"opt");
-
-			for(var x=0;x<item.length;x++){
-
-				item[x].style.display="none";
-
-			}
-			//label.value="";
-       select.style.display="none";
- 
-		}
-		
-	};
-  
-	icon.onclick=(function(){
-    label.focus();
-  });
-  
-	finder.onfocus = function() {
-		
-		if(attribute.value.length<50){
-      
-				var item = got(select,"opt");
-
-				for(var x=0;x<item.length;x++){
-
-						item[x].style.display="block";
-
-				}
-      
-		}
-    
-    select.style.display="block";
-		
-	};
-  
-	
-	finder.onkeyup = function() {
-
-	  var item = got(select,"opt");
-
-		if(item.length && this.value.length>3){
-
-			var string1 = removeAcento(this.value.toLowerCase());
-
-			for(var x=0;x<item.length;x++){
-
-				var ohtml=removeAcento(item[x].innerHTML.toLowerCase());
-
-					if(ohtml.indexOf(string1) >= 0){			
-
-						item[x].style.display="block";
-
-					}else{
-
-						item[x].style.display="none";
-
-					}
-
-			}
-
-		}else{
-			
-			for(var x=0;x<item.length;x++){
-		
-				item[x].style.display="none";
-
-			}
-			
-		}
-
-	};
-	
-	div.appendChild(select);
-	//var selectgrid	= cE("selectgrid");
-	//div.appendChild(selectgrid);
-	div.appendChild(input);
-
-  return div;
-	
-}
-
-function formMountSelectAjax(attribute){
-
-  var div           = cE("div");
-  var label         = cE("label");
-
-  if(attribute.title!==''){
-
-    label.appendChild(cT(attribute.label));
-    formFieldTooltip(label,attribute.title);   
-    
-  }else{
-    
-    label.appendChild(cT(attribute.label));
-    
-  }
-
-  div.appendChild(label);  
-
-  var finder        = cE("input");
-
-      finder.setAttribute("name","findernew");
-      finder.setAttribute("title",attribute.label);
-      finder.setAttribute("id","finder"+attribute.name);
-
-  var labelfigure   = cE("labelfigure");
-  
-      if(attribute.value.length){
-
-        labelfigure.style.backgroundColor=(attribute.value[0].colors!==undefined)?attribute.value[0].colors:"";
-        labelfigure.style.backgroundImage=(attribute.value[0].filename!==undefined)?"url("+localStorage.getItem("imgm")+attribute.value[0].filename+"?key="+attribute.value[0].key+")":"";
-
-      }
-  
-  var icon				  = cE("icon");
-
-  if(attribute.value.length<50){
-    
-      icon.setAttribute("class","icon-arrowdown");
-    
-  }
-
-  var iconconfig				= cE("icon");
-      iconconfig.setAttribute("class","icon-cog");
-      iconconfig.setAttribute("modules",attribute.name);
-
-  var input = cE("input");
-      input.setAttribute("name",attribute.name);
-      input.setAttribute("id",attribute.name);
-      input.setAttribute("type","hidden");
-      input.setAttribute("codigo",attribute.codigo);
-      input.setAttribute("required",attribute.required);
-  
-  if(attribute.value[0]!==undefined){
-    input.value=attribute.value[0].value;
-    
-  }
-  
-  finder.placeholder=(attribute.value[0]!==undefined)?attribute.value[0].label:"Escolha "+attribute.label;
-  finder.setAttribute("class","default");
-  finder.setAttribute("autocomplete","off");
-
-
-  div.appendChild(labelfigure);
-
-  div.appendChild(finder);
-  div.appendChild(icon);
-
-  var select = cE("selectajax");
-      select.setAttribute("mouse","0");
-  
- 
-      select.onmouseover = function(){this.setAttribute("mouse","1");}
-      select.onmouseout  = function(){this.setAttribute("mouse","0");}
-
-	icon.onclick=(function(){label.focus();});
- 
-	finder.onkeyup = function() {
-
-    
-    if(finder.value.length>=3){
-      
-      loadOpt(this,attribute);
-       
-    }else{
-      
-      select.style.display="none";
-      
-    }
-
-	};
-  
-  div.onblur = function() {};
-	
-	div.appendChild(select);
-	div.appendChild(input);
-
-  return div;
-	
-}
-
-
-
-function mountOpt(json,attribute){
-  
-  var opt    = document.createElement("opt");
-  var label  = document.createElement("label");
-  var figure = document.createElement("figure");
-  
-  label.appendChild(document.createTextNode(json.label));
-  opt.setAttribute("codigo",json.codigo);
-  
-  
-  if(json.colors!==undefined){
-
-    figure.setAttribute("style","background-color:"+json.colors+";");
-
-  }
-
-  if(json.filename!==undefined){
-
-    figure.setAttribute("style","background-image:url("+localStorage.getItem("imgm")+json.filename+"?key="+json.key+");");
-
-  }
-  
-  opt.onclick=(function(){
-    
-    var finder = document.getElementById("finder"+attribute.name);
-    var input  = document.getElementById(attribute.name);
-    var select = document.getElementById("div"+attribute.name);
-
-    var selectajax = select.getElementsByTagName("selectajax")[0];
-
-    var labelfigure = select.getElementsByTagName("labelfigure")[0];
-    
-    if(json.colors!==undefined){
-      
-      selectajax.style.display="none";
-      labelfigure.setAttribute("style","background-color:"+json.colors+";");
-      
-    }
-    
-    if(json.filename!==undefined){
-      
-       selectajax.style.display="none";
-       labelfigure.setAttribute("style","background-image:url("+localStorage.getItem("imgm")+json.filename+"?key="+json.key+");");
-      
-    }
-  
-    let window = document.querySelector("window");
-        window.setAttribute(attribute.name,json.codigo)
-    
-    input.value        = json.codigo;
-    finder.value       = label.innerHTML;
-    finder.placeholder = label.innerHTML;
-    
-  });
-              
-
-    
-  opt.appendChild(figure);
-  opt.appendChild(label);
-  
-  return opt;
-  
-}
-
-function loadOpt(element,attribute){
-  
-	var url 	= localStorage.getItem("url")+'/admin/json/jsonGetTableView.php?p='+attribute.name+'|codigo|label&l=label|'+element.value;
-
-	var xmlhttp;
-
-	xmlhttp = new XMLHttpRequest();
- 
-	xmlhttp.onreadystatechange = function() {
-
-		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			
- 			var json = JSON.parse(xmlhttp.responseText);
-
-      //var select= document.getElementById("div"+attribute.name).getElementsByTagName("selectajax")[0];
-      
-      var select= element.parentElement.getElementsByTagName("selectajax")[0];
-      
-        race(select);
-
-        for(var x=0;x<json.length;x++){
-
-          select.appendChild(mountOpt(json[x],attribute));
-
-        }
-      
-        if(json.length>=1){
-          select.style.display='block';
-        }else{
-          select.style.display='none';
-        }
-      
-		}
-		
-	};
-	
-	xmlhttp.open("GET", url, true);
-	xmlhttp.send();  
-  
-}
-
-function formMountSelectColor(attribute){
-
-  var div           = cE("div");
-  var label         = cE("label");
-
-  if(attribute.title!==''){
-
-    label.appendChild(cT(attribute.label));
-    formFieldTooltip(label,attribute.title);   
-    
-    //let fieldcodigo = input[x].parentElement.getAttribute("fieldcodigo");
-    //getLocalStorageMessages('fieldtutorial'+fieldcodigo)+"\n" ;  
-    
-  }else{
-    
-    label.appendChild(cT(attribute.label));
-    
-  }
-
-  div.appendChild(label);  
-
-  var finder        = cE("input");
-
-      finder.setAttribute("name","findernew");
-      finder.setAttribute("title",attribute.label);
-      finder.setAttribute("id","finder"+attribute.name);
-
-  var labelfigure   = cE("labelfigure");
-  
-      if(attribute.value.length){
-
-        labelfigure.style.backgroundColor=(attribute.value[0].colors!==undefined)?attribute.value[0].colors:"";
-        labelfigure.style.backgroundImage=(attribute.value[0].filename!==undefined)?"url("+localStorage.getItem("imgm")+attribute.value[0].filename+"?key="+attribute.value[0].key+")":"";
-
-      }
-  
-  var icon				  = cE("icon");
-
-  if(attribute.value.length<50){
-    
-      icon.setAttribute("class","icon-arrowdown");
-    
-  }
-
-  var iconconfig				= cE("icon");
-      iconconfig.setAttribute("class","icon-cog");
-      iconconfig.setAttribute("modules",attribute.name);
-
-  var input = cE("input");
-      input.setAttribute("name",attribute.name);
-      input.setAttribute("id",attribute.name);
-      input.setAttribute("type","hidden");
-      input.setAttribute("codigo",attribute.codigo);
-      input.setAttribute("required",attribute.required);
-  
-  if(attribute.value[0]!==undefined){
-      input.value=attribute.value[0].value;
-  }
-  
-  finder.placeholder=(attribute.value[0]!==undefined)?attribute.value[0].label:"Escolha "+attribute.label;
-  finder.setAttribute("class","default");
-  finder.setAttribute("autocomplete","off");
-
-
-  div.appendChild(labelfigure);
-
-  div.appendChild(finder);
-  div.appendChild(icon);
-
-  var select = cE("selectajax");
-
-      select.setAttribute("mouse","0");
-  
-
-  
-	select.onmouseover = function(){
-		
-		this.setAttribute("mouse","1");
-		
-	}
-	
-	select.onmouseout = function(){
-		
-		this.setAttribute("mouse","0");
-			
-	}
-
-	icon.onclick=(function(){
-    label.focus();
-  });
- 
-	finder.onkeyup = function() {
-    
-    if(finder.value.length>=3){
-      
-      loadOpt(this,attribute);
-       
-    }else{
-      
-      select.style.display="none";
-      
-    }
-
-	};
-  
-  div.onblur = function() {console.log('teste')};
-	
-	div.appendChild(select);
-	div.appendChild(input);
-
-  return div;
-	
-}
-
-function formMountTag(attribute){
-              	     
-  var label       = cE("label");
-	var div         = cE("div");
-  var view        = cE("tagview");
-
-      label.appendChild(cT(attribute.label));
-
-      div.appendChild(label);
-      div.appendChild(btAdd(attribute));
-
-      div.setAttribute("class","formtag");
-
-  var tagsearchbox = cE("tagsearchbox");
-      tagsearchbox.appendChild(iconClose());
-  
-  var taghidden = cE("taghidden");
- 
-  var input  = cE("input");
- 
-  var valor  = attribute.value;
-	
-      input.setAttribute("name",attribute.name);
-      input.setAttribute("title",attribute.title);
-      input.setAttribute("value",valor);
-      input.setAttribute("autocomplete","off");
-      input.setAttribute("required","");
-      input.setAttribute("type","hidden");
-      input.setAttribute("tipo","select");
-  
-      tagFinder(tagsearchbox);
-  
-		  tagsearchbox.appendChild(input);
-		
-	var arrayS = attribute.list;
-
-		for (var keyS in arrayS){
-			
-			var codigo = arrayS[keyS].codigo;
-			var label  = arrayS[keyS].label;
-      
-
-      
-			var opt = cE("opt");
-      
-			    opt.appendChild(cT(label));
-			    opt.setAttribute("value",codigo);
-     
-			var found = valor.indexOf('"codigo":"'+codigo+'"'); 
-			
-			if(found>=0){
-		
-				opt.setAttribute('selected','1');
-        
-        var val = getObjectByCode(valor,codigo);
-        
-        var list = [];
-
-            list.label=label;
-            list.codigo=codigo;
-            list.valor=val.valor;
-           // list.valor=codigo;
-        
-        view.appendChild(tag(list));        
-        
-			}else{
-				
-				opt.setAttribute('selected','0');
-				
-			}
-			
-			opt.onclick=(function(){
-				
-				var attr = this.getAttribute("selected");
-				
-				if(attr==1){
-					
-					this.setAttribute("selected","0");
-				
-					var text = input.value;
-          
-					var div = this.parentElement.parentElement.parentElement;
-          
-          var tagview = got(div,"tagview")[0];
-          
-          rE(goap(tagview,"c",this.getAttribute('value'))[0]);
-          
-          input.value=getSelectedValues(tagview);
-          
-				}else{
-					
-					this.setAttribute("selected","1");
-			
-          var list = [];
-          
-              list.label=this.innerHTML;
-              list.codigo=this.getAttribute('value');
-          
-          var div = this.parentElement.parentElement.parentElement;
-          
-          var tagview = got(div,"tagview")[0];
-              tagview.appendChild(tag(list));
-					    
-          input.value=getSelectedValues(tagview);
-          
-				}
-
-			});
-
-			taghidden.appendChild(opt);
-
-		}
-  
-	  tagsearchbox.appendChild(taghidden);    
-  
-	  div.appendChild(tagsearchbox);
-    div.appendChild(view);
-  
-  return div;
-	
-}
-
-function getObjectByCode(json,code){
-  
-  var obj = JSON.parse(json);
-  
-  for (var i = 0; i < obj.length; i++){
-  
-    if (obj[i].codigo == code){
-      return obj[i];
-    }
-    
-  }
-  
-}
-
-function iconClose(){
-  
-  var icon  = cE("icon");
-      icon.setAttribute("class","icon-cross");
-  
- 
-      icon.onclick=(function(){this.parentElement.parentElement.setAttribute("search","0");});
-  
-  return icon;
-  
-}
-
-function btAdd(attribute){
-  
-  var icon  = cE("icon");
-      icon.setAttribute("class","icon-plus");
-  
-  var label = cE("label");
-      label.appendChild(cT("Adicionar"));
-  
-  var btadd = cE("add");
-      btadd.onclick=(function(){this.parentElement.setAttribute("search","1");});
-  
-  
-      btadd.appendChild(icon);
-      btadd.appendChild(label);
-    
-  return btadd;
-  
-}
-
-function tag(list){
-  
-  var div     = cE("div");
-  var label   = cE("label");
-  
-  var valor   = cE("valor");  
-  
-      if(list.valor!==undefined){
-        
-        valor.appendChild(cT(list.valor));
-        
-      }
-  
-  valor.onblur=(function(){
-    
-    var tagview = this.parentElement.parentElement;
-    var valor = this.parentElement.parentElement.parentElement.getElementsByTagName("tagsearchbox")[0].getElementsByTagName("input")[1];
-    
-    valor.value=getSelectedValues(tagview);
-    
-  });
-  
-  var figure  = cE("figure");
-  
-  var btRemove   = cE("icon"); 
-  
-      btRemove.setAttribute("class","icon-cross");
-  
-  var text = cT(list.label);
-  
-  	btRemove.onclick=(function(){
-      
-      if(confirm("Tem certeza que deseja remover ?")){
-
-        var multiplehidden=got(this.parentElement.parentElement.parentElement,"taghidden")[0];
-
-        var input = got(multiplehidden,"input")[1];
-
-        var view=this.parentElement.parentElement;
-
-        rE(this.parentElement);
-        
-        input.value=getSelectedValues(view);
-
-      }
-        
-    });
-      
-      label.appendChild(text);
-      div.appendChild(figure);
-      div.appendChild(label);
-      div.appendChild(btRemove);
-      div.appendChild(valor);
-
-  
-      div.setAttribute('c',list.codigo);
-  
-  return div;
-  
-}
-
-function tagFinder(object){
-	
-	var finder = cE("input");
-
-      finder.setAttribute("placeholder","Digite para procurar");
-      finder.setAttribute("name","findernew"); 
-  
-	finder.onkeyup = function() {
-    
-    var item = got(object,"opt");
-    
-    if(this.value.length>=3){
-      
-      if(item.length){
-
-        var string1 = removeAcento(this.value.toLowerCase());
-
-        for(var x=0;x<item.length;x++){
-
-          var ohtml=removeAcento(item[x].innerHTML.toLowerCase());
-
-          //if(item[x].getAttribute("selected")=="0"){
-
-            if(ohtml.indexOf(string1) >= 0){			
-
-              //item[x].style.display="block";
-              item[x].setAttribute('found','1');
-
-
-            }else{
-
-              //item[x].style.display="none";
-              item[x].setAttribute('found','0');
-            }
-          //}
-        }
-      }
-
-    }else{
-      
-      for(var x=0;x<item.length;x++){
-
-        item[x].setAttribute('found','0');
-
-      }
-    }
-      
-	};
-	
-	object.appendChild(finder);
-	
-}
-
-function getSelectedValues(object){
-  
-  var item = object.getElementsByTagName("div");
-  var array = [];
-  
-  //console.log(item);
-  
-  for (var x=0;x<item.length;x++){
-    
-    array[x] = {codigo:item[x].getAttribute("c"),valor:item[x].getElementsByTagName("valor")[0].innerHTML}
-    
-    
-  }
-  
-  console.log(JSON.stringify(array));
-  return JSON.stringify(array);
-  
-}
-
-function formMountTagGroup(attribute){
-  
-  var label       = cE("label");
-	var div         = cE("div");
-  var tagview     = cE("tagview");
-
-      label.appendChild(cT(attribute.label));
-
-      div.appendChild(label);
-      div.appendChild(btAdd(attribute));
-
-      div.setAttribute("class","formtag");
-
-  var tagsearchbox = cE("tagsearchbox");
-      tagsearchbox.appendChild(iconClose());
-
-  var taghidden = cE("taghidden");
-
-  var input  = cE("input");
-
-  var valor  = attribute.value;
-
-      input.setAttribute("name",attribute.name);
-      input.setAttribute("title",attribute.title);
-      input.setAttribute("value",valor);
-      input.setAttribute("autocomplete","off");
-      input.setAttribute("required","");
-      input.setAttribute("type","hidden");
-      input.setAttribute("tipo","select");
-
-      tagFinder(tagsearchbox);
-
-      tagsearchbox.appendChild(input);
-  
- 
-	var arrayS = attribute.list;
-
-		for (var keyS in arrayS){
-			
-			var codigo = arrayS[keyS].codigo;
-			var label  = arrayS[keyS].label;
-      
-			var opt = cE("opt");
-      
-			    opt.appendChild(cT(label));
-			    opt.setAttribute("value",codigo);
-     
-			var found = valor.indexOf('"codigo":"'+codigo+'"'); 
-			
-			if(found>=0){
-		
-				opt.setAttribute('selected','1');
-        
-        var val = getObjectByCode(valor,codigo);
-        
-        var list = [];
-
-            list.label=label;
-            list.codigo=codigo;
-            list.valor=val.valor;
-           // list.valor=codigo;
-        
-        tagview.appendChild(tag(list));        
-        
-			}else{
-				
-				opt.setAttribute('selected','0');
-				
-			}
-			
-			opt.onclick=(function(){
-				
-				var attr = this.getAttribute("selected");
-				
-				if(attr==1){
-					
-					this.setAttribute("selected","0");
-				
-					var text = input.value;
-          
-					var div = this.parentElement.parentElement.parentElement;
-          
-          var tagview = got(div,"tagview")[0];
-          
-          rE(goap(tagview,"c",this.getAttribute('value'))[0]);
-          
-          input.value=getSelectedValues(tagview);
-          
-				}else{
-					
-					this.setAttribute("selected","1");
-			
-          var list = [];
-          
-              list.label=this.innerHTML;
-              list.codigo=this.getAttribute('value');
-          
-          var div = this.parentElement.parentElement.parentElement;
-          
-          var tagview = got(div,"tagview")[0];
-              tagview.appendChild(tag(list));
-					    
-          input.value=getSelectedValues(tagview);
-          
-				}
-
-			});
-
-			taghidden.appendChild(opt);
-
-		}
-  
-	  tagsearchbox.appendChild(taghidden);    
-  
-	  div.appendChild(tagsearchbox);
-    div.appendChild(tagview);
-  
-  
-  return div;
-  
-}
-
-function formMountText(attribute){
-  
-  var label       = cE("label");
-	var div         = cE("div");
-  
-  label.appendChild(cT(attribute.label));
-
-  div.appendChild(label);
-
-	var object = cE("input");
-	
-	for (var key in attribute){
-				
-		if(attribute[key]!=="0" && attribute[key]!==""){
-			object.setAttribute(key,attribute[key]);
-		}
-
-	}
-	
-	object.setAttribute("autocomplete","new-password");
-	object.setAttribute("type","text");
-	object.setAttribute("class","default");
-	object.setAttribute("placeholder",attribute.placeholder);
-	object.setAttribute("required",attribute.required);
-		
-  div.appendChild(object);
-  console.log(attribute.action);
-  return div;
-  
-}
-
-function formMountTexturl(attribute){
-                     
-    var label       = cE("label");
-    var div         = cE("div");
-
-    label.appendChild(cT(attribute.label));
-
-    div.appendChild(label);
-
-    var object = cE("input");
-
-    for (var key in attribute){
-
-      if(attribute[key]!=="0" && attribute[key]!==""){
-        object.setAttribute(key,attribute[key]);
-      }
-
-    }
-
-    object.setAttribute("autocomplete","off");
-    object.setAttribute("type","text");
-    object.setAttribute("class","default");
-    object.setAttribute("placeholder",attribute.label);
-    div.appendChild(object);
-  
-  	makeUrlFriendly(div);	
-  
-  return div;  
-  
-}
-
-
-function formMountTextarea(attribute){
-  
- var label       = cE("label");
-  var div         = cE("div");
-
-  if(attribute.title!==''){
-    label.appendChild(cT(attribute.label));
-    formFieldTooltip(label,attribute.title); 
-    
-  }else{
-    
-    label.appendChild(cT(attribute.label));
-    
-  }
-  
- div.appendChild(label);
-  
-  var object = cE("textarea");
-	
-	for (var key in attribute){
-		
-		if(attribute[key]!=="0" && attribute[key]!==""){
-			
-			if(key=='value'){
-				object.appendChild(cT(attribute[key]));
-	
-			}else{
-				object.setAttribute(key,attribute[key]);
-			}
-			
-		}
-		
-	}
-	object.setAttribute('id','editor');
-	object.setAttribute("class","default");
-  object.setAttribute("placeholder",attribute.label);
-	object.setAttribute("required",attribute.required);
-	
-  if(attribute.presetarray!==undefined){
-	  //label.append(textareaPresetSelect(object,attribute.presetarray));
-  }
-  
-  div.appendChild(object);
-  /*
-	var editor = CKEDITOR.replace(object, {
-toolbar: [
-    { name: 'document', items: [  'Bold', 'Italic', 'NumberedList', 'BulletedList','-','Source','CreateDiv'] }
-]});
-
-// The "change" event is fired whenever a change is made in the editor.
-editor.on( 'change', function( evt ) {
-	object.innerHTML=this.getData();
-
-});
-	*/
-  counter(div);	  
-  
-  return div;
-  
-}
-
-
-function textareaPresetSelect(textarea,array){
-  
-  let label = createObject('{"tag":"label"}');
-  
-  let select = createObject('{"tag":"select"}');
-  
-      
-    select.onchange=(function(){
-
-      if(array[this.value].content!==undefined){
-        textarea.innerHTML = array[this.value].content;
-      }
-
-    });
-  
-    select.append(createObject('{"tag":"option","value":"","innerhtml":"Predefinidos"}'));
-  
-  for (var x=0;x<array.length;x++){
-    
-    //let label   = array[x].label;
-    let content = array[x].content;
-    
-    let option       = createObject('{"tag":"option","value":"'+x+'","innerhtml":"'+array[x].label+'"}');
-    
-    
-    
-    select.append(option);
-    
-  }
-  
-  label.append(select);
-  //console.log(array[0]);
-  
-  return label;
-  
-}
-
-
-
-function formMountTextareaPreset(attribute){
-
-  var label       = cE("label");
-  var div         = cE("div");
-  
-  
-  if(attribute.title!==''){
-    
-    label.appendChild(cT(attribute.label));
-    formFieldTooltip(label,attribute.title); 
-
-  }else{
-
-    label.appendChild(cT(attribute.label));
-
-  }
-
- div.appendChild(label);
-  
-  var object = cE("textarea");
-	
-	for (var key in attribute){
-		
-		if(attribute[key]!=="0" && attribute[key]!==""){
-			
-			if(key=='value'){
-				object.appendChild(cT(attribute[key]));
-	
-			}else{
-				object.setAttribute(key,attribute[key]);
-			}
-			
-		}
-		
-	}
-	object.setAttribute('id','editor');
-	object.setAttribute("class","default");
-  object.setAttribute("placeholder",attribute.label);
-	object.setAttribute("required",attribute.required);
-  
-  if(attribute.presetarray!==undefined){
-	  label.append(textareaPresetSelect(object,attribute.presetarray));
-  }
-  
-  div.appendChild(object);
-  
-  
-  counter(div);	  
-  
-  return div;
-  
-}
-
-
-function formFieldTooltip(div,title){
-  
-  if(title!==''){
-    
-    var tooltip         = cE("tooltipv2");
-        tooltip.appendChild(cT(title));
-
-    var icon            = cE("tooltipv2icon");
-        icon.setAttribute('class','icon-question');
-    
-        icon.append(tooltip);
-
-    div.appendChild(icon); 
-    
-  }
-  
-}
-
-function formMountTrueFalse(attribute){
-
- var div   = cE("div");	
-	
-	var icon  = cE("icon");
-  icon.setAttribute("class","icon-");
-	div.appendChild(icon); 
-
-  var label       = cE("label");
-  
-  var vhide = (attribute.value==="1")?"0":"1";
-
-    div.setAttribute("hide",vhide);
-
-    if(attribute.action!=="view"){
-
-      icon.onclick=function(){formTrueFalse(this);};
-      label.onclick=function(){formTrueFalse(this);};
-
-    }
-
-    label.appendChild(cT(attribute.label));
-
-    div.appendChild(label);
-
-    attribute.type			= "text";
-  
-    var object = cE("input");
-
-    for (var key in attribute){
-
- 
-        object.setAttribute(key,attribute[key]);
-
-
-    }
-
-    object.setAttribute("autocomplete","off");
-    object.setAttribute("type","text");
-    object.setAttribute("class","default");
-
-    div.appendChild(object);
-  
-  return div;
-  
-}
-
-function formTrueFalse(e){
-	
-	var hide = e.parentElement.getAttribute('hide');
-	
-	if(hide==1){
-		e.parentElement.setAttribute('hide','0');
-    got(e.parentElement,"input")[0].value="1";
-    
-	}else if(hide==0){
-		e.parentElement.setAttribute('hide','1');
-    got(e.parentElement,"input")[0].value="0";
-	}
-	
-}
-
-function formUpload(object){
-	
-	var window = got(document,"window")[0];
-	
-	var uploadedfiles = got(window,"uploadedfiles")[0];
-	
-	for(var x=0;x<object.files.length;x++){
-			
-		var ext = object.files[x].type;
-		var anexos=document.getElementsByName('files')[0].value;
-
-		
-		if(ext=='image/jpeg'){
-
-			sendFile(object.files[x],anexos,localStorage.getItem("upload")+'?',
-
-				function(filename){
-				
-					
-					addUploadFiles(uploadedfiles,filename);
-					
-
-				}
-
-			);
-			
-		}else if(ext=='application/pdf'){
-			
-			sendFile(object.files[x],anexos,localStorage.getItem("upload")+'?',
-
-							 
-				function(filename){
-        
-				  //pdftothumb(object);
-	
-
-					addUploadFilesPDF(uploadedfiles,filename);
-
-				}
-							 
-			);
-
-		}else if(ext=='image/png'){
-			
-			sendFile(object.files[x],anexos,localStorage.getItem("upload")+'?',
-
-							 
-				function(filename){
-				
-
-					addUploadFiles(uploadedfiles,filename);
-
-				}
-							 
-			);
-						
-		}else{
-			alert('Formato de arquivo não suportado');
-		}
-
-	}
-		
-}
-
-function formMountFileupload(attribute){
-
-      var label       = cE("label");
-      var div         = cE("div");
-  
-			label.appendChild(cT(attribute.label));
-				
-			var object = cE("input");
-
-			for (var key in attribute){
-
-				if(attribute[key]!=="0" && attribute[key]!==""){
-					object.setAttribute(key,attribute[key]);
-				}
-
-			}
-
-			object.setAttribute("type","hidden");
-			
-			if(object.getAttribute("value")=="" || object.getAttribute("value")==null){
-				
-				object.setAttribute("value",randomString());
-				
-			}
-
-			var attribute = [];
-
-				attribute.tag 		= "uploadedStatus";
-
-			var span = cEA(attribute);
-				
-			var attribute = [];
-
-				attribute.tag 		= "uploadedFiles";
-
-			var result = cEA(attribute);
-				
-			div.append(object,result,span);
-
-
-
-			var xmlhttp;
-
-			xmlhttp = new XMLHttpRequest();
-
-			xmlhttp.onreadystatechange = function() {
-
-				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-
-					if(xmlhttp.responseText!==""){
-						
-						var json = JSON.parse(xmlhttp.responseText);
-						var items = [];
-						
-						for(var x=0;x<json.length;x++){
-						
-							var ext = json[x].filename.substring((json[x].filename.length-3),(json[x].filename.length));
-
-							if(ext=='jpg'){
-								
-								addUploadFiles(result,json[x]);
-						
-							}else if(ext=='pdf'){
-
-								addUploadFilesPDF(result,json[x].filename);
-
-							}else if(ext=='png'){
-
-								addUploadFilesPNG(result,json[x].filename);
-
-							}
-
-						}
-
-						
-					}
-				
-				}
-
-			};
-  
-  		var url 	= localStorage.getItem("url")+'/admin/json/jsonViewFile.php?';
-  	  var data = new FormData();
-  
-          data.append("session",localStorage.session);    
-          data.append("anexos",object.value);
-  
-			xmlhttp.open("POST", url, true);
-			xmlhttp.send(data);
-  
-  return div;
-  
-}
-
-function addUploadFiles(local,object){
-
-	var div 				= cE("div");
-	var figure 			= cE("figure");
-	var textCover 	= cT("Destaque");
-	var spanDelete 	= cE("span");
-	var spanLeft 		= cE("span");
-	var spanRight 	= cE("span");
-	var spanZoom 		= cE("span");
-	var spanCover 	= cE("span");
-	var divOptions 	= cE("options");
-  var spanEdit 		= cE("span");
-
-	if(object.filename!==undefined){
-		var filename=object.filename;
-		var key=object.key;
-		
-	}else{
-		var filename=object;
-	}
-	
-	
-	
-	if(filename!==null){
-
-		spanCover.appendChild(textCover);
-
-		divOptions.appendChild(spanDelete);
-		divOptions.appendChild(spanLeft);
-		divOptions.appendChild(spanZoom);
-		divOptions.appendChild(spanRight);
-		//divOptions.appendChild(spanEdit);
-		
-		div.appendChild(divOptions);
-
-		spanDelete.setAttribute('class','icon-bin');
-		spanLeft.setAttribute('class','icon-undo');
-		spanRight.setAttribute('class','icon-redo');
-		spanZoom.setAttribute('class','icon-search');
-		spanEdit.setAttribute('class','icon-edit');
-		
-		sA(figure,"style","background-image:url('"+localStorage.getItem("imgm")+filename+"?key="+key+"');");
-		sA(spanDelete,"onclick","if(confirm('Deseja remover este arquivo?')){removeAnexos(this.parentNode.parentNode,'"+filename+"')}");
-		
-		//sA(spanZoom,"onclick","window.open('"+localStorage.getItem("img")+filename+"?key="+randomString(32)+"','_blank');");
-    
-    spanZoom.onclick=(function(){
-      window.open(localStorage.getItem("img")+filename+"?key="+randomString(32),'_blank');
-    });
-                      
-		spanLeft.onclick=(function(){
-
-			figure.setAttribute('style',"background-image:url('"+localStorage.getItem("urlimagerotate")+"?img="+filename+"&rotate=left&key="+randomString(32)+"');");
-			divOptions.setAttribute('style',"background-image:url('"+localStorage.getItem("url")+"/admin/action/actionChangeImageKey.php?filename="+filename+"&key="+randomString(32)+"');");
-      
-      
-		});
-
-		spanRight.onclick=(function(){
-
-			figure.setAttribute('style',"background-image:url('"+localStorage.getItem("urlimagerotate")+"?img="+filename+"&rotate=right&key="+randomString(32)+"');");
-			divOptions.setAttribute('style',"background-image:url('"+localStorage.getItem("url")+"/admin/action/actionChangeImageKey.php?filename="+filename+"&key="+randomString(32)+"');");
-      
-		});
-		
-		if(goiFind(filename)){
-			
-			goi(filename).appendChild(divOptions);
-			goi(filename).appendChild(figure);
-			
-		}else{
-			
-			local.insertBefore(div, local.childNodes[0]);
-			div.appendChild(figure);
-			
-		}
-		
-
-		/*local.appendChild(div);*/
-		
-		
-		var label   = cE("input");
-		var content = cE("textarea");
-    var btsalvar = cE("button");
-        
-		label.setAttribute("name","label");
-		label.setAttribute("placeholder","Título");
-		content.setAttribute("name","textarea");
-    content.setAttribute("placeholder","Descrição");
-    btsalvar.setAttribute("type","button");
-		
-    /*    
-	    div.appendChild(label);
-		div.appendChild(content);
-		div.appendChild(btsalvar);
-			*/
-		div.setAttribute("id",filename);
-	
-		
-	}else{
-
-		var icon 	= cE("icon");
-
-		figure.setAttribute('style',"");
-		figure.appendChild(icon);
-		div.appendChild(figure);
-	
-		
-		local.insertBefore(div, local.childNodes[0]);
-		icon.setAttribute('class','icon-user');
-
-	}
-
-
-}
-
-function addUploadFilesPNG(local,filename){
-
-	var div 		= cE("div");
-	var figure 		= cE("figure");
-	
-	var textCover 	= cT("Destaque");
-	var spanDelete 	= cE("span");
-
-	var spanZoom 	= cE("span");
-	var spanCover 	= cE("span");
-	var divOptions 	= cE("options");
-
-	if(filename!==null){
-
-		spanCover.appendChild(textCover);
-
-		divOptions.appendChild(spanDelete);
-
-		divOptions.appendChild(spanZoom);
-
-
-		div.appendChild(divOptions);
-
-		spanDelete.setAttribute('class','icon-bin')
-
-		spanZoom.setAttribute('class','icon-search')
-		
-		sA(figure,"style","background-image:url('"+localStorage.getItem("png")+filename+"');");
-		sA(spanDelete,"onclick","if(confirm('Deseja remover este arquivo?')){removeAnexos(this.parentNode.parentNode,'"+filename+"')}");
-		
-		sA(spanZoom,"onclick","window.open('"+localStorage.getItem("png")+filename+"','_blank');");
-
-		div.appendChild(figure);
-		local.appendChild(div);
-
-	}else{
-
-		var icon 	= cE("icon");
-
-		figure.setAttribute('style',"");
-		figure.appendChild(icon);
-		div.appendChild(figure);
-		local.appendChild(div);
-		icon.setAttribute('class','icon-user');
-
-	}
-
-
-}
-
-function addUploadFilesPDFv2(local,filename){
-
-	var div 				= cE("div");
-	var divOptions 	= cE("options");
-
-	var textCover 	= cT("Destaque");
-	
-	var spanDelete 	= cE("span");
-	var spanCover 	= cE("span");
-	var spanZoom 		= cE("span");
-	var figure 			= cE("iframe");
-	
-
-	var divLabel 			= cE("h3");
-	
-	spanDelete.setAttribute('class','icon-bin');
-	spanCover.appendChild(textCover);
-	spanZoom.setAttribute('class','icon-search');
-	divOptions.appendChild(spanDelete);
-		divOptions.appendChild(spanZoom);
-	figure.appendChild(divLabel);
-	div.appendChild(figure);
-			div.appendChild(divOptions);
-
-	if(goiFind(filename)){
-
-		goi(filename).appendChild(divOptions);
-		goi(filename).appendChild(figure);
-
-	}else{
-
-		local.insertBefore(div, local.childNodes[0]);
-		div.appendChild(figure);
-	}
-	
-
-	var split= filename.split(".");
-	
-	sA(figure,"src",localStorage.getItem("pdf")+split[0]+".pdf");
-
-	sA(spanDelete,"onclick","if(confirm('Deseja remover este arquivo?')){removeAnexos(this.parentNode.parentNode,'"+filename+"')}");
-	
-	sA(spanZoom,"onclick","window.open('"+localStorage.getItem("pdf")+filename+"','_blank');");
-	//console.log(filename);
-	
-	div.setAttribute("id",filename);
-	
-}
-
-function addUploadFilesPDF(local,filename){
-
-	var div 				= cE("div");
-	var divOptions 	= cE("options");
-
-	var textCover 	= cT("Destaque");
-	
-	var spanDelete 	= cE("span");
-	var spanCover 	= cE("span");
-	var spanZoom 		= cE("span");
-	var figure 			= cE("figure");
-	
-
-	var divLabel 			= cE("h3");
-	
-	spanDelete.setAttribute('class','icon-bin');
-	spanCover.appendChild(textCover);
-	spanZoom.setAttribute('class','icon-search');
-	divOptions.appendChild(spanDelete);
-		divOptions.appendChild(spanZoom);
-	figure.appendChild(divLabel);
-	div.appendChild(figure);
-			div.appendChild(divOptions);
-
-	if(goiFind(filename)){
-
-		goi(filename).appendChild(divOptions);
-		goi(filename).appendChild(figure);
-
-	}else{
-
-		local.insertBefore(div, local.childNodes[0]);
-		div.appendChild(figure);
-	}
-	
-
-	var split= filename.split(".");
-	
-	sA(figure,"style","background-image:url('"+localStorage.getItem("imgp")+split[0]+".jpg');");
-
-	sA(spanDelete,"onclick","if(confirm('Deseja remover este arquivo?')){removeAnexos(this.parentNode.parentNode,'"+filename+"')}");
-	
-	sA(spanZoom,"onclick","window.open('"+localStorage.getItem("pdf")+filename+"','_blank');");
-	//console.log(filename);
-	
-	div.setAttribute("id",filename);
-	
-}
-
-
-
-function sendFile(file,anexos,url,cb){
-
-	var formData 	= new FormData();
-
-	formData.append('fileupload', file);
-
-	var xhr = new XMLHttpRequest();
-	
-	//var anexos = gon('files')[0].value;
-	
-	var form = got(document,"form")[0];
-	var uploadedstatus = got(form,"uploadedfiles")[0];
-	
-	var divLoading=cE("div");
-	var labelLoading=cE("label");
-	divLoading.appendChild(labelLoading);
-	uploadedstatus.insertBefore(divLoading, uploadedstatus.childNodes[0]);
-	
-
-	
-	xhr.upload.addEventListener("progress", function(e) {
-		
-		var pc = parseInt((e.loaded / e.total * 100));
-
-			labelLoading.innerHTML=pc+"%";
-		
-	}, false);
-	
-	xhr.onreadystatechange = function() {
-
-		if (xhr.readyState == 4 && xhr.status == 200) {
-			
-			var object = JSON.parse(xhr.responseText);
-			
-			if(object.ext=='jpg'){
-
-				var div = cE('div');
-				
-				//sA(div,"style","background-image:url('/client/"+object.url+"');");
-				//sA(div,"onclick","window.open('/client/"+object.url+"','_blank');");
-				
-				insertAnexos(anexos,object.filename);
-				divLoading.setAttribute("id",object.filename);
-				divLoading.innerHTML="";
-				cb(object.filename);
-			
-				//got('fileuploadresult').appendChild(div);
-
-			}else if(object.ext=='png'){
-
-				var div = cE('div');
-				
-				//sA(div,"style","background-image:url('/client/"+object.url+"');");
-				//sA(div,"onclick","window.open('/client/"+object.url+"','_blank');");
-				
-				insertAnexos(anexos,object.filename);
-				cb(object.filename);
-				console.log(object);
-				//got('fileuploadresult').appendChild(div);
-
-			}else if(object.ext=='pdf'){
-				
-				//var uploadedfiles = got(object.parentNode.parentNode,"uploadedfiles")[0];
-				
-				//addUploadFiles(uploadedfiles,object.filename);
-				insertAnexos(anexos,object.filename);
-				divLoading.setAttribute("id",object.filename);
-				divLoading.innerHTML="";
-				cb(object.filename);
-				
-			}
-			
-		}
-
-	};
-
-	xhr.open('POST', url, true);
-	xhr.send(formData);
-
-}
-
-function pdftothumb(file){
-      
-        pdfjsLib.disableWorker = true;
-   
-        fileReader = new FileReader();
-      
-        fileReader.onload = function(ev) {
-  
-          pdfjsLib.getDocument(fileReader.result).then(function getPdfHelloWorld(pdf) {
-     
-            pdf.getPage(1).then(function getPageHelloWorld(page) {
-              
-              var scale = 1;
-              var viewport = page.getViewport(scale);
-              // var canvas = document.getElementById('the-canvas');
-              
-              var canvas = document.createElement("canvas");
-              var random = Math.floor(Math.random() * 999999);
-              canvas.id=(random);
-              document.body.appendChild(canvas);
-              
-              
-              var context = canvas.getContext('2d');
-              canvas.height = viewport.height;
-              canvas.width = viewport.width;
-
-              var task = page.render({
-                canvasContext: context,
-                viewport: viewport
-              })
-              
-              task.promise.then(function() {
-                console.log(canvas.toDataURL('image/jpeg'));
-                
-                var getCanvas = document.getElementById(random); 
-           
-                getCanvas.parentNode.removeChild(getCanvas);
-                
-              });
-            });
-          }, function(error) {
-            console.log(error);
-          });
-        };
-      
-        fileReader.readAsArrayBuffer(file.files[0]);
-      
-      }
-
-function mountPS(){
-	
-	var pswp = cE("div");
-	
-			pswp.setAttribute("class","pswp");
-			pswp.setAttribute("tabindex","-1");
-			pswp.setAttribute("role","dialog");
-			pswp.setAttribute("aria-hidden","true");
-	
-	var bg = cE("div");
-			bg.setAttribute("class","pswp__bg");
-	
-	var scroll = cE("div");
-			scroll.setAttribute("class","pswp__scroll-wrap");
-	
-	var container = cE("div");
-			container.setAttribute("class","pswp__container");
-	
-	var item1 = cE("div");
-			item1.setAttribute("class","pswp__item");
-	
-	var item2 = cE("div");
-			item2.setAttribute("class","pswp__item");
-	var item3 = cE("div");
-			item3.setAttribute("class","pswp__item");
-	
-
-	
-	
-	var ui = cE("div");
-			ui.setAttribute("class","pswp__ui pswp__ui--hidden");
-	
-	var bar =cE("div");
-			bar.setAttribute("class","pswp__top-bar");
-	
-	var counter =cE("div");
-			counter.setAttribute("class","pswp__counter");
-	
-	var close =cE("button");
-			close.setAttribute("class","pswp__button pswp__button--close");
-			close.setAttribute("title","Close (Esc)");
-	
-	var share =cE("button");
-			share.setAttribute("class","pswp__button pswp__button--share");
-			share.setAttribute("title","Share");
-	
-	var fs =cE("button");
-				fs.setAttribute("class","pswp__button pswp__button--fs");
-				fs.setAttribute("title","Toggle fullscreen");
-	
-	var zoom =cE("button");
-				zoom.setAttribute("class","pswp__button pswp__button--zoom");
-				zoom.setAttribute("title","Zoom in/out");
-	
-	var preloader =cE("div");
-				preloader.setAttribute("class","pswp__preloader");
-	
-	var icn =cE("div");
-			icn.setAttribute("class","pswp__preloader__icn");
-	
-	var cut =cE("div");
-			cut.setAttribute("class","pswp__preloader__cut");
-	
-	var donut =cE("div");
-			donut.setAttribute("class","pswp__preloader__donut");
-
-		var modal =cE("div");
-				modal.setAttribute("class","pswp__share-modal pswp__share-modal--hidden pswp__single-tap");
-	
-		var tooltip =cE("div");
-				tooltip.setAttribute("class","swp__share-tooltip");	
-	
-		var left =cE("button");
-				left.setAttribute("class","pswp__button pswp__button--arrow--left");	
-				left.setAttribute("title","Previous (arrow left)");
-	
-		var right =cE("button");
-				right.setAttribute("class","pswp__button pswp__button--arrow--right");	
-				right.setAttribute("title","Next (arrow right)");
-	
-		var caption =cE("div");
-				caption.setAttribute("class","pswp__caption");	
-	
-		var center =cE("div");
-				center.setAttribute("class","pswp__caption__center");	
-	
-	  
-	container.appendChild(item1);
-	container.appendChild(item2);
-	container.appendChild(item3);	
-	
-	cut.appendChild(donut);
-	icn.appendChild(cut);
-	preloader.appendChild(icn);
-	
-	bar.appendChild(counter);
-	bar.appendChild(close);
-	bar.appendChild(share);
-	bar.appendChild(fs);
-	bar.appendChild(zoom);
-	bar.appendChild(preloader);
-
-	modal.appendChild(tooltip);
-	
-	caption.appendChild(center);
-	
-	ui.appendChild(bar);
-	ui.appendChild(modal);
-	ui.appendChild(left);	
-	ui.appendChild(right);		
-	ui.appendChild(caption);
-	
-	scroll.appendChild(container);
-	scroll.appendChild(ui);
-	
-	pswp.appendChild(bg);
-	pswp.appendChild(scroll);
-	
-	got(document,"body")[0].appendChild(pswp);
-
-}
-
-
-function insertAnexos(anexos,filename){
-	
-
-	var xmlhttp;
-
-	xmlhttp = new XMLHttpRequest();
- 
-	xmlhttp.onreadystatechange = function() {
-
-		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-
-			var authentic=xmlhttp.responseText;
-
-			
-			if(authentic==="1"){
-				//success
-				return true;
-				
-			}else{
-				
-				return false;
-				
-			}
-		}
-	};
-  
-	var url = localStorage.getItem("url")+'/admin/json/jsonAnexos.php';
-  
-  var data = new FormData();
- 
-      data.append('action','insert');
-      data.append('anexos',anexos);
-      data.append('filename',filename);  
-      data.append('session',localStorage.session);  
-
-  
-	xmlhttp.open("POST", url, true);
-	xmlhttp.send(data);
-	
-}
-
-
-function removeAnexos(e,filename){
-	
-	var url 	= localStorage.getItem("url")+'/admin/json/jsonAnexosDelete.php?filename='+filename;
-
-	var xmlhttp;
-
-	xmlhttp = new XMLHttpRequest();
-
-	xmlhttp.onreadystatechange = function() {
-
-		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-
-			var json = JSON.parse(xmlhttp.responseText);
-			
-			if(xmlhttp.responseText==1){
-				
-				rE(e);
-				console.log(e);
-			}
-			
-		}
-		
-	};
-	
-	xmlhttp.open("GET", url, true);
-	xmlhttp.send();
-			
-}
-
-function getStringFromYoutube(link){
-
-  var i, r, rx = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
- 
-    r = link.match(rx);
-  
-  
-    return r[1];
-  
-}
-
-function formMountYoutube(attribute){
-  
-	var div    = cE("div");
- 
-	var object = cE("input");
-  var figure = cE("figure");
-  
-	for (var key in attribute){
-				
-		if(attribute[key]!=="0" && attribute[key]!==""){
-			object.setAttribute(key,attribute[key]);
-		}
-
-	}
-	
-	object.setAttribute("autocomplete","off");
-	object.setAttribute("type","text");
-	object.setAttribute("class","default");
-	object.setAttribute("placeholder",attribute.label);
-	object.setAttribute("required",attribute.required);
-		
-  figure.onclick=(function(){
-
-    window.open(object.value,'_blank');
-
-  });
-  
-  if(object.value){
-    
-    figure.setAttribute('style','background-image:url(https://img.youtube.com/vi/'+getStringFromYoutube(object.value)+'/0.jpg);');
-  
-  }
-	
-  object.onkeyup=(function(){
-    
-    var url 	= 'https://info8.com.br/sistema8/json/jsonYoutube.php?url='+object.value;
-
-    var xmlhttp;
-
-    xmlhttp = new XMLHttpRequest();
-
-    xmlhttp.onreadystatechange = function() {
-
-      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-
-          if(xmlhttp.responseText!='Not Found'){
-            
-            var json = JSON.parse(xmlhttp.responseText);
-            
-            div.setAttribute('error','0');
-            
-                figure.onclick=(function(){
-
-          window.open(object.value,'_blank');
-
-        });
-             figure.setAttribute('style','background-image:url(https://img.youtube.com/vi/'+getStringFromYoutube(object.value)+'/0.jpg);');
-	
-          }else{
-            
-            figure.setAttribute('style','');
-	
-            div.setAttribute('error','1');
-            
-          }
-        
-        }
-
-      }
-
-    xmlhttp.open("GET", url, true);
-    xmlhttp.send();   
-    
-  });
-  
-  
-  div.appendChild(object);
-  div.appendChild(figure);
-  
-  return div;
-  
-}
-
-
-function reload(){
-  
-  
-  
-}
-
-
-function finder(object){
-	
-	var finder = cE("input");
-	var label = got(object,"label");
-	
-	finder.setAttribute("type","text");
-	finder.setAttribute("placeholder",label[0].innerHTML+" - Digite para procurar");
-	finder.setAttribute("name","finder");
-	finder.setAttribute("class","default");
-  
-	finder.onblur = function() {
-		
-	};  
-  
-	finder.onkeyup = function() {
-    
-    if(this.value.length>=3){
-      
-		var item = got(object,"opt");
-
-		if(item.length){
-
-			var string1 = removeAcento(this.value.toLowerCase());
-
-			for(var x=0;x<item.length;x++){
-
-				var ohtml=removeAcento(item[x].innerHTML.toLowerCase());
-
-				if(item[x].getAttribute("selected")=="0"){
-
-					if(ohtml.indexOf(string1) >= 0){			
-
-						//item[x].style.display="block";
-            item[x].setAttribute('found','1');
-            
-            
-					}else{
-
-						//item[x].style.display="none";
-            item[x].setAttribute('found','0');
-					}
-
-				}
-
-
-			}
-      
-    }
-
-    }else{
-      
-      for(var x=0;x<item.length;x++){
-
-        item[x].setAttribute('found','0');
-
-      }
-    }
-      
-	};
-	
-	object.appendChild(finder);
-	
-}
-
-
-function autoComplete(object,codigo){
-	
-	var label = goap(object,"name","label");
-	
-	var input = label[0];
-	
-	
-	var datalist= cE("suggestsplaces");
-
-	object.appendChild(datalist);
-	
-	input.onkeyup = function() {
-		
-		var url=localStorage.getItem("url")+'/admin/json/jsonGoogleplace.php?url='+this.value;
-
-		xmlhttp = new XMLHttpRequest();
-
-		xmlhttp.onreadystatechange = function() {
-
-			race(datalist);
-		
-			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-
-				var json = JSON.parse(xmlhttp.responseText);
-				//console.log(json.predictions.length);
-				
-				for(x=0;x<json.predictions.length;x++){
-					//console.log(x);
-					console.log(json.predictions[x].description);
-					
-					var option = cE("option");
-					var text = cT(json.predictions[x].description);
-					
-					option.setAttribute("place_id",json.predictions[x].place_id);
-					option.appendChild(text);
-					
-					option.onclick=(function(){
-						
-						var url=localStorage.getItem("url")+'/admin/json/jsonGoogleplacedetails.php?place_id='+this.getAttribute("place_id");
-
-						xmlhttp = new XMLHttpRequest();
-
-						xmlhttp.onreadystatechange = function() {
-							
-							if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-
-								var json = JSON.parse(xmlhttp.responseText);
-								
-								var item=goa("c",codigo)[0];
-								var address=goap(item,"name","address")[0];
-								var contact=goap(item,"name","contact")[0];
-								var googlemaps=goap(item,"name","googlemaps")[0];
-								
-								console.log(item);
-								address.value=json.result.formatted_address;
-								contact.value=json.result.international_phone_number;
-								googlemaps.value=json.result.geometry.location.lat+","+json.result.geometry.location.lng;
-								input.value=json.result.name;
-
-								
-							}
-							
-						};
-
-						xmlhttp.open("GET", url, true);
-						xmlhttp.send();
-						
-					});
-					
-					datalist.appendChild(option);
-				
-				}
-				
-			}
-
-		};
-
-		xmlhttp.open("GET", url, true);
-		xmlhttp.send();
-		
-	};
-
-}
-
-
-function makeUrlFriendly(object){
-	
-	function convertToSlug(str){
-		
- str = str.replace(/^\s+|\s+$/g, ''); // trim
-  str = str.toLowerCase();
-
-  // remove accents, swap ñ for n, etc
-  var from = "ãàáäâẽèéëêìíïîõòóöôùúüûñç·/_,:;";
-  var to   = "aaaaaeeeeeiiiiooooouuuunc------";
-  for (var i=0, l=from.length ; i<l ; i++) {
-    str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
-  }
-
-  str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
-    .replace(/\s+/g, '-') // collapse whitespace and replace by -
-    .replace(/-+/g, '-'); // collapse dashes
-
-  return str;
-			
-	}
-	
-	var label = got(object,"input")[0]; 
-	var url = cE("input");
-	
-	url.setAttribute('name','url');
-	url.setAttribute('type','hidden');
-	
-	object.appendChild(url);
-	
-	url.setAttribute("value",convertToSlug(label.value));
-	
-	label.onkeyup = (function() {
-		
-		url.setAttribute("value",convertToSlug(this.value));
-		
-	});
-	
-	label.onblur = (function() {
-		
-		url.setAttribute("value",convertToSlug(this.value));
-		
-	});
-	
-}
-
-function formMountMultipleHidden(attribute){
-
-  var label       = createObject('{"tag":"label","innerhtml":"'+attribute.label+'"}');
-	var div         = createObject('{"tag":"div","class":"multiplehidden"}');
-  var view        = createObject('{"tag":"multipleview"}');
- 
-      view.appendChild(multipleAdd(attribute));
-  
-      div.appendChild(label);
-  
-  var valor  = (attribute.value[0].value[0]==",")?attribute.value[0].value:","+attribute.value[0].value;
-	
-  var input  = createObject('{"tag":"input","name":"'+attribute.name+'","title":"","value":"'+valor+'","autocomplete":"off","required":"","type":"hidden","tipo":"select"}');
-     
-  var select = createObject('{"tag":"multiplehidden"}');
-  
-      select.appendChild(multipleHiddenClose());
-  
-      multipleHiddenFinder(select);
-  
-		  select.appendChild(input);
-		
-	var object = attribute.value;
-
-		for (var item in object){
-			
-			let codigon = new Number(object[item].codigo);
-     
-			let codigo = object[item].codigo;
-      
-			let label = object[item].label;
-      
-			var bt = createObject('{"tag":"opt","areas":"'+object[item].areas+'","value":"'+codigo+'","innerhtml":"'+codigon.pad(6)+' - '+label+'"}');
-      
-      if(object[item].filename!=undefined){
-
-        let filename = object[item].filename;    
-
-        let style = "background-image:url("+localStorage.getItem("imgm")+filename+");";
-        
-            bt.setAttribute("style",style);
-        
-      }
-
-			   // bt.appendChild(cT((codigo).pad(6)+" - "+label));
-			   // bt.setAttribute("value",codigo);
-			
-			var selected = valor.indexOf(","+codigo+","); 
-			
-			if(selected>=0){
-		
-				bt.setAttribute('selected','1');
-
-          var list = [];
-
-          list.label=label;
-          list.codigo=codigo;
-
-          view.appendChild(coolbutton(list));        
-        
-			}else{
-				
-				bt.setAttribute('selected','0');
-				
-			}
-			
-			bt.onclick=(function(){
-				
-				var attr = this.getAttribute("selected");
-				
-				if(attr==1){
-					
-					this.setAttribute("selected","0");
-					var valor = ","+this.getAttribute('value')+",";
-					var text = input.value;
-					var x = text.replace(valor,","); 
-					input.value=x;
-					
-          var multipleview = got(this.parentElement.parentElement,"multipleview")[0];
-          
-          rE(goap(multipleview,"c",this.getAttribute('value'))[0]);
-        
-          
-				}else{
-					
-					this.setAttribute("selected","1");
-					var valor = this.getAttribute('value')+",";
-					input.value=input.value+valor;
-          
-          var list = [];
-              list.label=this.innerHTML;
-              list.codigo=this.getAttribute('value');
-          
-          var multiple = this.parentElement.parentElement;
-          var multipleview = got(multiple,"multipleview")[0];
-              multipleview.appendChild(coolbutton(list));
-					
-				}
-
-			});
-
-			select.appendChild(bt);
-
-		}
-	
-	  div.appendChild(select);
-    div.appendChild(view);
-  
-  return div;
-	
-}
-
-
-
-
-function multipleAdd(attribute){
-  
-  var icon  = cE("icon");
-      icon.setAttribute("class","icon-plus");
-  
-  var label = cE("label");
-      label.appendChild(cT(attribute.label));
-  
-  var btadd = cE("add");
-      btadd.onclick=(function(){this.parentElement.parentElement.setAttribute("search","1");});
-  
-  
-      btadd.appendChild(icon);
-      btadd.appendChild(label);
-    
-  return btadd;
-  
-}
-
-
-function multipleHiddenClose(){
-  
-  var icon  = cE("icon");
-      icon.setAttribute("class","icon-cross");
-  
- 
-      icon.onclick=(function(){this.parentElement.parentElement.setAttribute("search","0");});
-  
-  return icon;
-  
-}
-
-
-function coolbutton(list){
-    
-  var suitesinfo = JSON.parse(localStorage.suitesinfo); 
-  var div     = cE("div");
-  var label   = cE("label");
-  label.setAttribute('style','background-color:'+suitesinfo.color1+';');
-  var figure  = cE("figure");
-  var close   = cE("icon"); 
-   close.setAttribute('style','background-color:'+suitesinfo.color1+';');
-      close.setAttribute("class","icon-cross");
-  
-  var text = cT(list.label);
-  
-  	close.onclick=(function(){
-      
-				if(confirm("Tem certeza que deseja remover ?")){
-          
-          var multiplehidden=got(this.parentElement.parentElement.parentElement,"multiplehidden")[0];
-
-          var input = got(multiplehidden,"input")[1];
-
-          var valor = ","+this.parentElement.getAttribute("c")+",";
-          var text = input.value;
-          var x = text.replace(valor,","); 
-
-              input.value=x;
-              rE(this.parentElement);
-
-        }
-			
-        
-    });
-      
-      label.appendChild(text);
-      div.appendChild(figure);
-      div.appendChild(label);
-      div.appendChild(close);
-  
-      div.setAttribute('c',list.codigo);
-  
-  return div;
-  
-}
-
-
-
-function multipleHiddenFinder(object){
-	
-	var finder = cE("input");
-	//var label = got(object,"label");
-	
-      //finder.setAttribute("type","text");
-      finder.setAttribute("placeholder","Digite para procurar");
-      finder.setAttribute("name","finder"); 
-  
-	finder.onkeyup = function() {
-    
-    var item = got(object,"opt");
-    
-    if(this.value.length>=3){
-      
-      if(item.length){
-
-        var string1 = removeAcento(this.value.toLowerCase());
-
-        for(var x=0;x<item.length;x++){
-
-          var ohtml=removeAcento(item[x].innerHTML.toLowerCase());
-
-          //if(item[x].getAttribute("selected")=="0"){
-
-            if(ohtml.indexOf(string1) >= 0){			
-
-              //item[x].style.display="block";
-              item[x].setAttribute('found','1');
-
-
-            }else{
-
-              //item[x].style.display="none";
-              item[x].setAttribute('found','0');
-            }
-          //}
-        }
-      }
-
-    }else{
-      
-      for(var x=0;x<item.length;x++){
-
-        item[x].setAttribute('found','0');
-
-      }
-    }
-      
-	};
-	
-	object.appendChild(finder);
-	
-}
-
-function formFieldShare(attribute){
-
-  var label       = cE("label");
-	var div         = cE("div");
- 
-  var input  = cE("input");
-  
-  var valor  = (attribute.value[0].value[0]==",")?attribute.value[0].value:","+attribute.value[0].value;
-	
-      input.setAttribute("name",attribute.name);
-      input.setAttribute("title",attribute.title);
-      input.setAttribute("value",valor);
-      input.setAttribute("autocomplete","off");
-      input.setAttribute("required","");
-      input.setAttribute("type","hidden");
-      input.setAttribute("tipo","select");
- 
-  div.append(input);
-  
-  return div;
-	
-}
-
 function btFilter(){
   
   var button = createObject('{"tag":"button","innerhtml":"Filtro","action":"filter"}');
@@ -7097,50 +2700,6 @@ function language(c,word){
   
 }
 
-function startIndexedDB(data){
-  
-  const dbName = "suite8";
-
-  //const DadosClientes = [data];
-
-const DadosClientes = [
-  { codigo: "333-44-4444", label: "aaaa"},
-  { codigo: "777-55-5555", label: "bbbb"}
-];
-
-  var request = indexedDB.open(dbName, 3);
-
-  request.onerror = function(event) {
-    // Tratar erros.
-  };
-  request.onupgradeneeded = function(event) {
-    var db = event.target.result;
-
-    // Cria um objectStore para conter a informação sobre nossos clientes. Nós vamos
-    // usar "ssn" como key path porque sabemos que é único;
-    var objectStore = db.createObjectStore("users", { keyPath: "codigo" });
-
-    // Cria um índice para buscar clientes pelo nome. Podemos ter nomes
-    // duplicados, então não podemos usar como índice único.
-    objectStore.createIndex("codigo", "codigo", { unique: false });
-
-    // Cria um índice para buscar clientes por email. Queremos ter certeza
-    // que não teremos 2 clientes com o mesmo e-mail;
-    objectStore.createIndex("label", "label", { unique: true });
-
-    // Usando transação oncomplete para afirmar que a criação do objectStore
-    // é terminada antes de adicionar algum dado nele.
-    objectStore.transaction.oncomplete = function(event) {
-      // Armazenando valores no novo objectStore.
-      var clientesObjectStore = db.transaction("users", "readwrite").objectStore("users");
-      for (var i in DadosClientes) {
-        clientesObjectStore.add(DadosClientes[i]);
-      }
-    }
-  };
-  
-}
-
 function inputTypeNumber(element){
   
   var key = element.keyCode;
@@ -7163,6 +2722,3005 @@ function loginInsertShortcut(buttonid){
   document.body.setAttribute("openlogin","1");
   document.getElementById(buttonid).click();
   
+}
+
+function message(code){
+ 
+  var a=[];
+  
+      a["1"]="Cadastro realizado com sucesso";
+
+      a["501"]="Logado com sucesso";
+      a["502"]="Senha inválida";
+      a["503"]="Conta desativada";
+      a["504"]="Usuário não encontrado";
+      a["505"]="Campo password vazio";
+      a["506"]="Erro deconhecido";
+      a["507"]="Sistema em atualização";
+      a["508"]="Campo usuário está vazio";
+
+      a["602"]="Campo nome completo está vazio";
+      a["603"]="Campo email está vazio";
+      a["605"]="O campo cpf está vazio";
+      a["606"]="Este cpf já foi cadastrado por outro usuário";
+      a["607"]="Este email já foi cadastrado por outro usuário";
+      
+      a["620"]="Digite apenas números, 11 dígitos";
+      
+  
+      a["999"]="Erro no sistema";  
+  
+  return a[code];       
+
+}
+
+
+
+
+function mountOrder(){
+  
+  var order = cE("order");
+  
+  var lbOrder = cE('label');
+  
+  lbOrder.appendChild(cT('Ordenar por :'));
+  lbOrder.setAttribute("class","order");
+  
+  var btOrderLabel=cB("nome");
+  btOrderLabel.setAttribute("class","order");
+  
+  btOrderLabel.onclick=(function(){
+    
+		localStorage.order=1;
+		viewLoad(gA());
+			
+	});
+  
+  var btOrderData=cB("data");
+  
+  btOrderData.setAttribute("class","order"); 
+  
+  btOrderData.onclick=(function(){
+    
+		localStorage.order=0;
+		viewLoad(gA());
+			
+	});
+  
+  if(localStorage.order==1){
+    btOrderLabel.setAttribute("selected","1");
+  }else{
+    btOrderData.setAttribute("selected","1");
+  }
+  
+  order.appendChild(lbOrder);
+  order.appendChild(btOrderLabel);
+	order.appendChild(btOrderData);
+  
+  return order;
+  
+}
+
+
+
+
+function mountPrint(array){
+	
+		var header = cE("printheader");
+			
+		var a 			= cE("a");
+		var logo    = cE("logo");
+		var span    = cE("span");	
+		var text    = cT(array.suites);
+
+		span.appendChild(text);
+		logo.appendChild(span);
+		a.appendChild(logo);
+header.appendChild(logo);
+
+		got(document,"body")[0].appendChild(header);
+		
+		
+}
+
+function navMount(){
+  
+  var user   = JSON.parse(localStorage.user);  
+  var config          = JSON.parse(localStorage.config);
+  var storagenav     = JSON.parse(localStorage.nav);
+
+	if(gotFind("nav")){
+    
+		rE(got(document,"nav")[0]);
+
+	}
+	
+	var html = '';
+
+	var nav  	  = cE('nav');
+	    nav.appendChild(profile());
+
+	var body = got(document,'body')[0];
+
+  Object.entries(storagenav).forEach(([key, value]) => {
+
+    var span      = createObject('{"tag":"span","innerhtml":"'+value.label+'"}');
+
+    nav.append(span);
+
+    Object.entries(value.modules).forEach(([key1, value1]) => {
+
+       let label   = value1.label;
+       let url    = value1.url;
+       let premium = value1.premium;
+       let id       = value1.id; 
+
+      var a      = createObject('{"tag":"a","innerhtml":"'+label+'","modules":"'+url+'","premium":"'+premium+'","c":"'+id+'"}');     
+
+     a.onclick=(function(){
+        resetHeaderOptions();
+        //modulesLoadTitle(c);
+        modulesOpen(url);
+        navClose();
+        gridHide();
+       
+        //mountRanking();
+
+        document.body.setAttribute("loading","1");
+      });
+
+
+      nav.append(a);
+
+    });
+
+  }); 
+
+	var a = cE('a');
+
+	a.onclick=(function(){
+ 
+    window.open('/','_self');
+
+	});
+	
+	a.appendChild(cT('Sair')); 
+
+	nav.appendChild(a);
+	
+
+nav.setAttribute('id','nav');
+
+
+	
+	body.appendChild(nav);
+
+	
+}
+
+function navClose(){
+	
+		var nav=got(document,"nav")[0];
+	
+				nav.setAttribute('class','hide');
+	
+}
+
+function loadNavSuite(){
+  
+  var navsuite = cE("navsuite");
+  document.body.setAttribute("navsuite","0");
+  
+  document.body.appendChild(navsuite);
+
+  
+}
+
+
+function pagesLoad(callback){
+  
+  var url = localStorage.getItem("url")+"/suites";
+  
+  fetch(url, {
+    method: 'POST',
+    headers: {'Content-Type':'application/x-www-form-urlencoded'}
+  })
+  
+  .then(response => response.json())
+  .then(data => callback(data))
+  .catch(erro => console.error(erro));
+    
+}
+
+function pagesMount(json){
+
+  document.title = json.suiteinfo.label;
+ 
+  var section = json.page.section;
+  
+  var pages   = document.createElement("pages"); 
+
+  var header  = pagesMountHeader(json.page.section);
+  
+  var grid    = document.createElement("grid"); 
+
+  //if(section.length>1){
+    
+      pages.appendChild(header);
+    
+ // }
+  
+  for(var x=0;x<section.length;x++){
+
+     // pages.appendChild(pagesMountSection(section[(section.length-1)-x]));
+
+  }
+  
+
+
+  pages.append(mountLogin());
+ 
+
+  document.body.append(pages,grid);
+ 
+}
+
+function profile(){
+
+  var user   = JSON.parse(localStorage.user);  
+  var config = JSON.parse(localStorage.config);
+
+	var div    		= cE("div");
+	var profile 	= cE("profile");
+	//var figure 		= cE("figure");
+	var label 		= cE("label");
+
+		//profile.appendChild(figure);
+
+		
+			label.appendChild(cT(user.label));
+	
+
+	
+	div.onclick=(function(){		
+
+		formEdit("users",user.session);
+		navClose();
+		
+	});
+	
+	var attribute = [];
+
+	attribute.tag 		= "uploadedFiles";
+
+	var result = cEA(attribute);
+		
+	if(user.figures!==undefined){
+
+		for(var x=0;x<user.figures.length;x++){
+
+			addUploadFilesProfile(result,user.figures[x]);
+
+		}
+
+	}
+
+	div.appendChild(result);
+
+	addUploadFilesProfile(result,null);
+	
+	profile.appendChild(div);
+	profile.appendChild(label);
+
+	
+	return profile;
+
+}
+
+function profileUpload(array){
+
+
+	/*
+	var object = cE("input");
+
+	object.setAttribute("type","hidden");
+	object.setAttribute("value",array.files);	
+	object.setAttribute("name","files");
+	
+	var attribute = [];
+
+		attribute.tag 		= "input";
+		attribute.type 		= "file";
+		attribute.name 		= "fileupload";
+		attribute.anexos 	= object.getAttribute('value');
+		attribute.gwidth 	= "900";
+		attribute.multiple	= "";
+		attribute.onchange	= "formUpload(this);";	
+
+	var fileupload = cEA(attribute);
+	
+		
+	var attribute = [];
+
+		attribute.tag 		= "div";
+		attribute.class 	= "fileupload";
+
+	var divFileUpload = cEA(attribute);	
+
+	var attribute = [];
+
+		attribute.tag 		= "icon";
+		attribute.class 	= "icon-upload3";
+
+	var divFileUploadEnviar = cEA(attribute);					
+
+	var attribute = [];
+
+		attribute.tag 		= "label";
+		attribute.text 		= "enviar foto";
+
+	var divFileUploadEnviar = cEA(attribute);	
+
+	var attribute = [];
+
+		attribute.tag 		= "uploadedStatus";
+
+	var span = cEA(attribute);	
+		
+
+		
+	div.appendChild(object);
+		
+	divFileUpload.appendChild(divFileUploadEnviar);
+	divFileUpload.appendChild(fileupload);
+		
+	div.appendChild(divFileUpload);
+
+	div.appendChild(span);	
+		
+	*/
+	
+	var attribute = [];
+
+		attribute.tag 		= "icon";
+		attribute.class 	= "icon-pencil";
+	
+	var icon = cEA(attribute);	
+	
+	icon.onclick=(function(){
+		console.log(array);
+		formEdit("users",array.codigo);
+		navClose();
+	});
+	
+	var attribute = [];
+
+	attribute.tag 		= "uploadedFiles";
+
+	var result = cEA(attribute);
+		
+	if(array.figures!==undefined){
+
+		for(var x=0;x<array.figures.length;x++){
+
+			addUploadFilesProfile(result,array.figures[x]);
+
+		}
+
+	}
+
+	div.appendChild(result);
+	div.appendChild(icon);
+	
+	addUploadFilesProfile(result,null);
+	
+	return div;	
+  
+}
+
+function addUploadFilesProfile(local,filename){
+
+	var div 				= cE("div");
+	var figure 			= cE("figure");
+
+	if(filename!==null){
+
+		sA(figure,"style","background-image:url('"+localStorage.getItem("imgp")+filename+"');");
+
+		div.appendChild(figure);
+
+	}else{
+
+		var icon 	= cE("icon");
+
+		figure.setAttribute('style',"");
+		figure.appendChild(icon);
+		div.appendChild(figure);
+
+		local.insertBefore(div, local.childNodes[0]);
+		icon.setAttribute('class','icon-user');
+
+	}
+	
+	local.insertBefore(div, local.childNodes[0]);
+
+}
+
+
+
+      Number.prototype.pad = function(size, character = "0") {
+        var s = String(this);
+        while (s.length < (size || 2)) {s = character + s;}
+        return s;
+      }
+
+function mountSection(){
+	
+	var section = cE("section");
+	var view 		= cE("view");
+
+	var ranking 	= cE("ranking");
+
+	
+
+	section.appendChild(view);
+	
+	got(document,"body")[0].appendChild(section);
+
+}
+
+function suporteLoad(){
+  
+  var suporte  = createObject('{"tag":"suporte"}');
+  var icon     = createObject('{"tag":"icon","class":"icon-whatsapp"}');
+  var text     = createObject('{"tag":"text","innerhtml":"Falar com atendente"}');
+
+  suporte.onclick=(function(){
+
+    window.open('https://api.whatsapp.com/send?phone=5531971720053&text=contato%20chat','_blank');
+
+  });
+
+  suporte.append(icon,text);
+
+
+
+  if(document.getElementsByTagName("suporte").length==0 && getLocalStorage("config","id")=="1"){
+    
+    document.body.append(suporte);
+    
+  }
+  
+}
+
+function tooltip(element,label){
+  
+  var mobile=got(document,"body")[0].getAttribute('mobile');
+
+  if(mobile==1){
+   
+    
+  }else{
+    
+    var tooltip = createObject('{"tag":"tooltip","innerhtml":"'+label+'"}');
+    var seta    = createObject('{"tag":"seta"}');
+
+    tooltip.append(seta);
+
+    element.append(tooltip);
+    
+  }
+  
+}
+
+function tooltipmenu(element,innerhtml){
+  
+  var mobile=got(document,"body")[0].getAttribute('mobile');
+
+  if(mobile==1){
+   
+    
+  }else{
+    
+    let tooltip = element.getElementsByTagName("tooltipmenu")[0];
+    
+    if(tooltip==undefined){
+      
+      let tooltip = createObject('{"tag":"tooltipmenu","innerhtml":"'+innerhtml+'"}');
+     // let seta    = createObject('{"tag":"seta"}');
+      
+         // tooltip.append(seta);
+          element.append(tooltip);
+      
+    }
+   
+  }
+  
+}
+
+/*
+    Vanilla AutoComplete v0.1
+    Copyright (c) 2019 Mauro Marssola
+    GitHub: https://github.com/marssola/vanilla-calendar
+    License: http://www.opensource.org/licenses/mit-license.php
+*/
+let VanillaCalendar = (function () {
+    function VanillaCalendar(options) {
+        function addEvent(el, type, handler){
+            if (!el) return
+            if (el.attachEvent) el.attachEvent('on' + type, handler)
+            else el.addEventListener(type, handler);
+        }
+        function removeEvent(el, type, handler){
+            if (!el) return
+            if (el.detachEvent) el.detachEvent('on' + type, handler)
+            else el.removeEventListener(type, handler);
+        }
+        let opts = {
+            selector: null,
+            datesFilter: false,
+            pastDates: true,
+            availableWeekDays: [],
+            availableDates: [],
+            date: new Date(),
+            todaysDate: new Date(),
+            button_prev: null,
+            button_next: null,
+            month: null,
+            month_label: null,
+            onSelect: (data, elem) => {},
+            months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            shortWeekday: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+        }
+        for (let k in options) if (opts.hasOwnProperty(k)) opts[k] = options[k]
+        
+        let element = document.querySelector(opts.selector)
+        if (!element)
+            return
+        
+        const getWeekDay = function (day) {
+            return ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][day]
+        }
+        
+        const createDay = function (date) {
+            let newDayElem = document.createElement('div')
+            let dateElem = document.createElement('span')
+            dateElem.innerHTML = date.getDate()
+            newDayElem.className = 'vanilla-calendar-date'
+            newDayElem.setAttribute('data-calendar-date', date)
+            
+            let available_week_day = opts.availableWeekDays.filter(f => f.day === date.getDay() || f.day === getWeekDay(date.getDay()))
+            let available_date = opts.availableDates.filter(f => f.date === (date.getFullYear() + '-' + String(date.getMonth() + 1).padStart('2', 0) + '-' + String(date.getDate()).padStart('2', 0)))
+            
+            if (date.getDate() === 1) {
+                newDayElem.style.marginLeft = ((date.getDay()) * 14.28) + '%'
+            }
+            if (opts.date.getTime() <= opts.todaysDate.getTime() - 1 && !opts.pastDates) {
+                newDayElem.classList.add('vanilla-calendar-date--disabled')
+            } else {
+                if (opts.datesFilter) {
+                    if (available_week_day.length) {
+                        newDayElem.classList.add('vanilla-calendar-date--active')
+                        newDayElem.setAttribute('data-calendar-data', JSON.stringify(available_week_day[0]))
+                        newDayElem.setAttribute('data-calendar-status', 'active')
+                    } else if (available_date.length) {
+                        newDayElem.classList.add('vanilla-calendar-date--active')
+                        newDayElem.setAttribute('data-calendar-data', JSON.stringify(available_date[0]))
+                        newDayElem.setAttribute('data-calendar-status', 'active')
+                    } else {
+                        newDayElem.classList.add('vanilla-calendar-date--disabled')
+                    }
+                } else {
+                    newDayElem.classList.add('vanilla-calendar-date--active')
+                    newDayElem.setAttribute('data-calendar-status', 'active')
+                }
+            }
+            if (date.toString() === opts.todaysDate.toString()) {
+                newDayElem.classList.add('vanilla-calendar-date--today')
+            }
+            
+            newDayElem.appendChild(dateElem)
+            opts.month.appendChild(newDayElem)
+        }
+        
+        const removeActiveClass = function () {
+            document.querySelectorAll('.vanilla-calendar-date--selected').forEach(s => {
+                s.classList.remove('vanilla-calendar-date--selected')
+            })
+        }
+        
+        const selectDate = function () {
+            let activeDates = element.querySelectorAll('[data-calendar-status=active]')
+            activeDates.forEach(date => {
+                date.addEventListener('click', function () {
+                    removeActiveClass()
+                    let datas = this.dataset
+                    let data = {}
+                    if (datas.calendarDate)
+                        data.date = datas.calendarDate
+                    if (datas.calendarData)
+                        data.data = JSON.parse(datas.calendarData)
+                    opts.onSelect(data, this)
+                    this.classList.add('vanilla-calendar-date--selected')
+                })
+            })
+        }
+        
+        const createMonth = function () {
+            clearCalendar()
+            let currentMonth = opts.date.getMonth()
+            while (opts.date.getMonth() === currentMonth) {
+                createDay(opts.date)
+                opts.date.setDate(opts.date.getDate() + 1)
+            }
+            
+            opts.date.setDate(1)
+            opts.date.setMonth(opts.date.getMonth() -1)
+            opts.month_label.innerHTML = opts.months[opts.date.getMonth()] + ' ' + opts.date.getFullYear()
+            selectDate()
+        }
+        
+        const monthPrev = function () {
+            opts.date.setMonth(opts.date.getMonth() - 1)
+            createMonth()
+        }
+        
+        const monthNext = function () {
+            opts.date.setMonth(opts.date.getMonth() + 1)
+            createMonth()
+        }
+        
+        const clearCalendar = function () {
+            opts.month.innerHTML = ''
+        }
+        
+        const createCalendar = function () {
+            document.querySelector(opts.selector).innerHTML = `
+            <div class="vanilla-calendar-header">
+                <button type="button" class="vanilla-calendar-btn" data-calendar-toggle="previous"><svg height="24" version="1.1" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"></path></svg></button>
+                <div class="vanilla-calendar-header__label" data-calendar-label="month"></div>
+                <button type="button" class="vanilla-calendar-btn" data-calendar-toggle="next"><svg height="24" version="1.1" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z"></path></svg></button>
+            </div>
+            <div class="vanilla-calendar-week"></div>
+            <div class="vanilla-calendar-body" data-calendar-area="month"></div>
+            `
+        }
+        const setWeekDayHeader = function () {
+            document.querySelector(`${opts.selector} .vanilla-calendar-week`).innerHTML = `
+                <span>${opts.shortWeekday[0]}</span>
+                <span>${opts.shortWeekday[1]}</span>
+                <span>${opts.shortWeekday[2]}</span>
+                <span>${opts.shortWeekday[3]}</span>
+                <span>${opts.shortWeekday[4]}</span>
+                <span>${opts.shortWeekday[5]}</span>
+                <span>${opts.shortWeekday[6]}</span>
+            `
+        }
+        
+        this.init = function () {
+            createCalendar()
+            opts.button_prev = document.querySelector(opts.selector + ' [data-calendar-toggle=previous]')
+            opts.button_next = document.querySelector(opts.selector + ' [data-calendar-toggle=next]')
+            opts.month = document.querySelector(opts.selector + ' [data-calendar-area=month]')
+            opts.month_label = document.querySelector(opts.selector + ' [data-calendar-label=month]')
+            
+            opts.date.setDate(1)
+            createMonth()
+            setWeekDayHeader()
+            addEvent(opts.button_prev, 'click', monthPrev)
+            addEvent(opts.button_next, 'click', monthNext)
+        }
+        
+        this.destroy = function () {
+            removeEvent(opts.button_prev, 'click', monthPrev)
+            removeEvent(opts.button_next, 'click', monthNext)
+            clearCalendar()
+            document.querySelector(opts.selector).innerHTML = ''
+        }
+        
+        this.reset = function () {
+            this.destroy()
+            this.init()
+        }
+        
+        this.set = function (options) {
+            for (let k in options)
+                if (opts.hasOwnProperty(k))
+                    opts[k] = options[k]
+            createMonth()
+//             this.reset()
+        }
+        
+        this.init()
+    }
+    return VanillaCalendar
+})()
+
+window.VanillaCalendar = VanillaCalendar
+
+
+function goToMedicLogin(){
+  
+  document.body.setAttribute("openlogin","1");
+  document.getElementById('btInsertMedico').click();
+  
+}
+
+function goToPacienteLogin(){
+  
+  document.body.setAttribute("openlogin","1");
+  document.getElementById('btInsertPaciente').click();
+  window.scrollTo( 0, 0 );
+}
+
+function iconCalendar(element){
+  
+    var icon = cE("icon")
+        icon.setAttribute("class","icon-calendar");
+  
+        tooltip(icon,"Agenda");
+  
+    var userinfo    = JSON.parse(localStorage.userinfo);
+    var systeminfo  = JSON.parse(localStorage.systeminfo);
+  
+    icon.onclick=(function(){
+
+        if(document.body.getAttribute("calendar")=="1"){
+
+          document.body.setAttribute("calendar","0");
+
+        }else{
+
+          document.body.setAttribute("calendar","1");
+
+        }
+
+    });
+
+  element.appendChild(icon);
+  
+}
+
+function iconFacedoctor(element){
+  
+    var icon = cE("icon")
+        icon.setAttribute("class","icon-users");
+  
+        tooltip(icon,"Conheça o Facedoctors");
+  
+    var userinfo = JSON.parse(localStorage.userinfo);
+
+        icon.onclick=(function(){
+          
+     
+           window.open("https://facedoctors.com.br/","_blank");
+          
+        });
+
+  element.appendChild(icon);
+  
+}
+
+function iconPlanilha(element){
+  
+    var icon = cE("icon")
+        icon.setAttribute("class","icon-table2");
+  tooltip(icon,"Solicitação de contato");
+  
+    var config = JSON.parse(localStorage.config);
+
+        icon.onclick=(function(){
+          
+          window.open(config.planilha,"_blank");
+          
+        });
+
+  element.appendChild(icon);
+  
+}
+
+
+function iconReceitaEspecial(element){
+
+  var shortcut = createObject('{"tag":"shortcut"}');
+  
+  document.body.append(shortcut);
+  
+  var icon = cE("icon");
+      icon.setAttribute("class","icon-file-text2");
+
+     tooltip(icon,"Documentos");
+  
+  var config   = JSON.parse(localStorage.config);
+  var shortcutstorage   = JSON.parse(config.shortcut);
+  var links =shortcutstorage[0].links;
+
+      icon.onclick=(function(){
+
+          if(document.body.getAttribute("shortcut")=="1"){
+            
+            document.body.setAttribute("shortcut","0");
+            
+          }else{
+            
+            document.body.setAttribute("shortcut","1");
+            
+          }
+
+      });
+
+        element.appendChild(icon);
+
+        let label = "";
+        let url   = "";
+
+        shortcut.append(createObject('{"tag":"label","innerhtml":"Receitas"}'));
+
+
+        Object.entries(links[0].receituario).forEach(([key, value]) => {
+
+            shortcut.append(shortcutItem(value.url,value.label));
+
+        });
+
+shortcut.append(createObject('{"tag":"label","innerhtml":"Protocolos"}'));
+
+        Object.entries(links[1].protocolos).forEach(([key, value]) => {
+
+            shortcut.append(shortcutItem(value.url,value.label));
+
+        });
+
+
+shortcut.append(createObject('{"tag":"label","innerhtml":"Outros"}'));
+
+        Object.entries(links[2].outros).forEach(([key, value]) => {
+
+            shortcut.append(shortcutItem(value.url,value.label));
+
+        });
+  
+       
+  
+}
+
+function shortcutItem(link,label){
+ 
+  var div1      = createObject('{"tag":"div"}');
+  var icon1     = createObject('{"tag":"icon","class":"icon-file-text2"}');
+  var label1    = createObject('{"tag":"label","innerhtml":"'+label+'"}');
+  
+  div1.append(icon1,label1);
+  
+  div1.onclick=(function(){
+    window.open(link);
+  });
+  
+  return div1;
+
+}
+
+
+  
+
+
+function formMountAutoStart(area,cb){
+ 
+	var url 	= localStorage.getItem("url")+'/json/'+area+'/editar/null';
+
+  var view 	= got(document,"view")[0];
+	var xmlhttp;
+
+	xmlhttp = new XMLHttpRequest();
+ 
+	xmlhttp.onreadystatechange = function() {
+
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			
+ 			var json = JSON.parse(xmlhttp.responseText);
+     
+				
+			  cb(json);
+		}
+		
+	};
+	
+	xmlhttp.open("GET", url, true);
+	xmlhttp.send();
+  
+}
+
+
+function btOptionsBtShare(){
+
+	var bt = cE("icon");
+			
+			bt.setAttribute("action","share");
+			bt.setAttribute("class","icon-share2");
+			bt.onclick=(function(){
+
+			});
+  
+	return bt;
+	
+}
+
+
+function formCustomEdit(areas){
+	
+		formMount(areas,null,function(){
+			
+			document.body.setAttribute("loading","0");
+      
+      //var userinfo  = JSON.parse(localStorage.userinfo);
+      
+
+			
+			gridShow();
+			
+		});
+
+}
+
+
+function formCustomView(areas,codigo){
+	
+		formMountV2(areas,'view',codigo,function(){
+			
+			document.body.setAttribute("loading","0");
+            
+			gridShow();
+			
+		});
+
+}
+
+
+function formEdit(modules,id){
+  
+  gridShow();
+  formMount(modules,id);
+
+
+    /* 
+			document.body.setAttribute("loading","0");
+      
+      var user  = JSON.parse(localStorage.user);
+      
+			if(id==user.id && (modules=="users" || modules=="formcovid")){
+        //Edicao do proprio Profile
+      }else{
+
+        var item  = gibc(id);
+
+        item.setAttribute("open","1");
+			  localStorage.openedformcodigo=id;
+        
+      }
+
+			gridShow();
+			 */
+
+}
+
+function formMount(modules,id,header){
+
+  var config    = JSON.parse(localStorage.config);
+	var user      = JSON.parse(localStorage.user);
+
+  const send = async function() {
+    
+    const rawResponse = await fetch(config.form, {
+
+      method: 'POST',
+      headers: {'Accept': 'application/json','Content-Type': 'application/json'},
+      body: JSON.stringify({session:user.session,modules:modules,id:id})
+
+    });
+
+    const data = await rawResponse.json();
+
+	               await formMountFields(modules,data);
+
+    document.body.removeAttribute("loading");
+
+  }
+
+  send();
+
+ /*   const data = await rawResponse.json();
+
+		await formMountFields(modules,data); */
+
+
+}
+
+function formMountFields(modules,data){
+
+	var user     = JSON.parse(localStorage.user);
+	var config   = JSON.parse(localStorage.config);
+
+	var window   = createObject('{"tag":"window","modules":"'+modules+'"}');
+	var form     = createObject('{"tag":"form","autocomplete":"off"}');
+	var header   = createObject('{"tag":"header"}');
+	var label    = createObject('{"tag":"label"}');
+
+	header.append(btBack(data.id),label);
+
+	window.append(header);
+
+  header.append(btHeaderSave(data.id));
+
+	if(data.id){
+    
+    label.appendChild(cT("Editando "+modules));
+    header.appendChild(btHeaderPrint());
+    
+		got(document,"body")[0].setAttribute("open","1");
+
+    var jsonform = data.form.fields;
+
+	}else{
+
+		window.setAttribute("tutorial","1");
+		label.appendChild(cT("Novo "+modules));
+		
+		var jsonform = data.form.fields;
+
+	}  
+  
+  //let menu = createObject('{"tag":"menu","style":"background-color:'+config.bgcolor+';"}');
+
+	//form.appendChild(menu);
+
+
+	Object.entries(jsonform).forEach(([key, value]) => {
+
+    form.append(fields(value,header));	
+	
+	});
+  
+	window.append(form);
+	
+	document.body.appendChild(window);
+  
+}  
+
+/* 
+		var type 		      = json[x].type;
+		var grid 		      = json[x].grid;
+		var gridmobile 		= json[x].gridmobile;
+		var fieldcodigo 	= json[x].id;
+    
+		var attribute = [];
+		
+        attribute.codigo		      = codigo;
+        attribute.label			      = json[x].label;
+        attribute.name			      = json[x].name;
+        attribute.title			      = json[x].title;
+        attribute.required	      = json[x].required;
+        attribute.pattern		      = json[x].pattern;
+        attribute.value			      = (json[x].value!==undefined)?json[x].value:"";	
+        attribute.list			      = (json[x].list!==undefined)?json[x].list:"";	
+        attribute.limit			      = json[x].limit;
+        attribute.grid			      = json[x].grid;
+        attribute.gridmobile      = json[x].gridmobile;
+        attribute.admin			      = json[x].admin;
+        attribute.attributes			= json[x].attributes;
+        attribute.placeholder			= json[x].placeholder;
+        attribute.presetarray			= json[x].presetarray;  
+        attribute.action			    = action;
+
+    
+		switch(type) {
+
+            case "hide":            var div = formMountHide(attribute);div.setAttribute('type',type);           break;
+            case "hideinput":       var div = formMountHideInput(attribute);div.setAttribute('type',type);      break; 
+            case "textarea":        var div = formMountTextarea(attribute);div.setAttribute('type',type);       break;
+            case "textareapreset":  var div = formMountTextareaPreset(attribute);div.setAttribute('type',type);       break;
+            case "data":            var div = formMountData(attribute);div.setAttribute('type',type);           break;
+            case "text":            var div = formMountText(attribute);div.setAttribute('type',type);           break;
+            case "password":        var div = formMountPassword(attribute);div.setAttribute('type',type);       break;
+            case "youtube":         var div = formMountYoutube(attribute);div.setAttribute('type',type);        break;  
+            case "trueorfalse":     var div = formMountTrueFalse(attribute);div.setAttribute('type',type);      break;	
+            case "texturl":         var div = formMountTexturl(attribute);div.setAttribute('type',type);        break;
+            case "selectajax":      var div = formMountSelectAjax(attribute);                                   break;
+            case "selectcolor":     var div = formMountSelectColor(attribute);                                  break;   
+            case "search":          var div = formMountSelectCustom(attribute);                                 break;
+            case "multiple":        var div = formMountMultiple(attribute);div.setAttribute('type',type);       break;
+            case "multiplehidden":  var div = formMountMultipleHidden(attribute);div.setAttribute('type',type); break;
+            case "share":           var div = formFieldShare(attribute);div.setAttribute('type',type);header.append(btOptionsBtShare());break;    
+            case "tag":             var div = formMountTag(attribute);div.setAttribute('type',type);            break;
+            case "taggroup":        var div = formMountTagGroup(attribute);div.setAttribute('type',type);       break; 
+            case "keywords":        var div = formMountKeywords(attribute);div.setAttribute('type',type);       break;        
+            case "fileupload":      var div = formMountFileupload(attribute);div.setAttribute('type',type);header.append(btHeaderAttach());break;
+            case "select":
+                        
+                if(attribute.value=='undefined'){
+
+                    if(attribute.value.length<30){
+                        var div = formMountSelect(attribute);
+                    }else{
+                        var div = formMountSelectCustom(attribute);
+                    }
+
+                }else{
+                    
+                    var div = formMountSelect(attribute);
+                    
+                }
+
+        	    break;
+
+            default:
+                    
+                var div = formMountText(attribute);
+                //console.log(type);
+
+		}
+    */
+
+        
+
+
+function formClose(){
+
+	rE(got(document,"window"));
+	got(document,"body")[0].setAttribute("open","0");
+
+	gridHide();
+
+	if(localStorage.openedformcodigo){
+    
+    var item  = gibc(localStorage.openedformcodigo);
+    
+    if(item!=undefined){
+      
+       	item.setAttribute("open","0");
+      
+    }
+
+		localStorage.openedformcodigo="";
+		
+	}
+	
+}
+
+function formDelete(codigo){
+	
+
+
+	var xmlhttp;
+
+	xmlhttp = new XMLHttpRequest();
+ 
+	xmlhttp.onreadystatechange = function() {
+
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	
+
+						
+		}
+		
+	};
+
+	if (confirm("Tem certeza que deseja excluir?") === true) {
+
+    var url = localStorage.getItem("url")+'/admin/json/jsonUpdate.php';
+    
+    var data = new FormData();
+    
+        data.append('area',gA());
+        data.append('acao','delete');
+        data.append('codigo',codigo);
+        data.append('session',localStorage.session);
+    
+		xmlhttp.open("POST", url, true);
+		xmlhttp.send(data);
+		
+			rE(gibc(codigo));
+			formClose();
+		
+	} else {
+
+	
+
+	}
+
+}
+
+function formNew(){
+      document.body.setAttribute("loading","1");
+  formEdit(gA(),null);
+
+	
+}
+
+function gridShow(){
+	
+		var grade= got(document,"grade")[0];
+
+		grade.setAttribute("class","show");
+
+	
+}
+
+function gridHide(){
+	
+		var grade= got(document,"grade")[0];
+	
+		grade.setAttribute("class","hide");
+
+}
+
+function btClose(codigo){
+
+	var btClose = cE("icon");
+			btClose.setAttribute("class","icon-cross");
+	//btClose.appendChild(cT("×"));
+			btClose.setAttribute("action","close");
+			btClose.onclick=(function(){
+
+				formClose(codigo);
+
+			});
+
+	return btClose;
+	
+}
+
+function btBack(codigo){
+
+	var bt = cE("icon");
+			//btClose.setAttribute("class","icon-cross");
+	//bt.appendChild(cT("<"));
+			bt.setAttribute("action","back");
+			bt.setAttribute("class","icon-arrow-left2");
+			bt.onclick=(function(){
+
+				formClose(codigo);
+
+			});
+
+	return bt;
+	
+}
+
+function btHeaderPrint(){
+
+	var bt = cE("icon");
+			
+			bt.setAttribute("action","print");
+			bt.setAttribute("class","icon-printer");
+			bt.onclick=(function(){
+
+					print();
+
+			});
+
+	return bt;
+	
+}
+
+function btHeaderAttach(){
+	
+var attribute = [];
+		attribute.tag 		= "input";
+		attribute.type 		= "file";
+		attribute.name 		= "fileupload";
+		attribute.multiple	= "";
+		attribute.onchange	= "upload(this);";
+	
+var fileupload = cEA(attribute);
+	
+	var bt = cE("icon");
+		
+			bt.setAttribute("action","attach");
+			bt.setAttribute("class","icon-attachment");
+			bt.onclick=(function(){
+
+				
+
+			});
+
+	bt.appendChild(fileupload);
+	
+	return bt;
+	
+}
+
+function btHeaderSeeAttach(){
+
+	var bt = cE("icon");
+			
+			bt.setAttribute("action","seeattach");
+			bt.setAttribute("class","icon-images");
+			bt.onclick=(function(){
+					var anexos=document.getElementsByName('files')[0].value;
+					window.open("/admin/json/jsonAnexosView.php?anexos="+anexos,"_blank");
+
+			});
+
+	return bt;
+	
+}
+
+function btHeaderSave(codigo){
+
+	var bt = cE("icon");
+			
+			bt.setAttribute("action","save");
+			bt.setAttribute("class","icon-checkmark");
+			bt.onclick=(function(){
+					formSave(codigo);
+
+
+			});
+
+	return bt;
+	
+}
+
+function btHeaderDelete(codigo){
+
+	var bt = cE("icon");
+			
+			bt.setAttribute("action","delete");
+			bt.setAttribute("class","icon-bin");
+			bt.onclick=(function(){
+					formDelete(codigo);
+
+			});
+
+	return bt;
+	
+}
+
+function btDelete(codigo){
+	
+		var btDelete = cB("excluir");
+	
+				btDelete.setAttribute("action","delete");
+				btDelete.onclick=(function(){
+
+					formDelete(codigo);
+
+				});
+	
+	return btDelete;
+}
+
+function btSave(codigo){
+	
+		var button = cB("salvar");
+				button.setAttribute("action","save");
+				button.onclick=(function(){
+
+					formSave(codigo);
+
+				});
+	
+	return button;
+		
+}
+
+function btPrint(){
+	
+	var button = cB("imprimir");
+	
+			button.setAttribute('action','print');
+			button.onclick=(function(){
+
+				print();
+
+			});
+	
+	return button;
+	
+}
+
+function btAttach(){
+	
+	var attribute = [];
+
+		attribute.tag 		= "input";
+		attribute.type 		= "file";
+		attribute.name 		= "fileupload";
+		//attribute.anexos 	= object.getAttribute('value');
+		attribute.gwidth 	= "900";
+		attribute.multiple	= "";
+		attribute.onchange	= "formUpload(this);";
+
+	var fileupload = cEA(attribute);
+	
+	var attribute = [];
+
+		attribute.tag 		= "div";
+		attribute.class 	= "fileupload";
+
+	
+	var divFileUpload = cEA(attribute);
+	
+	var attribute = [];
+
+		attribute.tag 		= "icon";
+		attribute.class 		= "icon-attachment";
+	
+	var icon = cEA(attribute);
+	
+	var attribute = [];
+
+		attribute.tag 		= "button";
+		attribute.text 		= "";
+		attribute.action 	= "attach";
+	
+	var divFileUploadEnviar = cEA(attribute);
+	
+	divFileUploadEnviar.appendChild(icon);
+	
+	divFileUpload.appendChild(divFileUploadEnviar);
+	divFileUpload.appendChild(fileupload);
+	
+	return divFileUpload;
+	
+}
+
+function btSeeAttach(){
+
+				var anexos=document.getElementsByName('files')[0].value;
+	
+			var attribute = [];
+
+			attribute.tag 		= "button";
+			attribute.text 		= "Visualizar anexos";
+			attribute.onclick	= "window.open('/admin/json/jsonAnexosView.php?anexos="+anexos+"','_blank')";
+			attribute.type		= "button";
+			attribute.action	= "seeattach";
+	
+		var bt = cEA(attribute);
+			return bt;
+
+}
+
+function formSave(codigo){
+
+	var formfields    = document.querySelectorAll("window > form input,textarea");
+  var data          = {};
+  let error         = '';
+
+	Object.entries(formfields).forEach(([key, value]) => {
+
+    let id          = value.getAttribute('id');
+    let required    = value.parentElement.getAttribute('required');
+    let title       = value.getAttribute('title');
+    let valueid     = value.getAttribute('valueid') || value.value ;
+        //data[id] = [];
+        data[id]=valueid;
+
+        if(required=="true"){
+
+          error+= (valueid)?"":"Campo "+title+" está vazio \n";
+
+        }
+
+	});
+
+  if(error){
+    
+    swal("Erro",error, "error");
+
+  }else{
+    formSend(data,codigo); 
+
+  }
+
+}
+
+
+
+function formSend(data,id){
+
+  const modules     = document.querySelector("window").getAttribute("modules");
+  const config        = JSON.parse(localStorage.config);
+  const user          = JSON.parse(localStorage.user);
+
+data.session=user.session;
+data.modules=modules;
+data.id=id;
+
+  var url  = config.formsave;
+
+  document.body.setAttribute("loading","1");
+
+  formClose();
+
+  const send = async function(data) {
+
+    const rawResponse = await fetch(config.formsave, {
+
+      method: 'POST',
+      headers: {'Accept': 'application/json','Content-Type': 'application/json'},
+      body: JSON.stringify({data:data})
+
+    });
+
+    const post = await rawResponse.json();
+
+    itemReload(id)
+
+  
+    
+}
+
+send(data); 
+
+  
+}
+
+function itemReload(id){
+
+     var user    = JSON.parse(localStorage.user);
+     var config  = JSON.parse(localStorage.config);
+
+    if(id){
+      
+  
+        const send = async function() {
+
+            const rawResponse = await fetch(config.urlmodules, {
+
+                  method: 'POST',
+                  headers: {'Accept': 'application/json','Content-Type': 'application/json'},
+                  body: JSON.stringify({session: user.session, modules: gA(),id:id})
+
+                });
+
+                const data = await rawResponse.json();
+
+                      var item = document.querySelector("tabela item[c='"+id+"']");
+
+                      race(item);
+                      loadItem(item,data[0]);
+         
+
+          document.body.removeAttribute("loading");
+        }
+
+        send();
+
+    }else{
+
+   
+      modulesOpen(gA());
+
+    }
+
+}
+
+function formView(areas,codigo){
+	
+  formMount(areas,codigo,function(){
+
+    document.body.setAttribute("loading","0");
+
+    let userinfo  = JSON.parse(localStorage.userinfo);
+
+    let item      = gibc(codigo);
+        item.setAttribute("open","1");
+
+    localStorage.openedformcodigo=codigo;
+
+    gridShow();
+
+  });
+
+}
+
+function fieldTooltip(div,data){
+
+  if(data){
+
+    var tooltip   = createObject('{"tag":"tooltipv2","innerhtml":"'+data.title+'"}');
+
+    var icon   = createObject('{"tag":"tooltipv2icon","class":"icon-question"}');
+
+        icon.append(tooltip);
+
+    div.appendChild(icon); 
+  }
+  
+}
+
+
+
+function fields(data,header){
+
+  const e = (function(){
+    
+    switch(data.type) {
+
+    case "textarea":return textarea(data);
+    case "selectajax":return selectAjax(data,header);
+  /*   case "multiplehidden":return multipleHidden(data);
+   case "share":return share(data);header.append(btOptionsBtShare());*/
+    case "fileupload":return fileupload(data,header);
+ 
+    default:return text(data);
+      
+    } 
+
+  }())
+
+
+  e.setAttribute('required',data.required);
+  e.setAttribute('id','div'+data.url);
+  e.setAttribute('grid',data.grid);
+  e.setAttribute('gridmobile',data.gridmobile);
+  e.setAttribute('fieldcodigo',data.id);
+  e.setAttribute('type',data.type);
+
+  return e;
+  
+}
+
+/*
+
+
+//   case "hide":            var div = formMountHide(attribute);div.setAttribute('type',type);           break;
+ //   case "hideinput":       var div = formMountHideInput(attribute);div.setAttribute('type',type);      break; 
+////    case "textareapreset":  var div = formMountTextareaPreset(attribute);div.setAttribute('type',type);       break;
+ //   case "data":            var div = formMountData(attribute);div.setAttribute('type',type);           break;
+//    case "text":            var div = formMountText(attribute);div.setAttribute('type',type);           break;
+ //   case "password":        var div = formMountPassword(attribute);div.setAttribute('type',type);       break;
+ //   case "youtube":         var div = formMountYoutube(attribute);div.setAttribute('type',type);        break;  
+  //  case "trueorfalse":     var div = formMountTrueFalse(attribute);div.setAttribute('type',type);      break;	
+   // case "texturl":         var div = formMountTexturl(attribute);div.setAttribute('type',type);        break;
+   // case "selectcolor":     var div = formMountSelectColor(attribute);                                  break;   
+  //  case "search":          var div = formMountSelectCustom(attribute);                                 break;
+  //  case "multiple":        var div = formMountMultiple(attribute);div.setAttribute('type',type);       break;
+   // case "tag":             var div = formMountTag(attribute);div.setAttribute('type',type);            break;
+  //  case "taggroup":        var div = formMountTagGroup(attribute);div.setAttribute('type',type);       break; 
+   // case "keywords":        var div = formMountKeywords(attribute);div.setAttribute('type',type);       break;        
+
+
+       case "select":
+                
+        if(data.value=='undefined'){
+
+            if(data.value.length<30){
+                var div = select(attribute);
+            }else{
+                var div = selectCustom(attribute);
+            }
+
+        }else{
+            
+            var div = formMountSelect(attribute);
+            
+        }
+
+      break;
+   */
+
+function fileupload(data,header){
+
+  var label    = createObject('{"tag":"label","innerhtml":"'+data.label+'"}');
+  var div      = createObject('{"tag":"div"}');
+
+  var uuid = uuidv4();
+
+  var object   = createObject('{"tag":"input","id":"files","type":"hidden","value":"'+uuid+'"}');
+
+      header.append(btHeaderAttach());
+
+  var span   = createObject('{"tag":"uploadedStatus"}');
+  var result = createObject('{"tag":"uploadedFiles"}');
+    
+      div.append(object,result,span);
+
+      if(data.value){
+
+        var files    = JSON.parse(data.value);
+
+        Object.entries(files).forEach(([key, value]) => {
+          
+            fileUploadFigure(result,files);
+      
+            object.setAttribute('value',value.uuid);
+
+        });
+
+      }
+
+  return div;
+  
+}
+
+
+function addUploadFiles(local,object){
+
+  const config = JSON.parse(localStorage.config);
+
+	var div 				= cE("div");
+	var figure 			= cE("figure");
+	var textCover 	= cT("Destaque");
+	var spanDelete 	= cE("span");
+	var spanLeft 		= cE("span");
+	var spanRight 	= cE("span");
+	var spanZoom 		= cE("span");
+	var spanCover 	= cE("span");
+	var divOptions 	= cE("options");
+  var spanEdit 		= cE("span");
+
+	if(object.filename!==undefined){
+    
+		var filename=object.filename;
+		var key=object.key;
+		
+	}else{
+		var filename=object;
+	}
+	
+	if(filename!==null){
+    
+    var urlimgm = config.imgm+filename+"?key="+key;
+    var urlimg  = config.img+filename+"?key="+randomString(32);
+
+		spanCover.appendChild(textCover);
+
+		divOptions.appendChild(spanDelete);
+		divOptions.appendChild(spanLeft);
+		divOptions.appendChild(spanZoom);
+		divOptions.appendChild(spanRight);
+		//divOptions.appendChild(spanEdit);
+		
+		div.appendChild(divOptions);
+
+		spanDelete.setAttribute('class','icon-bin');
+		spanLeft.setAttribute('class','icon-undo');
+		spanRight.setAttribute('class','icon-redo');
+		spanZoom.setAttribute('class','icon-search');
+		spanEdit.setAttribute('class','icon-edit');
+		
+		sA(figure,"style","background-image:url('"+urlimgm+"');");
+		sA(spanDelete,"onclick","if(confirm('Deseja remover este arquivo?')){removeAnexos(this.parentNode.parentNode,'"+filename+"')}");
+		
+		//sA(spanZoom,"onclick","window.open('"+localStorage.getItem("img")+filename+"?key="+randomString(32)+"','_blank');");
+    
+    spanZoom.onclick=(function(){
+      window.open(urlimg,'_blank');
+    });
+                      
+		spanLeft.onclick=(function(){
+
+			figure.setAttribute('style',"background-image:url('"+localStorage.getItem("urlimagerotate")+"?img="+filename+"&rotate=left&key="+randomString(32)+"');");
+			divOptions.setAttribute('style',"background-image:url('"+localStorage.getItem("url")+"/admin/action/actionChangeImageKey.php?filename="+filename+"&key="+randomString(32)+"');");
+      
+      
+		});
+
+		spanRight.onclick=(function(){
+
+			figure.setAttribute('style',"background-image:url('"+localStorage.getItem("urlimagerotate")+"?img="+filename+"&rotate=right&key="+randomString(32)+"');");
+			divOptions.setAttribute('style',"background-image:url('"+localStorage.getItem("url")+"/admin/action/actionChangeImageKey.php?filename="+filename+"&key="+randomString(32)+"');");
+      
+		});
+		
+		if(goiFind(filename)){
+			
+			goi(filename).appendChild(divOptions);
+			goi(filename).appendChild(figure);
+			
+		}else{
+			
+			local.insertBefore(div, local.childNodes[0]);
+			div.appendChild(figure);
+			
+		}
+		
+
+		/*local.appendChild(div);*/
+		
+		
+		var label   = cE("input");
+		var content = cE("textarea");
+    var btsalvar = cE("button");
+        
+		label.setAttribute("name","label");
+		label.setAttribute("placeholder","Título");
+		content.setAttribute("name","textarea");
+    content.setAttribute("placeholder","Descrição");
+    btsalvar.setAttribute("type","button");
+		
+    /*    
+	    div.appendChild(label);
+		div.appendChild(content);
+		div.appendChild(btsalvar);
+			*/
+		div.setAttribute("id",filename);
+	
+		
+	}else{
+
+		var icon 	= cE("icon");
+
+		figure.setAttribute('style',"");
+		figure.appendChild(icon);
+		div.appendChild(figure);
+	
+		
+		local.insertBefore(div, local.childNodes[0]);
+		icon.setAttribute('class','icon-user');
+
+	}
+
+
+}
+
+
+
+function addUploadFilesPDF(local,filename){
+
+  const config = JSON.parse(localStorage.config);
+
+	var split       = filename.split(".");
+
+	var div 				= createObject('{"tag":"div","id":"'+filename+'"}');
+	var divOptions 	= createObject('{"tag":"options"}');
+	var spanDelete 	= createObject('{"tag":"span","class":"icon-bin"}');
+	var spanCover 	= createObject('{"tag":"span","innerhtml":"Destaque"}');
+	var spanZoom 		= createObject('{"tag":"span","class":"icon-search"}');
+	var figure 			= createObject('{"tag":"figure","style":"background-image:url('+config.imgp+split[0]+'.jpg);"}');
+	var divLabel 		= createObject('{"tag":"h3"}');
+
+
+	if(goiFind(filename)){
+
+		goi(filename).appendChild(divOptions);
+		goi(filename).appendChild(figure);
+
+	}else{
+
+		local.insertBefore(div, local.childNodes[0]);
+		div.appendChild(figure);
+
+	}
+	
+  spanDelete.onclick=(function(){
+
+      if(confirm('Deseja remover este arquivo?')){removeAnexos(this.parentNode.parentNode,filename)}
+
+  });
+
+  spanZoom.onclick=(function(){
+
+    window.open(config.pdf+filename,'_blank');
+
+  });
+	
+  divOptions.append(spanDelete,spanZoom);
+  figure.append(divLabel);
+  div.append(figure,divOptions);
+
+}
+
+function addUploadFilesPDFv2(local,filename){
+
+  const config = JSON.parse(localStorage.config);
+
+	var div 				= cE("div");
+	var divOptions 	= cE("options");
+
+	var textCover 	= cT("Destaque");
+	
+	var spanDelete 	= cE("span");
+	var spanCover 	= cE("span");
+	var spanZoom 		= cE("span");
+	var figure 			= cE("iframe");
+	
+
+	var divLabel 			= cE("h3");
+	
+	spanDelete.setAttribute('class','icon-bin');
+	spanCover.appendChild(textCover);
+	spanZoom.setAttribute('class','icon-search');
+	divOptions.appendChild(spanDelete);
+		divOptions.appendChild(spanZoom);
+	figure.appendChild(divLabel);
+	div.appendChild(figure);
+			div.appendChild(divOptions);
+
+	if(goiFind(filename)){
+
+		goi(filename).appendChild(divOptions);
+		goi(filename).appendChild(figure);
+
+	}else{
+
+		local.insertBefore(div, local.childNodes[0]);
+		div.appendChild(figure);
+	}
+	
+
+	var split= filename.split(".");
+	
+	sA(figure,"src",localStorage.getItem("pdf")+split[0]+".pdf");
+
+	sA(spanDelete,"onclick","if(confirm('Deseja remover este arquivo?')){removeAnexos(this.parentNode.parentNode,'"+filename+"')}");
+	
+	sA(spanZoom,"onclick","window.open('"+localStorage.getItem("pdf")+filename+"','_blank');");
+	//console.log(filename);
+	
+	div.setAttribute("id",filename);
+	
+}
+
+
+
+function addUploadFilesPNG(local,filename){
+
+	var div 		= cE("div");
+	var figure 		= cE("figure");
+	
+	var textCover 	= cT("Destaque");
+	var spanDelete 	= cE("span");
+
+	var spanZoom 	= cE("span");
+	var spanCover 	= cE("span");
+	var divOptions 	= cE("options");
+
+	if(filename!==null){
+
+		spanCover.appendChild(textCover);
+
+		divOptions.appendChild(spanDelete);
+
+		divOptions.appendChild(spanZoom);
+
+
+		div.appendChild(divOptions);
+
+		spanDelete.setAttribute('class','icon-bin')
+
+		spanZoom.setAttribute('class','icon-search')
+		
+		sA(figure,"style","background-image:url('"+localStorage.getItem("png")+filename+"');");
+		sA(spanDelete,"onclick","if(confirm('Deseja remover este arquivo?')){removeAnexos(this.parentNode.parentNode,'"+filename+"')}");
+		
+		sA(spanZoom,"onclick","window.open('"+localStorage.getItem("png")+filename+"','_blank');");
+
+		div.appendChild(figure);
+		local.appendChild(div);
+
+	}else{
+
+		var icon 	= cE("icon");
+
+		figure.setAttribute('style',"");
+		figure.appendChild(icon);
+		div.appendChild(figure);
+		local.appendChild(div);
+		icon.setAttribute('class','icon-user');
+
+	}
+
+
+}
+
+
+function fileUploadFigure(result,data){
+
+  Object.entries(data).forEach(([key, value]) => {
+
+    var ext = value.filename.split('.').pop();
+
+    switch(ext) {
+
+      case "jpg": addUploadFiles(result,value);break;
+      case "pdf": addUploadFilesPDF(result,value.filename);break;
+      case "png": ddUploadFilesPNG(result,value.filename);break;
+
+    } 
+
+  });
+
+}
+
+
+function insertAnexos(anexos,filename){
+
+  const config  = JSON.parse(localStorage.config);
+  const user    = JSON.parse(localStorage.user);
+
+
+  (async () => {
+    const rawResponse = await fetch(config.insertfile, {
+    method: 'POST',
+    headers: {'Accept': 'application/json','Content-Type': 'application/json'},
+    body: JSON.stringify({session: user.session, anexos: anexos, filename: filename})
+    });
+
+    const data = await rawResponse.json();
+
+  })();
+
+}
+
+
+
+function sendFile(file,anexos,url,cb){
+
+	var formData 	= new FormData();
+
+	formData.append('fileupload', file);
+
+	var xhr = new XMLHttpRequest();
+	
+	//var anexos = gon('files')[0].value;
+	
+	var form = got(document,"form")[0];
+	var uploadedfiles = document.querySelector("form uploadedfiles");
+	
+	var divLoading=cE("div");
+	var labelLoading=cE("label");
+	divLoading.appendChild(labelLoading);
+	uploadedfiles.insertBefore(divLoading, uploadedfiles.childNodes[0]);
+	
+
+	
+	xhr.upload.addEventListener("progress", function(e) {
+		
+		var pc = parseInt((e.loaded / e.total * 100));
+
+			labelLoading.innerHTML=pc+"%";
+		
+	}, false);
+	
+	xhr.onreadystatechange = function() {
+
+		if (xhr.readyState == 4 && xhr.status == 200) {
+			
+			var object = JSON.parse(xhr.responseText);
+			
+			if(object.ext=='jpg'){
+
+				var div = cE('div');
+				
+				//sA(div,"style","background-image:url('/client/"+object.url+"');");
+				//sA(div,"onclick","window.open('/client/"+object.url+"','_blank');");
+				
+				insertAnexos(anexos,object.filename);
+				divLoading.setAttribute("id",object.filename);
+				divLoading.innerHTML="";
+				cb(object.filename);
+			
+				//got('fileuploadresult').appendChild(div);
+
+			}else if(object.ext=='png'){
+
+				var div = cE('div');
+				
+				//sA(div,"style","background-image:url('/client/"+object.url+"');");
+				//sA(div,"onclick","window.open('/client/"+object.url+"','_blank');");
+				
+				insertAnexos(anexos,object.filename);
+				cb(object.filename);
+				console.log(object);
+				//got('fileuploadresult').appendChild(div);
+
+			}else if(object.ext=='pdf'){
+				
+				//var uploadedfiles = got(object.parentNode.parentNode,"uploadedfiles")[0];
+				
+				//addUploadFiles(uploadedfiles,object.filename);
+				insertAnexos(anexos,object.filename);
+				divLoading.setAttribute("id",object.filename);
+				divLoading.innerHTML="";
+				cb(object.filename);
+				
+			}
+			
+		}
+
+	};
+
+	xhr.open('POST', url, true);
+	xhr.send(formData);
+
+}
+
+function upload(object){
+
+	const config = JSON.parse(localStorage.config);
+
+	var window = got(document,"window")[0];
+	
+	var uploadedfiles = got(window,"uploadedfiles")[0];
+	
+	for(var x=0;x<object.files.length;x++){
+			
+		var ext     = object.files[x].type;
+		var anexos  = document.getElementById('files').value;
+
+		if(ext=='image/jpeg'){
+
+			sendFile(object.files[x],anexos,config.upload+'?',
+
+				function(filename){
+
+					addUploadFiles(uploadedfiles,filename);
+
+				}
+
+			);
+			
+		}else if(ext=='application/pdf'){
+			
+			sendFile(object.files[x],anexos,localStorage.getItem("upload")+'?',
+
+							 
+				function(filename){
+        
+				  //pdftothumb(object);
+	
+
+					addUploadFilesPDF(uploadedfiles,filename);
+
+				}
+							 
+			);
+
+		}else if(ext=='image/png'){
+			
+			sendFile(object.files[x],anexos,config.upload+'?',
+
+							 
+				function(filename){
+				
+
+					addUploadFiles(uploadedfiles,filename);
+
+				}
+							 
+			);
+						
+		}else{
+			alert('Formato de arquivo não suportado');
+		}
+
+	}
+		
+}
+
+function getAttValue(data,att){
+
+  if (data.attributes){
+    if(data.attributes[att]){
+      return data.attributes[att];
+    }else{
+      return false;
+    }
+
+  }else{
+    return false;
+  }
+
+}
+
+function multipleHidden(data){
+
+  var label       = createObject('{"tag":"label","innerhtml":"'+data.label+'"}');
+	var div         = createObject('{"tag":"div","class":"multiplehidden"}');
+  var view        = createObject('{"tag":"multipleview"}');
+
+
+  var valor  = data.value;
+    
+  var input  = createObject('{"tag":"input","id":"'+data.url+'","value":"'+valor+'"}');
+
+
+  var select = createObject('{"tag":"multiplehidden"}');
+  
+      multipleHiddenFinder(select);
+  
+		  select.append(input,multipleHiddenClose());
+
+      div.append(select,view);
+
+  return div;
+}
+
+
+
+/* function multipleHidden(data){
+
+  var label       = createObject('{"tag":"label","innerhtml":"'+data.label+'"}');
+	var div         = createObject('{"tag":"div","class":"multiplehidden"}');
+  var view        = createObject('{"tag":"multipleview"}');
+ 
+      view.appendChild(multipleAdd(data));
+  
+      div.appendChild(label);
+  
+  var valor  = (data.value[0].value[0]==",")?data.value[0].value:","+data.value[0].value;
+	
+  var input  = createObject('{"tag":"input","name":"'+data.name+'","title":"","value":"'+valor+'","autocomplete":"off","required":"","type":"hidden","tipo":"select"}');
+     
+  var select = createObject('{"tag":"multiplehidden"}');
+  
+      select.appendChild(multipleHiddenClose());
+  
+      multipleHiddenFinder(select);
+  
+		  select.appendChild(input);
+		
+	var object = data.value;
+
+		for (var item in object){
+			
+			let codigon = new Number(object[item].codigo);
+     
+			let codigo = object[item].codigo;
+      
+			let label = object[item].label;
+      
+			var bt = createObject('{"tag":"opt","areas":"'+object[item].areas+'","value":"'+codigo+'","innerhtml":"'+codigon.pad(6)+' - '+label+'"}');
+      
+      if(object[item].filename!=undefined){
+
+        let filename = object[item].filename;    
+
+        let style = "background-image:url("+localStorage.getItem("imgm")+filename+");";
+        
+            bt.setAttribute("style",style);
+        
+      }
+
+			   // bt.appendChild(cT((codigo).pad(6)+" - "+label));
+			   // bt.setAttribute("value",codigo);
+			
+			var selected = valor.indexOf(","+codigo+","); 
+			
+			if(selected>=0){
+		
+				bt.setAttribute('selected','1');
+
+          var list = [];
+
+          list.label=label;
+          list.codigo=codigo;
+
+          view.appendChild(coolbutton(list));        
+        
+			}else{
+				
+				bt.setAttribute('selected','0');
+				
+			}
+			
+			bt.onclick=(function(){
+				
+				var attr = this.getAttribute("selected");
+				
+				if(attr==1){
+					
+					this.setAttribute("selected","0");
+					var valor = ","+this.getAttribute('value')+",";
+					var text = input.value;
+					var x = text.replace(valor,","); 
+					input.value=x;
+					
+          var multipleview = got(this.parentElement.parentElement,"multipleview")[0];
+          
+          rE(goap(multipleview,"c",this.getAttribute('value'))[0]);
+        
+          
+				}else{
+					
+					this.setAttribute("selected","1");
+					var valor = this.getAttribute('value')+",";
+					input.value=input.value+valor;
+          
+          var list = [];
+              list.label=this.innerHTML;
+              list.codigo=this.getAttribute('value');
+          
+          var multiple = this.parentElement.parentElement;
+          var multipleview = got(multiple,"multipleview")[0];
+              multipleview.appendChild(coolbutton(list));
+					
+				}
+
+			});
+
+			select.appendChild(bt);
+
+		}
+	
+	  div.appendChild(select);
+    div.appendChild(view);
+  
+  return div;
+	
+}
+
+ */
+
+
+function multipleAdd(attribute){
+  
+  var icon  = cE("icon");
+      icon.setAttribute("class","icon-plus");
+  
+  var label = cE("label");
+      label.appendChild(cT(attribute.label));
+  
+  var btadd = cE("add");
+      btadd.onclick=(function(){this.parentElement.parentElement.setAttribute("search","1");});
+  
+  
+      btadd.appendChild(icon);
+      btadd.appendChild(label);
+    
+  return btadd;
+  
+}
+
+
+function multipleHiddenClose(){
+  
+  var icon  = cE("icon");
+      icon.setAttribute("class","icon-cross");
+  
+ 
+      icon.onclick=(function(){this.parentElement.parentElement.setAttribute("search","0");});
+  
+  return icon;
+  
+}
+
+
+function coolbutton(list){
+    
+  var suitesinfo = JSON.parse(localStorage.suitesinfo); 
+  var div     = cE("div");
+  var label   = cE("label");
+  label.setAttribute('style','background-color:'+suitesinfo.color1+';');
+  var figure  = cE("figure");
+  var close   = cE("icon"); 
+   close.setAttribute('style','background-color:'+suitesinfo.color1+';');
+      close.setAttribute("class","icon-cross");
+  
+  var text = cT(list.label);
+  
+  	close.onclick=(function(){
+      
+				if(confirm("Tem certeza que deseja remover ?")){
+          
+          var multiplehidden=got(this.parentElement.parentElement.parentElement,"multiplehidden")[0];
+
+          var input = got(multiplehidden,"input")[1];
+
+          var valor = ","+this.parentElement.getAttribute("c")+",";
+          var text = input.value;
+          var x = text.replace(valor,","); 
+
+              input.value=x;
+              rE(this.parentElement);
+
+        }
+			
+        
+    });
+      
+      label.appendChild(text);
+      div.appendChild(figure);
+      div.appendChild(label);
+      div.appendChild(close);
+  
+      div.setAttribute('c',list.codigo);
+  
+  return div;
+  
+}
+
+function multipleHiddenFinder(object){
+	
+	var finder = cE("input");
+	//var label = got(object,"label");
+	
+      //finder.setAttribute("type","text");
+      finder.setAttribute("placeholder","Digite para procurar");
+      finder.setAttribute("name","finder"); 
+  
+	finder.onkeyup = function() {
+    
+    var item = got(object,"opt");
+    
+    if(this.value.length>=3){
+      
+      if(item.length){
+
+        var string1 = removeAcento(this.value.toLowerCase());
+
+        for(var x=0;x<item.length;x++){
+
+          var ohtml=removeAcento(item[x].innerHTML.toLowerCase());
+
+          //if(item[x].getAttribute("selected")=="0"){
+
+            if(ohtml.indexOf(string1) >= 0){			
+
+              //item[x].style.display="block";
+              item[x].setAttribute('found','1');
+
+
+            }else{
+
+              //item[x].style.display="none";
+              item[x].setAttribute('found','0');
+            }
+          //}
+        }
+      }
+
+    }else{
+      
+      for(var x=0;x<item.length;x++){
+
+        item[x].setAttribute('found','0');
+
+      }
+    }
+      
+	};
+	
+	object.appendChild(finder);
+	
+}
+
+function selectAjax(data,header){
+
+  var div         = createObject('{"tag":"div"}');
+  var label       = createObject('{"tag":"label","innerhtml":"'+data.label+'"}');
+
+  var plugin      = getAttValue(data,"plugin");
+  var btshare     = createObject('{"tag":"compartilhar","innerhtml":"Compartilhar"}');
+  var finder  = selectAjaxSetInputValue(data);
+  var valueid = finder.getAttribute("valueid");
+
+      div.append(label,finder); 
+
+  if(plugin=="multiply"){
+
+    let json = (data.value)?JSON.parse(data.value):[];
+    let btshare=btOptionsBtShare();
+
+    div.append(selectAjaxListCards(json));
+
+    label.onclick = function(){
+
+      selectBox(data.url);
+
+    };
+
+btshare.onclick = function(){
+
+ selectBox(data.url);
+};
+
+    header.append(btshare);
+
+  }else{
+
+
+    selectFigure(div,valueid);
+
+    finder.onclick = function(){
+
+      selectBox(data.url);
+
+    };
+
+  }
+
+  //fieldTooltip(label,data.attributes);   
+
+  var select = createObject('{"tag":"selectajax"}');
+
+
+
+
+  return div;
+	
+}
+
+function selectAjaxRemoveCard(e){
+
+  let input     = e.parentElement.parentElement.parentElement.querySelector("input");
+
+  let elements  = e.parentElement.parentElement.getElementsByTagName("card");
+
+  rE(e.parentElement);
+
+  let json      = [];
+
+  Object.entries(elements).forEach(([key, value]) => {
+
+    json.push(parseInt(value.id));
+
+  });
+
+  valueid = JSON.stringify(json);
+
+  input.setAttribute("valueid",valueid);
+
+}
+
+function selectAjaxSetInputValue(data){
+
+  let value       = (data.value)?JSON.parse(data.value):null;
+
+  if(Array.isArray(value)){
+
+    var valueid = "";
+
+    let json    = [];
+
+    Object.entries(value).forEach(([key, value]) => {json.push(value.id)});
+
+    valueid = JSON.stringify(json);
+
+  }else{
+
+    var valueid     = (value)?value.id:"";
+
+  }
+
+  let placeholder = (value)?value.label:"Escolha "+data.label;
+
+  
+
+  var finder = createObject('{"tag":"input","title":"'+data.label+'","id":"'+data.url+'","class":"default","placeholder":"'+placeholder+'","valueid":"'+valueid+'"}');
+
+  if(getAttValue(data,"plugin")){
+
+    finder.setAttribute("plugin",getAttValue(data,"plugin"));
+
+  }
+
+    if(data.attributes){
+      if(data.attributes.required){
+        finder.setAttribute("required","required");
+      }
+    }
+
+
+
+return finder;
+
+}
+
+
+
+
+
+function selectAjaxListCards(data){
+
+  if(document.querySelector("cards")){
+
+    var cards = document.querySelector("cards");
+
+  }else{
+
+    var cards = createObject('{"tag":"cards"}');
+
+  }
+
+  Object.entries(data).forEach(([key, value]) => {
+
+
+
+    var card    = createObject('{"tag":"card","id":"'+value.id+'"}');
+    var label   = createObject('{"tag":"label","innerhtml":"'+value.label+'"}');
+    var btclose = createObject('{"tag":"btclose","class":"icon-cancel-circle"}');
+
+      selectFigure(card,value);
+      card.append(label,btclose);
+      cards.append(card);
+
+      btclose.onclick=(function(){
+
+        swal("Tem certeza que deseja remover este compartilhamento?", {
+          buttons: {
+                   defeat: "Sim",
+            cancel: "Cancelar",
+          },
+        })
+        .then((value) => {
+          switch (value) {
+    
+            case "defeat":
+               selectAjaxRemoveCard(this);
+              break;
+
+          }
+        });
+
+      });
+
+  });
+
+  return cards
+
+}
+
+
+function selectBox(modules){
+	
+  var selectbox   = document.querySelector('selectbox');
+  var window   = document.querySelector('window');
+
+
+
+  if(!selectbox){
+
+      selectbox   = createObject('{"tag":"selectbox"}');
+      selectbox.append(selectBoxFields(modules),selectBoxList());
+    
+      window.append(selectbox);
+  }
+
+  selectbox.setAttribute('modules',modules);
+
+  document.getElementsByTagName("selectbox")[0].getElementsByTagName("input")[0].focus();
+
+}
+
+
+function selectBoxFields(modules){
+
+  var fields = createObject('{"tag":"fields"}');
+
+  var icon   = createObject('{"tag":"icon","class":"icon-cancel-circle"}');
+
+  var input  = createObject('{"tag":"input","type":"text","placeholder":"Digite para procurar"}'); 
+
+
+
+    input.onkeyup = function(){
+
+      if(this.value.length>4){
+        selectBoxSearch(this.value,modules)
+      }
+        
+    }
+
+tooltip(icon,"fechar"); 
+
+    icon.onclick=(function(){
+      rE(document.querySelector('selectbox'));
+    });
+
+  fields.append(input,icon);
+
+  return fields;
+
+}
+
+function selectBoxList(){
+
+  let list = createObject('{"tag":"list"}');
+
+  return list;
+
+}
+
+function selectBoxOpt(data,modules){
+
+  var opt        = createObject('{"tag":"opt"}');
+  var plugin     = document.querySelector("#"+modules).getAttribute("plugin");
+
+  opt.onclick=(function(){
+
+    if(plugin=='multiply'){
+
+
+
+      selectBoxOptClickMultiply(this,data,modules);
+
+    }else{
+
+      selectBoxOptClick(this,data,modules);
+
+    }
+
+  })
+
+  opt.append(selectBoxCells('files',data.files),selectBoxCells('id',data.id),selectBoxCells('label',data.label));
+
+  return opt;
+
+}
+
+function selectBoxOptClick(e,data,modules){
+
+    let input = document.getElementById(modules);
+
+        input.placeholder  = data.label;
+        input.setAttribute("valueid",data.id); 
+
+    let optfigure = e.querySelector('figure').style.backgroundImage;
+    let figure    = document.querySelector('#div'+modules+' figure');
+
+    figure.style.backgroundImage    = optfigure;
+    
+    rE(document.querySelector('selectbox'));
+
+}
+
+
+function selectBoxCells(type,data){
+
+  const e = (function(){
+
+   switch(type) {
+
+      case "id"     :return createObject('{"tag":"'+type+'","innerhtml":"'+data+'"}');
+      case "label"  :return createObject('{"tag":"'+type+'","innerhtml":"'+data+'"}');
+      case "files"  :return selectBoxCellsFigure(data);
+
+   }
+
+  }())
+
+  return e;
+
+} 
+
+function selectBoxCellsFigure(data){
+
+  var figure = createObject('{"tag":"figure"}');
+
+  if(data!==null){
+
+    var config = JSON.parse(localStorage.config); 
+
+    let filename = data[0].filename;
+    let key      = data[0].key; 
+    let url      = config.imgm+filename+"?key="+key;
+
+        figure.style.backgroundImage="url("+url+")";
+
+  }
+
+  return figure;
+
+}
+
+function selectBoxOptClickMultiply(e,data,modules){
+
+    let input   =  document.getElementById(modules);
+    let valueid =  input.getAttribute("valueid");
+    let cards   = input.parentElement.querySelector("cards");
+   
+        json = (valueid)?JSON.parse(valueid):[];
+
+        json.push(data.id);
+
+    input.setAttribute('valueid',JSON.stringify(json));
+
+    selectAjaxListCards([data]);
+
+    rE(document.querySelector('selectbox'));
+
+}
+
+function selectBoxSearch(string,modules){
+  
+  const config = JSON.parse(localStorage.config);
+
+    const send = async function() {
+      
+      const rawResponse = await fetch(config.urlselect, {
+
+        method: 'POST',
+        headers: {'Accept': 'application/json','Content-Type': 'application/json'},
+        body: JSON.stringify({modules:modules,string:string})
+
+      });
+
+      const data = await rawResponse.json();
+      
+      const list = document.querySelector('selectbox > list');
+      
+      race(list);
+
+      Object.entries(data).forEach(([key, value]) => {
+
+        list.append(selectBoxOpt(value,modules));
+
+      });
+
+  }();
+
+}
+
+function selectFigure(div,data){
+
+  var config = JSON.parse(localStorage.config); 
+
+  var labelfigure   = createObject('{"tag":"figure"}');
+
+if(data){
+
+  if(data.files){
+
+    let filename = data.files[0].filename;
+    let key      = data.files[0].key; 
+    let url      = config.imgm+filename+"?key="+key;
+
+    labelfigure.style.backgroundImage="url("+url+")";
+
+  }
+}
+
+  div.append(labelfigure);
+
+}
+
+function share(attribute){
+
+  var label       = cE("label");
+	var div         = cE("div");
+ 
+  var input  = cE("input");
+  
+  var valor  = (attribute.value[0].value[0]==",")?attribute.value[0].value:","+attribute.value[0].value;
+	
+      input.setAttribute("name",attribute.name);
+      input.setAttribute("title",attribute.title);
+      input.setAttribute("value",valor);
+      input.setAttribute("autocomplete","off");
+      input.setAttribute("required","");
+      input.setAttribute("type","hidden");
+      input.setAttribute("tipo","select");
+ 
+  div.append(input);
+  
+  return div;
+	
+}
+
+function text(data){
+  
+  var label       = createObject('{"tag":"label","innerhtml":"'+data.label+'"}');
+	var div         = createObject('{"tag":"div"}');
+	var object      = createObject('{"tag":"input","value":"'+data.value+'","id":"'+data.url+'"}');
+
+  div.appendChild(label);
+
+/* 	for (var key in attribute){
+				
+		if(attribute[key]!=="0" && attribute[key]!==""){
+			object.setAttribute(key,attribute[key]);
+		}
+
+	}
+	 */
+
+	object.setAttribute("autocomplete","new-password");
+	object.setAttribute("type","text");
+	object.setAttribute("class","default");
+	object.setAttribute("placeholder",data.placeholder);
+	object.setAttribute("required",data.required);
+		
+  div.appendChild(object);
+
+  return div;
+  
+}
+
+function textarea(data){
+  
+  var label = createObject('{"tag":"label","type":"'+data.type+'","innerhtml":"'+data.label+'"}');
+  var div   = createObject('{"tag":"div"}');
+
+	Object.entries(data.attributes).forEach(([key, value]) => {
+
+    if(key=='title'){
+        fieldTooltip(label,data.attributes); 
+    }
+
+  });
+
+  div.append(label);
+  
+  var object = createObject('{"tag":"textarea","title":"'+data.label+'","id":"'+data.url+'","class":"default","placeholder":"'+data.label+'"}');
+	
+	Object.entries(data).forEach(([key, value]) => {
+
+    if(value!=="0" && value!==""){
+
+      if(key=='value'){
+        object.append(cT(value));
+      }else{
+        //object.setAttribute(key,value);
+      }
+
+    }
+		
+	});
+
+  div.append(object);
+
+  return div;
+  
+}
+
+
+function textareaPresetSelect(textarea,array){
+  
+  let label = createObject('{"tag":"label"}');
+  
+  let select = createObject('{"tag":"select"}');
+
+      select.onchange=(function(){
+
+        if(array[this.value].content!==undefined){
+          textarea.innerHTML = array[this.value].content;
+        }
+
+      });
+  
+      select.append(createObject('{"tag":"option","value":"","innerhtml":"Predefinidos"}'));
+  
+      for (var x=0;x<array.length;x++){
+        
+        //let label   = array[x].label;
+        let content = array[x].content;
+        
+        let option       = createObject('{"tag":"option","value":"'+x+'","innerhtml":"'+array[x].label+'"}');
+        
+        select.append(option);
+        
+      }
+  
+      label.append(select);
+
+  return label;
+  
+}
+
+
+
+function removeAnexos(e,filename){
+	
+	var url 	= localStorage.getItem("url")+'/admin/json/jsonAnexosDelete.php?filename='+filename;
+
+	var xmlhttp;
+
+	xmlhttp = new XMLHttpRequest();
+
+	xmlhttp.onreadystatechange = function() {
+
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+
+			var json = JSON.parse(xmlhttp.responseText);
+			
+			if(xmlhttp.responseText==1){
+				
+				rE(e);
+				console.log(e);
+			}
+			
+		}
+		
+	};
+	
+	xmlhttp.open("GET", url, true);
+	xmlhttp.send();
+			
 }
 
 function load(){
@@ -7192,8 +5750,12 @@ function load(){
     //localStorage.languages    = JSON.stringify(data.languages);
     //localStorage.language    = "ptbr";
 
-
     document.getElementsByTagName("pages")[0].append(mountLogin());
+    grade();
+
+   //formEdit('prontuarios',21233);
+    //document.body.append(selectBox('pacientes'));
+
   });
 
 
@@ -7742,7 +6304,7 @@ function logoutResetStep1(){
 function logoutResetStep2(){
   
     rE(got(document,'nav'));
-    rE(got(document,'grade'));
+    //rE(got(document,'grade'));
     rE(got(document,'section'));
     rE(got(document,'boxfilter'));
     rE(got(document,'header'));
@@ -7894,35 +6456,157 @@ function getLoginStatus(){
 	
 }
 
-function message(code){
- 
-  var a=[];
+function category(header,array,item){
   
-      a["1"]="Cadastro realizado com sucesso";
-
-      a["501"]="Logado com sucesso";
-      a["502"]="Senha inválida";
-      a["503"]="Conta desativada";
-      a["504"]="Usuário não encontrado";
-      a["505"]="Campo password vazio";
-      a["506"]="Erro deconhecido";
-      a["507"]="Sistema em atualização";
-      a["508"]="Campo usuário está vazio";
-
-      a["602"]="Campo nome completo está vazio";
-      a["603"]="Campo email está vazio";
-      a["605"]="O campo cpf está vazio";
-      a["606"]="Este cpf já foi cadastrado por outro usuário";
-      a["607"]="Este email já foi cadastrado por outro usuário";
+  if(array){
+		
+		var icon = cE("category");
+    
+    if(array.filename){
       
-      a["620"]="Digite apenas números, 11 dígitos";
+      let categoryfilename = array.filename;
       
+      let categorystyleimage="url("+localStorage.getItem("img")+"/"+categoryfilename+")";
+     
+    }
+    
+		icon.appendChild(cT(array.label));
+
+		header.appendChild(icon);
+
+		item.setAttribute("category",array.id);
+
+    
+	}	
   
-      a["999"]="Erro no sistema";  
+}
+
+function loadItem(item,array){
   
-  return a[code];       
+  var header = cE("header");
+  
+  var footer = cE("footer");
+  
+        item.setAttribute('me',array.me);
+        item.setAttribute("a",array.a);
+        item.setAttribute("view","0");
+  
+  if(array.me==true){
+    
+  }else{
+    
+      var iconshare = document.createElement("icon");
+          iconshare.setAttribute("class","icon-share2");
+    
+      header.appendChild(iconshare);
+    
+  }
+  
+  
+  if(array.category!==undefined && array.category!==null){item.appendChild(header); } 
+  
+  //loadInfo(header,array);
+	
+  loadPacientes(header,array.pacientes);
+  
+  category(header,array.category,item);
+
+  if(array.label!==""){
+	  modulesLoadItemContent(item,array);
+  }
+  
+  loadItemOptions(item,array);
+  itemDetail(item,array);
+  loadMedicos(item,array.medicos);
+  //loadPacientesFull(item,array);
+  loadItemUpdateTime(item,array);
+  loadShare(footer,array);
+  
+  if(footer.innerHTML!=""){item.appendChild(footer);}
 
 }
+
+function itemDetail(item,data){
+
+  if(data.files){
+
+    var detalhes = cE("detalhes");
+
+    Object.entries(data.files).forEach(([key, value]) => {
+          
+      detalhes.appendChild(itemDetailFigure(value));	
+
+    });
+
+    item.appendChild(detalhes);
+
+  }
+
+}
+
+function itemDetailFigure(data){
+
+
+      var config = JSON.parse(localStorage.config);
+
+      let figure = createObject('{"tag":"figure"}');
+
+			let split  =data.filename.split(".");
+
+      let extensao = split[1];
+      let filename = split[0];
+
+      let onclick = "";
+
+      switch(extensao) {
+
+      case "jpg": 
+
+          onclick="window.open('"+config.jsonanexos+data.anexos+"','_blank');"
+          figure.setAttribute("onclick",onclick);
+
+        break;
+
+      case "pdf": 
+
+        onclick = "window.open('"+config.pdf+filename+".pdf','_blank');"
+        
+
+        let label = createObject('{"tag":"label","innerhtml":"pdf"}');
+
+            figure.setAttribute("onclick",onclick);
+            figure.append(label);
+
+        break;
+      }        
+
+			figure.style.backgroundImage="url("+config.imgp+filename+".jpg?key="+data.key;
+		
+return figure;
+}
+
+
+function loadMedicos(elements,array){
+  
+   if(array){
+
+      var medico   = createObject('{"tag":"medicos"}');
+
+      var div   = createObject('{"tag":"div"}');
+
+      var icon   = createObject('{"tag":"icon","class":"icon-reddit"}');
+      
+      div.append(createObject('{"tag":"label","innerhtml":"Médico: "}'));
+      div.append(createObject('{"tag":"label","innerhtml":"'+array.label+'"}'));
+
+
+      medico.appendChild(div);
+      elements.appendChild(medico);
+     
+   }
+
+}
+
 
 
 function modulesLoad(array) {
@@ -8039,51 +6723,6 @@ function loadInfo(header,array){
   
 }
 
-function loadItem(item,array){
-  
-  var header = cE("header");
-  
-  var footer = cE("footer");
-  
-        item.setAttribute('me',array.me);
-        item.setAttribute("a",array.a);
-        item.setAttribute("view","0");
-  
-  if(array.me==true){
-    
-  }else{
-    
-      var iconshare = document.createElement("icon");
-          iconshare.setAttribute("class","icon-share2");
-    
-      header.appendChild(iconshare);
-    
-  }
-  
-  
-  if(array.category!==undefined && array.category!==null){item.appendChild(header); } 
-  
-  //loadInfo(header,array);
-	
-  loadPacientes(header,array);
-  
-  modulesLoadItemCategory(header,array,item);
-
-  if(array.label!==""){
-	  modulesLoadItemContent(item,array);
-  }
-  
-  loadItemOptions(item,array);
-  loadItemDetail(item,array);
-  loadMedicos(item,array);
-  //loadPacientesFull(item,array);
-  loadItemUpdateTime(item,array);
-  loadShare(footer,array);
-  
-  if(footer.innerHTML!=""){item.appendChild(footer);}
-
-}
-
 function actionButton(element,fields,table,array){
   
   var value     = element.getAttribute("value");
@@ -8125,32 +6764,6 @@ function actionButton(element,fields,table,array){
   
 }
 
-function modulesLoadItemCategory(header,array,item){
-  
-  if(array.category!==undefined && array.category!==null){
-		
-		var icon = cE("category");
-    
-    if(array.categoryfilename!==undefined){
-      
-      let categoryfilename = array.categoryfilename;
-      
-      let categorystyleimage="url("+localStorage.getItem("img")+"/"+categoryfilename+")";
-     
-    }
-    
-		icon.appendChild(cT(array.categorylabel));
-
-		header.appendChild(icon);
-
-		item.setAttribute("category",array.category);
-
-    item.style.backgroundColor=array.categorycolors+"20";
-    
-	}	
-  
-}
-
 function modulesLoadItemContent(item,array){
   
   var p 	 = cE('p');
@@ -8161,96 +6774,6 @@ function modulesLoadItemContent(item,array){
   
 }
 
-function loadItemDetail(elements,array){
-
-	if(array.files!==undefined ){
-    
-		var detalhes = cE("detalhes");
-    
-		for(var y=0;((y<array.files.length));y++){
-			
-			var figure = cE("figure");
-			
-      		figure.style['border']="2px solid "+array.categorycolors+"40";
-      
-			var filename=array.files[y].filename.split(".");
-			var key=array.files[y].key;
-      
-      if(array.me!=="1"){
-        
-          if(filename[1]=="jpg"){
-
-            figure.setAttribute("onclick","window.open('"+localStorage.getItem("url")+"/admin/json/jsonAnexosView.php?anexos="+array.anexos+"','_blank');");
-            
-          }else if(filename[1]=="pdf"){
-    
-            var label = cE("label");
-            label.appendChild(cT("pdf"));
-            figure.appendChild(label);
-            figure.setAttribute("onclick","window.open('"+localStorage.getItem("pdf")+""+filename[0]+".pdf','_blank');");
-  
-          }    
-        
-      }else{
-
-          if(filename[1]=="jpg"){
-
-          }else if(filename[1]=="pdf"){
-
-            var label = cE("label");
-            
-            label.appendChild(cT("pdf"));
-            figure.appendChild(label);
-            
-          }          
-        
-      }
-               
-			figure.style.backgroundImage="url("+localStorage.getItem("imgp")+filename[0]+".jpg?key="+key;
-			detalhes.appendChild(figure);	
-				
-		}
-    
-    elements.appendChild(detalhes);
-	}		
-
-}
-
-function loadItemJson(codigo,cb){
-  
-  var userinfo    = JSON.parse(localStorage.userinfo);
-	var suitesinfo  = JSON.parse(localStorage.suitesinfo);
-	var session     = localStorage.session;
-  
-  var data 	= new FormData();
-
- 	    data.append('area', got(document,"window")[0].getAttribute("modules"));
- 	    data.append('codigo', codigo);
- 	    data.append('session', session);
-  
-	var xmlhttp;
-
-	xmlhttp = new XMLHttpRequest();
-	
-	xmlhttp.onreadystatechange = function() {
-		
-		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			
-			var json = JSON.parse(xmlhttp.responseText);
-						
-			cb(json[0]);
-			
-		}
-		
-	};
-  
-	var url = localStorage.getItem("url")+'/admin/json/jsonView.php';	
-  
-	xmlhttp.open("POST", url, true);
-	xmlhttp.send(data);
-	
-}
-
 function loadItemOptions(elements,array){
   
     let options = createObject('{"tag":"options"}');
@@ -8259,10 +6782,10 @@ function loadItemOptions(elements,array){
     
       let edit = createObject('{"tag":"button","action":"edit","class":"icon-pencil"}');
 
-	    edit.onclick=(function(){ 
+	    edit.onclick=( async function(){ 
 
 			  document.body.setAttribute("loading","1");
-        formEdit(gA(),array.id)
+         await formEdit(gA(),array.id)
       
       });
       
@@ -8647,90 +7170,24 @@ function loadItemDetail(elements,array){
 }
 
 
-function loadMedicos(elements,array){
+function loadPacientesFull(element,array){
   
-   if(array.medicoslabel!==undefined && array.medicoslabel!==null){
-     
-        var medico = cE("medicos");
+  let pacientes = createObject('{"tag":"pacientes"}');
+  let div       = createObject('{"tag":"div"}');
+  let label     = createObject('{"tag":"label","innerhtml":"'+array.pacienteslabel+'"}');
 
-     
-        var div = cE("div");
+      div.append(label);
+      pacientes.append(div);
 
-        var icon = cE("icon");
-            icon.setAttribute("class","icon-reddit");
-
-        var label = cE("label");
-            label.appendChild(cT("Médico: "));
-
-        var label2 = cE("label");
-         
-
-            if(array.medicoswhereby!==undefined && array.medicoswhereby!==null){
-              
-              var a = document.createElement("a");
-              var text = cT(array.medicoslabel);
-              
-              a.appendChild(text);
-              a.setAttribute("href","https://whereby.com/"+array.medicoswhereby);
-              a.setAttribute("target","_blank");
-              
-                label2.appendChild(a);
-              
-            }else{
-              
-               label2.appendChild(cT(array.medicoslabel));
-              
-            }
-     
-        var nome = array.medicoslabel;
-
-
-        div.appendChild(label);
-        div.appendChild(label2);
-
-        medico.appendChild(div);
-
-        elements.appendChild(medico);
-     
-   }
-
+      element.append(pacientes);
+  
 }
 
 
 
-function loadPacientes(element,array){
+function loadPacientesInfo(element,array){
   
-   if(array.pacienteslabel!==undefined && array.pacienteslabel!==null){
-     
-      var pacientes = cE("pacientes");
-
-      if(array.pacienteslabel!==undefined && array.pacienteslabel!==null){
-
-        var div = cE("div");
-
-        var icon = cE("icon");
-            icon.setAttribute("class","icon-user");
-
-        var label = cE("label");
-            label.appendChild(cT("Paciente: "));
-
-        var pacientesnome = array.pacienteslabel.split(" ");
-        
-        var label2 = cE("label");
-        label2.append(icon);
-            //label2.appendChild(cT(pacientesnome[0]+" "+pacientesnome[1]));
-        label2.appendChild(cT(array.pacienteslabel));
-        
-        var nome = array.pacienteslabel;
-
-        div.appendChild(label2);
-        pacientes.appendChild(div);
-
-      }
-     
-      element.appendChild(pacientes);
-     
-     pacientes.onmouseover=(function(){
+     element.mouseover(function(){
             
 
       var xmlhttp;
@@ -8766,7 +7223,7 @@ function loadPacientes(element,array){
               texto+="\n Endereço: "+json[0].endereco;          
               texto+="\n Idade: "+age;          
        
-          pacientes.setAttribute('title',texto);
+          element.setAttribute('title',texto);
              // tooltipmenu(label2,texto);
           
         }
@@ -8787,24 +7244,6 @@ function loadPacientes(element,array){
     });
 
    }
-  
-}
-
-
-
-function loadPacientesFull(element,array){
-  
-  let pacientes = createObject('{"tag":"pacientes"}');
-  let div       = createObject('{"tag":"div"}');
-  let label     = createObject('{"tag":"label","innerhtml":"'+array.pacienteslabel+'"}');
-
-      div.append(label);
-      pacientes.append(div);
-
-      element.append(pacientes);
-  
-}
-
 
 function loadShare(element, array) {
 
@@ -8902,11 +7341,11 @@ function loadUser(elements,array){
 }
 
 
-function modulesOpen(id){
+function modulesOpen(url){
 	
 	var body    = got(document,'body')[0];
 
-	var modules = getModulesById(id);
+	var modules = getModulesByUrl(url);
 
 	//e.appendChild(boxLoad());
 
@@ -8938,6 +7377,24 @@ function modulesOpen(id){
 }
 
 
+function loadPacientes(element,array){
+
+   if(array){
+
+      var paciente   = createObject('{"tag":"pacientes"}');
+      var div        = createObject('{"tag":"div"}');
+      var icon       = createObject('{"tag":"icon","class":"icon-user"}');
+      
+   //   div.append(createObject('{"tag":"label","innerhtml":"Paciente: "}'));
+      div.append(createObject('{"tag":"label","innerhtml":"'+array.label+'"}'));
+
+      paciente.appendChild(div);
+      element.appendChild(paciente);
+     
+   }
+
+}
+
 function tabelaLoad(modules){
 
  var config        = JSON.parse(localStorage.config);
@@ -8966,631 +7423,5 @@ function tabelaLoad(modules){
   })();
 
 }
-
-
-
-function mountPrint(array){
-	
-		var header = cE("printheader");
-			
-		var a 			= cE("a");
-		var logo    = cE("logo");
-		var span    = cE("span");	
-		var text    = cT(array.suites);
-
-		span.appendChild(text);
-		logo.appendChild(span);
-		a.appendChild(logo);
-header.appendChild(logo);
-
-		got(document,"body")[0].appendChild(header);
-		
-		
-}
-
-function navMount(){
-  
-  var user   = JSON.parse(localStorage.user);  
-  var config          = JSON.parse(localStorage.config);
-  var storagenav     = JSON.parse(localStorage.nav);
-
-	if(gotFind("nav")){
-    
-		rE(got(document,"nav")[0]);
-
-	}
-	
-	var html = '';
-	var grade   = cE('grade');
-	var nav  	  = cE('nav');
-	    nav.appendChild(profile());
-
-	var body = got(document,'body')[0];
-
-  Object.entries(storagenav).forEach(([key, value]) => {
-
-    var span      = createObject('{"tag":"span","innerhtml":"'+value.label+'"}');
-
-    nav.append(span);
-
-    Object.entries(value.modules).forEach(([key1, value1]) => {
-
-       let label   = value1.label;
-       let url    = value1.url;
-       let premium = value1.premium;
-       let id       = value1.id; 
-
-      var a      = createObject('{"tag":"a","innerhtml":"'+label+'","modules":"'+url+'","premium":"'+premium+'","c":"'+id+'"}');     
-
-     a.onclick=(function(){
-        resetHeaderOptions();
-        //modulesLoadTitle(c);
-        modulesOpen(id);
-        navClose();
-        gridHide();
-       
-        //mountRanking();
-
-        document.body.setAttribute("loading","1");
-      });
-
-
-      nav.append(a);
-
-    });
-
-  }); 
-
-	var a = cE('a');
-
-	a.onclick=(function(){
- 
-    window.open('/','_self');
-
-	});
-	
-	a.appendChild(cT('Sair')); 
-
-	nav.appendChild(a);
-	
-
-nav.setAttribute('id','nav');
-	grade.onclick=(function(){
-		
-		navClose();
-		formClose();
-
-	});
-	
-	body.appendChild(nav);
-	body.appendChild(grade);
-	
-	
-}
-
-function navClose(){
-	
-		var nav=got(document,"nav")[0];
-	
-				nav.setAttribute('class','hide');
-	
-}
-
-function loadNavSuite(){
-  
-  var navsuite = cE("navsuite");
-  document.body.setAttribute("navsuite","0");
-  
-  document.body.appendChild(navsuite);
-
-  
-}
-
-
-function pagesLoad(callback){
-  
-  var url = localStorage.getItem("url")+"/suites";
-  
-  fetch(url, {
-    method: 'POST',
-    headers: {'Content-Type':'application/x-www-form-urlencoded'}
-  })
-  
-  .then(response => response.json())
-  .then(data => callback(data))
-  .catch(erro => console.error(erro));
-    
-}
-
-function pagesMount(json){
-
-  document.title = json.suiteinfo.label;
- 
-  var section = json.page.section;
-  
-  var pages   = document.createElement("pages"); 
-
-  var header  = pagesMountHeader(json.page.section);
-  
-  var grid    = document.createElement("grid"); 
-
-  //if(section.length>1){
-    
-      pages.appendChild(header);
-    
- // }
-  
-  for(var x=0;x<section.length;x++){
-
-     // pages.appendChild(pagesMountSection(section[(section.length-1)-x]));
-
-  }
-  
-
-
-  pages.append(mountLogin());
- 
-
-  document.body.append(pages,grid);
- 
-}
-
-function profile(){
-
-  var user   = JSON.parse(localStorage.user);  
-  var config = JSON.parse(localStorage.config);
-
-	var div    		= cE("div");
-	var profile 	= cE("profile");
-	//var figure 		= cE("figure");
-	var label 		= cE("label");
-
-		//profile.appendChild(figure);
-
-		
-			label.appendChild(cT(user.label));
-	
-
-	
-	div.onclick=(function(){		
-
-		formEdit("users",user.session);
-		navClose();
-		
-	});
-	
-	var attribute = [];
-
-	attribute.tag 		= "uploadedFiles";
-
-	var result = cEA(attribute);
-		
-	if(user.figures!==undefined){
-
-		for(var x=0;x<user.figures.length;x++){
-
-			addUploadFilesProfile(result,user.figures[x]);
-
-		}
-
-	}
-
-	div.appendChild(result);
-
-	addUploadFilesProfile(result,null);
-	
-	profile.appendChild(div);
-	profile.appendChild(label);
-
-	
-	return profile;
-
-}
-
-function profileUpload(array){
-
-
-	/*
-	var object = cE("input");
-
-	object.setAttribute("type","hidden");
-	object.setAttribute("value",array.files);	
-	object.setAttribute("name","files");
-	
-	var attribute = [];
-
-		attribute.tag 		= "input";
-		attribute.type 		= "file";
-		attribute.name 		= "fileupload";
-		attribute.anexos 	= object.getAttribute('value');
-		attribute.gwidth 	= "900";
-		attribute.multiple	= "";
-		attribute.onchange	= "formUpload(this);";	
-
-	var fileupload = cEA(attribute);
-	
-		
-	var attribute = [];
-
-		attribute.tag 		= "div";
-		attribute.class 	= "fileupload";
-
-	var divFileUpload = cEA(attribute);	
-
-	var attribute = [];
-
-		attribute.tag 		= "icon";
-		attribute.class 	= "icon-upload3";
-
-	var divFileUploadEnviar = cEA(attribute);					
-
-	var attribute = [];
-
-		attribute.tag 		= "label";
-		attribute.text 		= "enviar foto";
-
-	var divFileUploadEnviar = cEA(attribute);	
-
-	var attribute = [];
-
-		attribute.tag 		= "uploadedStatus";
-
-	var span = cEA(attribute);	
-		
-
-		
-	div.appendChild(object);
-		
-	divFileUpload.appendChild(divFileUploadEnviar);
-	divFileUpload.appendChild(fileupload);
-		
-	div.appendChild(divFileUpload);
-
-	div.appendChild(span);	
-		
-	*/
-	
-	var attribute = [];
-
-		attribute.tag 		= "icon";
-		attribute.class 	= "icon-pencil";
-	
-	var icon = cEA(attribute);	
-	
-	icon.onclick=(function(){
-		console.log(array);
-		formEdit("users",array.codigo);
-		navClose();
-	});
-	
-	var attribute = [];
-
-	attribute.tag 		= "uploadedFiles";
-
-	var result = cEA(attribute);
-		
-	if(array.figures!==undefined){
-
-		for(var x=0;x<array.figures.length;x++){
-
-			addUploadFilesProfile(result,array.figures[x]);
-
-		}
-
-	}
-
-	div.appendChild(result);
-	div.appendChild(icon);
-	
-	addUploadFilesProfile(result,null);
-	
-	return div;	
-  
-}
-
-function addUploadFilesProfile(local,filename){
-
-	var div 				= cE("div");
-	var figure 			= cE("figure");
-
-	if(filename!==null){
-
-		sA(figure,"style","background-image:url('"+localStorage.getItem("imgp")+filename+"');");
-
-		div.appendChild(figure);
-
-	}else{
-
-		var icon 	= cE("icon");
-
-		figure.setAttribute('style',"");
-		figure.appendChild(icon);
-		div.appendChild(figure);
-
-		local.insertBefore(div, local.childNodes[0]);
-		icon.setAttribute('class','icon-user');
-
-	}
-	
-	local.insertBefore(div, local.childNodes[0]);
-
-}
-
-
-
-      Number.prototype.pad = function(size, character = "0") {
-        var s = String(this);
-        while (s.length < (size || 2)) {s = character + s;}
-        return s;
-      }
-
-function suporteLoad(){
-  
-  var suporte  = createObject('{"tag":"suporte"}');
-  var icon     = createObject('{"tag":"icon","class":"icon-whatsapp"}');
-  var text     = createObject('{"tag":"text","innerhtml":"Falar com atendente"}');
-
-  suporte.onclick=(function(){
-
-    window.open('https://api.whatsapp.com/send?phone=5531971720053&text=contato%20chat','_blank');
-
-  });
-
-  suporte.append(icon,text);
-
-
-
-  if(document.getElementsByTagName("suporte").length==0 && getLocalStorage("config","id")=="1"){
-    
-    document.body.append(suporte);
-    
-  }
-  
-}
-
-function tooltip(element,label){
-  
-  var mobile=got(document,"body")[0].getAttribute('mobile');
-
-  if(mobile==1){
-   
-    
-  }else{
-    
-    var tooltip = createObject('{"tag":"tooltip","innerhtml":"'+label+'"}');
-    var seta    = createObject('{"tag":"seta"}');
-
-    tooltip.append(seta);
-
-    element.append(tooltip);
-    
-  }
-  
-}
-
-function tooltipmenu(element,innerhtml){
-  
-  var mobile=got(document,"body")[0].getAttribute('mobile');
-
-  if(mobile==1){
-   
-    
-  }else{
-    
-    let tooltip = element.getElementsByTagName("tooltipmenu")[0];
-    
-    if(tooltip==undefined){
-      
-      let tooltip = createObject('{"tag":"tooltipmenu","innerhtml":"'+innerhtml+'"}');
-     // let seta    = createObject('{"tag":"seta"}');
-      
-         // tooltip.append(seta);
-          element.append(tooltip);
-      
-    }
-   
-  }
-  
-}
-
-/*
-    Vanilla AutoComplete v0.1
-    Copyright (c) 2019 Mauro Marssola
-    GitHub: https://github.com/marssola/vanilla-calendar
-    License: http://www.opensource.org/licenses/mit-license.php
-*/
-let VanillaCalendar = (function () {
-    function VanillaCalendar(options) {
-        function addEvent(el, type, handler){
-            if (!el) return
-            if (el.attachEvent) el.attachEvent('on' + type, handler)
-            else el.addEventListener(type, handler);
-        }
-        function removeEvent(el, type, handler){
-            if (!el) return
-            if (el.detachEvent) el.detachEvent('on' + type, handler)
-            else el.removeEventListener(type, handler);
-        }
-        let opts = {
-            selector: null,
-            datesFilter: false,
-            pastDates: true,
-            availableWeekDays: [],
-            availableDates: [],
-            date: new Date(),
-            todaysDate: new Date(),
-            button_prev: null,
-            button_next: null,
-            month: null,
-            month_label: null,
-            onSelect: (data, elem) => {},
-            months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-            shortWeekday: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-        }
-        for (let k in options) if (opts.hasOwnProperty(k)) opts[k] = options[k]
-        
-        let element = document.querySelector(opts.selector)
-        if (!element)
-            return
-        
-        const getWeekDay = function (day) {
-            return ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][day]
-        }
-        
-        const createDay = function (date) {
-            let newDayElem = document.createElement('div')
-            let dateElem = document.createElement('span')
-            dateElem.innerHTML = date.getDate()
-            newDayElem.className = 'vanilla-calendar-date'
-            newDayElem.setAttribute('data-calendar-date', date)
-            
-            let available_week_day = opts.availableWeekDays.filter(f => f.day === date.getDay() || f.day === getWeekDay(date.getDay()))
-            let available_date = opts.availableDates.filter(f => f.date === (date.getFullYear() + '-' + String(date.getMonth() + 1).padStart('2', 0) + '-' + String(date.getDate()).padStart('2', 0)))
-            
-            if (date.getDate() === 1) {
-                newDayElem.style.marginLeft = ((date.getDay()) * 14.28) + '%'
-            }
-            if (opts.date.getTime() <= opts.todaysDate.getTime() - 1 && !opts.pastDates) {
-                newDayElem.classList.add('vanilla-calendar-date--disabled')
-            } else {
-                if (opts.datesFilter) {
-                    if (available_week_day.length) {
-                        newDayElem.classList.add('vanilla-calendar-date--active')
-                        newDayElem.setAttribute('data-calendar-data', JSON.stringify(available_week_day[0]))
-                        newDayElem.setAttribute('data-calendar-status', 'active')
-                    } else if (available_date.length) {
-                        newDayElem.classList.add('vanilla-calendar-date--active')
-                        newDayElem.setAttribute('data-calendar-data', JSON.stringify(available_date[0]))
-                        newDayElem.setAttribute('data-calendar-status', 'active')
-                    } else {
-                        newDayElem.classList.add('vanilla-calendar-date--disabled')
-                    }
-                } else {
-                    newDayElem.classList.add('vanilla-calendar-date--active')
-                    newDayElem.setAttribute('data-calendar-status', 'active')
-                }
-            }
-            if (date.toString() === opts.todaysDate.toString()) {
-                newDayElem.classList.add('vanilla-calendar-date--today')
-            }
-            
-            newDayElem.appendChild(dateElem)
-            opts.month.appendChild(newDayElem)
-        }
-        
-        const removeActiveClass = function () {
-            document.querySelectorAll('.vanilla-calendar-date--selected').forEach(s => {
-                s.classList.remove('vanilla-calendar-date--selected')
-            })
-        }
-        
-        const selectDate = function () {
-            let activeDates = element.querySelectorAll('[data-calendar-status=active]')
-            activeDates.forEach(date => {
-                date.addEventListener('click', function () {
-                    removeActiveClass()
-                    let datas = this.dataset
-                    let data = {}
-                    if (datas.calendarDate)
-                        data.date = datas.calendarDate
-                    if (datas.calendarData)
-                        data.data = JSON.parse(datas.calendarData)
-                    opts.onSelect(data, this)
-                    this.classList.add('vanilla-calendar-date--selected')
-                })
-            })
-        }
-        
-        const createMonth = function () {
-            clearCalendar()
-            let currentMonth = opts.date.getMonth()
-            while (opts.date.getMonth() === currentMonth) {
-                createDay(opts.date)
-                opts.date.setDate(opts.date.getDate() + 1)
-            }
-            
-            opts.date.setDate(1)
-            opts.date.setMonth(opts.date.getMonth() -1)
-            opts.month_label.innerHTML = opts.months[opts.date.getMonth()] + ' ' + opts.date.getFullYear()
-            selectDate()
-        }
-        
-        const monthPrev = function () {
-            opts.date.setMonth(opts.date.getMonth() - 1)
-            createMonth()
-        }
-        
-        const monthNext = function () {
-            opts.date.setMonth(opts.date.getMonth() + 1)
-            createMonth()
-        }
-        
-        const clearCalendar = function () {
-            opts.month.innerHTML = ''
-        }
-        
-        const createCalendar = function () {
-            document.querySelector(opts.selector).innerHTML = `
-            <div class="vanilla-calendar-header">
-                <button type="button" class="vanilla-calendar-btn" data-calendar-toggle="previous"><svg height="24" version="1.1" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"></path></svg></button>
-                <div class="vanilla-calendar-header__label" data-calendar-label="month"></div>
-                <button type="button" class="vanilla-calendar-btn" data-calendar-toggle="next"><svg height="24" version="1.1" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z"></path></svg></button>
-            </div>
-            <div class="vanilla-calendar-week"></div>
-            <div class="vanilla-calendar-body" data-calendar-area="month"></div>
-            `
-        }
-        const setWeekDayHeader = function () {
-            document.querySelector(`${opts.selector} .vanilla-calendar-week`).innerHTML = `
-                <span>${opts.shortWeekday[0]}</span>
-                <span>${opts.shortWeekday[1]}</span>
-                <span>${opts.shortWeekday[2]}</span>
-                <span>${opts.shortWeekday[3]}</span>
-                <span>${opts.shortWeekday[4]}</span>
-                <span>${opts.shortWeekday[5]}</span>
-                <span>${opts.shortWeekday[6]}</span>
-            `
-        }
-        
-        this.init = function () {
-            createCalendar()
-            opts.button_prev = document.querySelector(opts.selector + ' [data-calendar-toggle=previous]')
-            opts.button_next = document.querySelector(opts.selector + ' [data-calendar-toggle=next]')
-            opts.month = document.querySelector(opts.selector + ' [data-calendar-area=month]')
-            opts.month_label = document.querySelector(opts.selector + ' [data-calendar-label=month]')
-            
-            opts.date.setDate(1)
-            createMonth()
-            setWeekDayHeader()
-            addEvent(opts.button_prev, 'click', monthPrev)
-            addEvent(opts.button_next, 'click', monthNext)
-        }
-        
-        this.destroy = function () {
-            removeEvent(opts.button_prev, 'click', monthPrev)
-            removeEvent(opts.button_next, 'click', monthNext)
-            clearCalendar()
-            document.querySelector(opts.selector).innerHTML = ''
-        }
-        
-        this.reset = function () {
-            this.destroy()
-            this.init()
-        }
-        
-        this.set = function (options) {
-            for (let k in options)
-                if (opts.hasOwnProperty(k))
-                    opts[k] = options[k]
-            createMonth()
-//             this.reset()
-        }
-        
-        this.init()
-    }
-    return VanillaCalendar
-})()
-
-window.VanillaCalendar = VanillaCalendar
 
 

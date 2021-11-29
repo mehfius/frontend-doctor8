@@ -1,8 +1,8 @@
-function modulesOpen(id){
+function modulesOpen(url){
 	
 	var body    = got(document,'body')[0];
 
-	var modules = getModulesById(id);
+	var modules = getModulesByUrl(url);
 
 	//e.appendChild(boxLoad());
 

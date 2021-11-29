@@ -1,5 +1,3 @@
-
-
 function multipleHiddenFinder(object){
 	
 	var finder = cE("input");

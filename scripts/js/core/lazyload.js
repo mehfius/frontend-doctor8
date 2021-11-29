@@ -1,18 +1,59 @@
   function lazyload() {
+        
+    var config        = JSON.parse(localStorage.config);
+    var user          = JSON.parse(localStorage.user);
+    var modules       = document.body.getAttribute("modules");
+    var rolled        = document.body.offsetHeight + document.body.scrollTop + document.documentElement.scrollTop;
+    var height        = document.documentElement.scrollHeight;
+    var tabela        = got(document,"tabela")[0];
 
-    var rolled = document.body.offsetHeight + document.body.scrollTop + document.documentElement.scrollTop;
-    var height = document.documentElement.scrollHeight;
-  
     if ((rolled) > (height-10)) {
       
-        window.onscroll=null;
+          window.onscroll=null;
 
-          var item = got(got(document,"tabela")[0],"item");
+        
+          var limit = got(got(document,"tabela")[0],"item").length;
 
-          var limit= item.length+",10";
 
           document.body.setAttribute("loading","1");
-      
+
+          const loadLazyJson = async function(limit){
+            
+              const rawResponse = await fetch(config.urlmodules, {
+
+                method: 'POST',
+                headers: {'Accept': 'application/json','Content-Type': 'application/json'},
+                body: JSON.stringify({
+
+                  modules: modules, 
+                  session: user.session, 
+                  page: limit
+                  
+                  })
+
+              });
+
+              const data = await rawResponse.json();
+
+              Object.entries(data).forEach(([key, value]) => {
+
+
+                let item = createObject('{"tag":"item","c":"'+value.id+'"}');
+
+                loadItem(item,value);
+                tabela.appendChild(item);
+                
+              });
+
+              document.body.setAttribute("loading","0");
+              window.onscroll=lazyload;
+          }
+
+          loadLazyJson(limit);
+
+          
+
+      /* 
           loadLazyJson(limit,function(json){
 
             let tabela = got(document,"tabela")[0];
@@ -44,12 +85,12 @@
             //document.addEventListener('scroll',lazyload);
             window.onscroll=lazyload;
 
-        });
+        }); */
   
     }
 
 }
-
+/* 
 function loadMore(){
   
   var item = got(got(document,"tabela")[0],"item");
@@ -78,28 +119,4 @@ function loadMore(){
   }
  
 }
-
-function loadLazyJson(limit,cb){
-  
-  var url = localStorage.getItem("url")+'/admin/json/jsonView.php?&session='+localStorage.session+'&area='+gA()+'&limit='+limit;
-		
-	var xmlhttp;
-
-	xmlhttp = new XMLHttpRequest();
- 
-	xmlhttp.onreadystatechange = function() {
-
-		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			
- 			var json = JSON.parse(xmlhttp.responseText);
-		
-			cb(json);
-
-		}
-    
-	};
-	
-	xmlhttp.open("GET", url, true);
-	xmlhttp.send();
-  
-}
+ */

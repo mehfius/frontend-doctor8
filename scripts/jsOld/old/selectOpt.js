@@ -1,12 +1,57 @@
 
+function selectOpt(modules){
+  
+  const config = JSON.parse(localstorage.config);
+
+    const send = async function() {
+      
+      const rawResponse = await fetch(config.select, {
+
+        method: 'POST',
+        headers: {'Accept': 'application/json','Content-Type': 'application/json'},
+        body: JSON.stringify({modules:modules})
+
+      });
+
+      const data = await rawResponse.json();
+
+      document.body.removeAttribute("loading");
+
+    }
+
+  send();
+  
+}
+
+function mountSelect(json,attribute){
+
+    var select= element.parentElement.getElementsByTagName("selectajax")[0];
+    
+    race(select);
+
+    Object.entries(jsonform).forEach(([key, value]) => {
+
+      select.append(mountOpt(value,attribute));
+
+    });
+  
+    if(json.length>=1){
+      select.style.display='block';
+    }else{
+      select.style.display='none';
+    }
+
+}
 
 function mountOpt(json,attribute){
-  
+
+  const config = JSON.parse(localstorage.config);
+
   var opt    = document.createElement("opt");
   var label  = document.createElement("label");
   var figure = document.createElement("figure");
   
-  label.appendChild(document.createTextNode(json.label));
+  label.append(document.createTextNode(json.label));
   opt.setAttribute("codigo",json.codigo);
   
   
@@ -18,7 +63,7 @@ function mountOpt(json,attribute){
 
   if(json.filename!==undefined){
 
-    figure.setAttribute("style","background-image:url("+localStorage.getItem("imgm")+json.filename+"?key="+json.key+");");
+    figure.setAttribute("style","background-image:url("+config.imgm+json.filename+"?key="+json.key+");");
 
   }
   
@@ -42,7 +87,7 @@ function mountOpt(json,attribute){
     if(json.filename!==undefined){
       
        selectajax.style.display="none";
-       labelfigure.setAttribute("style","background-image:url("+localStorage.getItem("imgm")+json.filename+"?key="+json.key+");");
+       labelfigure.setAttribute("style","background-image:url("+config.imgm+json.filename+"?key="+json.key+");");
       
     }
   
@@ -55,52 +100,9 @@ function mountOpt(json,attribute){
     
   });
               
-
-    
   opt.appendChild(figure);
   opt.appendChild(label);
   
   return opt;
-  
-}
-
-function loadOpt(element,attribute){
-  
-	var url 	= localStorage.getItem("url")+'/admin/json/jsonGetTableView.php?p='+attribute.name+'|codigo|label&l=label|'+element.value;
-
-	var xmlhttp;
-
-	xmlhttp = new XMLHttpRequest();
- 
-	xmlhttp.onreadystatechange = function() {
-
-		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			
- 			var json = JSON.parse(xmlhttp.responseText);
-
-      //var select= document.getElementById("div"+attribute.name).getElementsByTagName("selectajax")[0];
-      
-      var select= element.parentElement.getElementsByTagName("selectajax")[0];
-      
-        race(select);
-
-        for(var x=0;x<json.length;x++){
-
-          select.appendChild(mountOpt(json[x],attribute));
-
-        }
-      
-        if(json.length>=1){
-          select.style.display='block';
-        }else{
-          select.style.display='none';
-        }
-      
-		}
-		
-	};
-	
-	xmlhttp.open("GET", url, true);
-	xmlhttp.send();  
   
 }

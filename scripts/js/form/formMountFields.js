@@ -1,9 +1,5 @@
 function formMountFields(modules,data){
 
- //function formMountFields(modules,json,codigo,action){
-
-	//var languages  = JSON.parse(localStorage.languages);
-
 	var user     = JSON.parse(localStorage.user);
 	var config   = JSON.parse(localStorage.config);
 
@@ -12,36 +8,46 @@ function formMountFields(modules,data){
 	var header   = createObject('{"tag":"header"}');
 	var label    = createObject('{"tag":"label"}');
 
-	header.append(btBack(data.id));
+	header.append(btBack(data.id),label);
 
-	
-	header.appendChild(label);
+	window.append(header);
 
-  if(document.getElementsByName('files')[0]!==undefined){
+  header.append(btHeaderSave(data.id));
 
-  }
-	
-	if(data.id===null){
+	if(data.id){
     
-		window.setAttribute("tutorial","1");
-		label.appendChild(cT("Novo "+modules));
-		
-	}else{
-
     label.appendChild(cT("Editando "+modules));
     header.appendChild(btHeaderPrint());
     
 		got(document,"body")[0].setAttribute("open","1");
-				
+
+    var jsonform = data.form.fields;
+
+	}else{
+
+		window.setAttribute("tutorial","1");
+		label.appendChild(cT("Novo "+modules));
+		
+		var jsonform = data.form.fields;
+
 	}  
   
-  var menu = createObject('{"tag":"menu","style":"background-color:'+config.bgcolor+';"}');
+  //let menu = createObject('{"tag":"menu","style":"background-color:'+config.bgcolor+';"}');
 
-	form.appendChild(menu);
+	//form.appendChild(menu);
 
-  let jsonform = data[0].form.fields;
 
-		Object.entries(jsonform).forEach(([key, value]) => {
+	Object.entries(jsonform).forEach(([key, value]) => {
+
+    form.append(fields(value,header));	
+	
+	});
+  
+	window.append(form);
+	
+	document.body.appendChild(window);
+  
+}  
 
 /* 
 		var type 		      = json[x].type;
@@ -67,11 +73,8 @@ function formMountFields(modules,data){
         attribute.placeholder			= json[x].placeholder;
         attribute.presetarray			= json[x].presetarray;  
         attribute.action			    = action;
- */
-        let div = fields(jsonform);
 
-        
-    /*
+    
 		switch(type) {
 
             case "hide":            var div = formMountHide(attribute);div.setAttribute('type',type);           break;
@@ -119,22 +122,5 @@ function formMountFields(modules,data){
 
 		}
     */
-        div.setAttribute('id','div'+attribute.name);
-        div.setAttribute('grid',grid);
-        div.setAttribute('gridmobile',gridmobile);
-        div.setAttribute('fieldcodigo',id);
-        
-        if(attribute.admin=="1"){
-            div.setAttribute('admin',attribute.admin);
-        }
 
-        form.appendChild(div);	
-	
-	}
-  
-	window.appendChild(header);
-	window.appendChild(form);
-	
-	document.body.appendChild(window);
-  
-}
+        

@@ -1,5 +1,5 @@
-body[logged="1"] window{position:fixed;z-index:550;top: 50%;transform: translateX(-50%) translateY(-50%);left: 50%;overflow:auto;max-height:100%;}
-body[logged="1"] window form {float:left;background-color:#fff;width:100%;box-shadow: inset -1px 5px 8px -7px #000}
+body window{position:fixed;z-index:550;top: 50%;transform: translateX(-50%) translateY(-50%);left: 50%;overflow:auto;max-height:100%;}
+body window form {float:left;background-color:#fff;width:100%;box-shadow: inset -1px 5px 8px -7px #000}
 
 window form menu{position:absolute;right:0;bottom:0;z-index:500;}
 window form > div > label {padding:10px 0 0 10px;color:#444;}
@@ -12,7 +12,7 @@ form p.sucess {color: #55C73D}
 form div.status {  text-align: center;  font-size: 90%}
 
 form > div {  float: left;position:relative;margin-bottom:20px;}
-form > div:first-child{margin-top:10px;}
+
 form > div > label {  display: block;-webkit-tap-highlight-color: transparent;}
 form > div.error > label > counter {  color: red}
 

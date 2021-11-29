@@ -24,17 +24,17 @@ function loadItem(item,array){
   
   //loadInfo(header,array);
 	
-  loadPacientes(header,array);
+  loadPacientes(header,array.pacientes);
   
-  modulesLoadItemCategory(header,array,item);
+  category(header,array.category,item);
 
   if(array.label!==""){
 	  modulesLoadItemContent(item,array);
   }
   
   loadItemOptions(item,array);
-  loadItemDetail(item,array);
-  loadMedicos(item,array);
+  itemDetail(item,array);
+  loadMedicos(item,array.medicos);
   //loadPacientesFull(item,array);
   loadItemUpdateTime(item,array);
   loadShare(footer,array);
