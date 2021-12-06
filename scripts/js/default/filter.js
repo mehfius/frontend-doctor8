@@ -1,30 +1,11 @@
-function iconFilter(){
-  
-    var icon = cE("icon")
-        icon.setAttribute("class","icon-search");
-    
-        icon.onclick=(function(){
-          
-        document.body.setAttribute("notification","0");
 
-        if(document.body.getAttribute("filter")=="1"){
-
-           document.body.setAttribute("filter","0");
-
-        }else{
-
-          document.body.setAttribute("filter","1");
-
-        }
-          
-        });
-
-  return icon;
-  
-}
 
 function boxFilter(){
   
+  const user = JSON.parse(localStorage.user);
+
+  const config = JSON.parse(localStorage.config);
+
   if(document.getElementsByTagName("boxfilter").length==0){
     
     var box           = document.createElement("boxfilter");
@@ -51,7 +32,7 @@ function boxFilter(){
 
   var modules = document.body.getAttribute("modules");
 
-  if(modules=="prontuariosmedicos"){
+  if(modules=="prontuarios" && user.areas=='50'){
 
     filter.appendChild(mountFilterCustom("pacientes","Listagem de pacientes"));
     
@@ -127,3 +108,27 @@ function mountFilterStandard(){
 }
 
 
+function iconFilter(){
+  
+    var icon = cE("icon")
+        icon.setAttribute("class","icon-search");
+    
+        icon.onclick=(function(){
+          
+        document.body.setAttribute("notification","0");
+
+        if(document.body.getAttribute("filter")=="1"){
+
+           document.body.setAttribute("filter","0");
+
+        }else{
+
+          document.body.setAttribute("filter","1");
+
+        }
+          
+        });
+
+  return icon;
+  
+}

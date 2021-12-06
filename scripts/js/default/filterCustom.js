@@ -130,7 +130,7 @@ function mountFilterCustom(modules,placeholder){
       data.append('modules', modules);
       data.append('session', localStorage.session);
   
-  var url 	= localStorage.getItem("url")+'/admin/json/jsonSelect.php';
+  var url 	= config.url_filter;
   
     xmlhttp.open("POST", url, true);
     xmlhttp.send(data);

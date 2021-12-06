@@ -19,7 +19,7 @@ function tabelaLoad(modules){
     
 
     rE(got(document,"box"));
-    //boxFilter();
+    boxFilter();
     document.body.setAttribute("loading","0");
     view.append(modulesLoad(data)); 
     

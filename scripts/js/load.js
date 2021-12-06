@@ -1,37 +1,49 @@
 function load(){
 
-  document.body.appendChild(loadingMount());
-  document.body.appendChild(ad());
-  document.body.setAttribute('open','0');
-  document.body.setAttribute('logged','0');
-  //fail
-  pagesLoad((data)=>{
+    if (window.innerWidth <= 480) {
 
-    var text = [];
-    var config ={};
+      document.body.setAttribute('mobile', '1');
 
-    for (var [key, value] of Object.entries(data[0].suites_config)) {
+    } else {
 
-        config[value.label]=value.url;
+      document.body.setAttribute('mobile', '0');
 
     }
 
-    //var config=JSON.parse(text);
- 
+   // suporteLoad();
 
-    localStorage.config       = JSON.stringify(config);
+    document.body.appendChild(loadingMount());
+    document.body.appendChild(ad());
+    document.body.setAttribute('open','0');
+    document.body.setAttribute('logged','0');
+    //fail
+    pagesLoad((data)=>{
 
-    //console.log(JSON.stringify(data));
-    //localStorage.languages    = JSON.stringify(data.languages);
-    //localStorage.language    = "ptbr";
+      var text   = [];
+      var config = {};
 
-    document.getElementsByTagName("pages")[0].append(mountLogin());
-    grade();
+      for (var [key, value] of Object.entries(data[0].suites_config)) {
 
-   //formEdit('prontuarios',21233);
-    //document.body.append(selectBox('pacientes'));
+          config[value.label]=value.url;
 
-  });
+      }
+
+      //var config=JSON.parse(text);
+
+
+      localStorage.config       = JSON.stringify(config);
+
+      //console.log(JSON.stringify(data));
+      //localStorage.languages    = JSON.stringify(data.languages);
+      //localStorage.language    = "ptbr";
+
+      document.getElementsByTagName("pages")[0].append(mountLogin());
+      grade();
+
+      //formEdit('prontuarios',21233);
+      //document.body.append(selectBox('pacientes'));
+
+    });
 
 
 }
@@ -70,4 +82,5 @@ document.onkeydown = function(evt) {
 	}
 	
 }
+
 window.onload=load;

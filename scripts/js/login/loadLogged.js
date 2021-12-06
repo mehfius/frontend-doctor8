@@ -25,7 +25,6 @@ function loadLogged(authentic){
   document.getElementsByTagName("body")[0].setAttribute("premium",authentic.user.premium);
   loopCheck();
   
-  suporteLoad();
   
 	var autoload=document.getElementsByTagName("body")[0].getAttribute("autoload");
 

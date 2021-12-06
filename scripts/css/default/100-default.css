@@ -281,7 +281,7 @@ ranking line span:nth-child(2) {
   width: 30%;
   text-align: right
 }
-
+/* 
 nav box {
   position: relative;
   color: rgb(15, 137, 202)
@@ -328,7 +328,7 @@ box icon {
     -webkit-transform: rotate(360deg)
   }
 }
-
+ */
 grade {
 
   height: 100%;
