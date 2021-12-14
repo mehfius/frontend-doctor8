@@ -54,8 +54,8 @@ function loopCheck(){
 
     if(document.body.getAttribute('open')=='1'){
       
-      if (navigator.onLine) {loadNotifications();} else {console.log('offline');}
-      
+/*       if (navigator.onLine) {loadNotifications();} else {console.log('offline');}
+       */
     }
    
     loopCheck();

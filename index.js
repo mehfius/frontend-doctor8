@@ -5,6 +5,8 @@ const app = express();
 app.use(express.static("./export"));
 app.use(cors());
 
+console.log("acesso");
+
 app.get('/', (req, res) => {
 
   res.setHeader('Access-Control-Allow-Origin', '*');
